@@ -39,6 +39,11 @@
 			path = TabBar;
 			sourceTree = "<group>";
 		};
+		3F2F35BD2F12353B000ADB96 /* Models */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Models;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,6 +60,7 @@
 		3F2F34E12F11F30F000ADB96 = {
 			isa = PBXGroup;
 			children = (
+				3F2F35BD2F12353B000ADB96 /* Models */,
 				3F2F35052F1202F6000ADB96 /* TabBar */,
 				3F2F35042F11FC1D000ADB96 /* TrackersList */,
 				3F2F34EC2F11F30F000ADB96 /* Tracker */,
@@ -89,6 +95,7 @@
 				3F2F34EC2F11F30F000ADB96 /* Tracker */,
 				3F2F35042F11FC1D000ADB96 /* TrackersList */,
 				3F2F35052F1202F6000ADB96 /* TabBar */,
+				3F2F35BD2F12353B000ADB96 /* Models */,
 			);
 			name = Tracker;
 			packageProductDependencies = (

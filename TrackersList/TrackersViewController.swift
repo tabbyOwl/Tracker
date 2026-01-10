@@ -6,7 +6,7 @@
 //
 import UIKit
 
-final class TrackersListViewController: UIViewController {
+final class TrackersViewController: UIViewController {
     
     private var addButton = UIButton()
     private var dateLabel = UILabel()
@@ -15,6 +15,8 @@ final class TrackersListViewController: UIViewController {
     private var label = UILabel()
     private var imageView = UIImageView()
  
+    var categories: [TrackerCategory] = []
+    var completedTrackers: [TrackerRecord] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
