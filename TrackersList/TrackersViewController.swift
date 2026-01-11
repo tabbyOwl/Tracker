@@ -14,6 +14,7 @@ final class TrackersViewController: UIViewController {
         let picker = UIDatePicker()
         picker.datePickerMode = .date
         picker.preferredDatePickerStyle = .compact
+        picker.locale = Locale(identifier: "ru_RU")
         return picker
     }()
 
@@ -144,7 +145,11 @@ final class TrackersViewController: UIViewController {
     }
 
     @objc private func datePickerValueChanged(_ sender: UIDatePicker) {
-        print(sender.date)
+        let selectedDate = sender.date
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd.MM.yyyy" // Формат даты
+            let formattedDate = dateFormatter.string(from: selectedDate)
+            print("Выбранная дата: \(formattedDate)")
     }
 }
 //MARK: - UICollectionViewDataSource
@@ -161,6 +166,7 @@ extension TrackersViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrackerCardCell.reuseIdentifier, for: indexPath) as? TrackerCardCell else { return UICollectionViewCell() }
         let tracker = categories[indexPath.section].trackers[indexPath.item]
+        cell.delegate = self
         cell.configure(emoji: tracker.emoji, name: tracker.name, color: tracker.color)
         return cell
     }
@@ -203,4 +209,10 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
         return CGSize(width: collectionView.frame.width, height: 50)
     }
    
+}
+
+extension TrackersViewController: TrackerCardCellDelegate {
+    func actionButtonTapped(_ cell: TrackerCardCell) {
+        cell.updateActionButton()
+    }
 }

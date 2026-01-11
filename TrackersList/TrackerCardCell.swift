@@ -7,10 +7,14 @@
 
 import UIKit
 
+protocol TrackerCardCellDelegate: AnyObject {
+    func actionButtonTapped(_ cell: TrackerCardCell)
+}
+
 final class TrackerCardCell: UICollectionViewCell {
     
     static let reuseIdentifier = "TrackerCardCell"
-    
+    weak var delegate: TrackerCardCellDelegate?
     // MARK: - Subviews
     
     private let cardView: UIView = {
@@ -44,16 +48,15 @@ final class TrackerCardCell: UICollectionViewCell {
         label.font = .systemFont(ofSize: 12)
         label.text = "0 дней"
         label.textColor = .black
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private let actionButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("+", for: .normal)
+        button.setImage(UIImage(systemName: "plus"), for: .normal)
         button.tintColor = .white
         button.layer.cornerRadius = 17
-        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(actionButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -62,7 +65,6 @@ final class TrackerCardCell: UICollectionViewCell {
         stack.axis = .horizontal
         stack.alignment = .center
         stack.distribution = .equalSpacing
-        stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
     
@@ -78,6 +80,9 @@ final class TrackerCardCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func updateActionButton() {
+        actionButton.setImage(UIImage(systemName: "checkmark"), for: .normal)
+    }
     // MARK: - Setup
     
     private func setupViews() {
@@ -90,7 +95,6 @@ final class TrackerCardCell: UICollectionViewCell {
         
         contentView.addSubview(cardView)
         contentView.addSubview(footerStack)
-        
     }
     
     private func setupConstraints() {
@@ -125,6 +129,10 @@ final class TrackerCardCell: UICollectionViewCell {
             footerStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             footerStack.heightAnchor.constraint(equalToConstant: 58)
         ])
+    }
+    
+    @objc private func actionButtonTapped() {
+        delegate?.actionButtonTapped(self)
     }
     
     // MARK: - Configure
