@@ -12,13 +12,14 @@ protocol TrackerCardCellDelegate: AnyObject {
 }
 
 final class TrackerCardCell: UICollectionViewCell {
-    
     static let reuseIdentifier = "TrackerCardCell"
     weak var delegate: TrackerCardCellDelegate?
-    // MARK: - Subviews
+    
+    // MARK: - Private properties
     private var daysCounter = 0
     private var isSelectedState = false
     
+    // MARK: - UI
     private let cardView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 16
@@ -44,7 +45,6 @@ final class TrackerCardCell: UICollectionViewCell {
         return label
     }()
     
-    // footer
     private let daysLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 12)
@@ -69,7 +69,6 @@ final class TrackerCardCell: UICollectionViewCell {
     }()
     
     // MARK: - Init
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupButton()
@@ -78,17 +77,19 @@ final class TrackerCardCell: UICollectionViewCell {
         setupConstraints()
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        nil
     }
     
+    //MARK: - Public methods
     func updateActionButtonAndDaysCount(date: Date) {
         let currentDate = Date()
         
         if date > currentDate {
             return
         }
-    
+        
         isSelectedState.toggle()
         
         if isSelectedState {
@@ -100,8 +101,15 @@ final class TrackerCardCell: UICollectionViewCell {
         }
         setDaysLabelText()
     }
-    // MARK: - Setup
     
+    func configure(emoji: String, name: String, color: UIColor) {
+        emojiLabel.text = emoji
+        nameLabel.text = name
+        cardView.backgroundColor = color
+        actionButton.backgroundColor = color
+    }
+    
+    // MARK: - Private methods
     private func setupViews() {
         footerStack.addArrangedSubviews(daysLabel, actionButton)
         cardView.addSubviews(emojiLabel, nameLabel)
@@ -148,10 +156,10 @@ final class TrackerCardCell: UICollectionViewCell {
     
     private func setDaysLabelText() {
         let word: String
-
+        
         let lastDigit = daysCounter % 10
         let lastTwoDigits = daysCounter % 100
-
+        
         if lastTwoDigits >= 11 && lastTwoDigits <= 14 {
             word = "дней"
         } else {
@@ -164,21 +172,12 @@ final class TrackerCardCell: UICollectionViewCell {
                 word = "дней"
             }
         }
-
+        
         daysLabel.text = "\(daysCounter) \(word)"
     }
     
     @objc private func actionButtonTapped() {
         delegate?.actionButtonTapped(self)
-    }
-    
-    // MARK: - Configure
-    
-    func configure(emoji: String, name: String, color: UIColor) {
-        emojiLabel.text = emoji
-        nameLabel.text = name
-        cardView.backgroundColor = color
-        actionButton.backgroundColor = color
     }
 }
 

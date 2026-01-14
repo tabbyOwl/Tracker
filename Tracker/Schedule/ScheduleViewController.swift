@@ -11,10 +11,16 @@ protocol ScheduleViewControllerDelegate: AnyObject {
 }
 
 final class ScheduleViewController: UIViewController {
-    
     weak var delegate: ScheduleViewControllerDelegate?
-    // MARK: - UI
     
+    // MARK: - Private properties
+    private var selectedDays: Set<WeekDay> = []
+    
+    private let orderedWeekDays = WeekDay.allCases.sorted {
+        $0.displayOrder < $1.displayOrder
+    }
+    
+    // MARK: - UI
     private let tableView = UITableView(frame: .zero, style: .insetGrouped)
     
     private let doneButton: UIButton = {
@@ -27,25 +33,16 @@ final class ScheduleViewController: UIViewController {
         return button
     }()
     
-    // MARK: - Data
-    
-    private var selectedDays: Set<WeekDay> = []
-    
-    private let orderedWeekDays = WeekDay.allCases.sorted {
-        $0.displayOrder < $1.displayOrder
-    }
     // MARK: - Lifecycle
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        setupLayout()
+        setupConstraints()
     }
     
-    // MARK: - Setup
-    
+    // MARK: - Private methods
     private func setupUI() {
-        view.backgroundColor = .white
+        tableView.backgroundColor = .white
         title = "Расписание"
         
         tableView.register(ScheduleCell.self, forCellReuseIdentifier: ScheduleCell.reuseIdentifier)
@@ -55,7 +52,7 @@ final class ScheduleViewController: UIViewController {
         doneButton.addTarget(self, action: #selector(doneTapped), for: .touchUpInside)
     }
     
-    private func setupLayout() {
+    private func setupConstraints() {
         view.addSubview(tableView)
         view.addSubview(doneButton)
         
@@ -76,14 +73,13 @@ final class ScheduleViewController: UIViewController {
     }
     
     // MARK: - Actions
-    
     @objc private func doneTapped() {
         delegate?.didSelectDays(selectedDays)
         dismiss(animated: true)
     }
 }
 
-
+// MARK: - UITableViewDataSource
 extension ScheduleViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -114,5 +110,9 @@ extension ScheduleViewController: UITableViewDataSource, UITableViewDelegate {
             }
         }
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        75
     }
 }

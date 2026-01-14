@@ -8,6 +8,9 @@ import UIKit
 
 final class ChooseTrackerTypeViewController: UIViewController {
     
+    var onCreateTracker: ((TrackerDraft) -> Void)?
+    
+    //MARK: - UI
     private let habitButton = TrackerTypeButton(title: "Привычка")
     private let eventButton = TrackerTypeButton(title: "Нерегулярное событие")
     
@@ -19,13 +22,16 @@ final class ChooseTrackerTypeViewController: UIViewController {
         return stack
     }()
     
+    //MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setupButtons()
         setupNavigationBar()
-        setupLayout()
+        setupConstraints()
     }
     
+    //MARK: - Private methods
     private func setupButtons() {
         habitButton.addTarget(self, action: #selector(habbitButtonTapped), for: .touchUpInside)
         eventButton.addTarget(self, action: #selector(eventButtonTapped), for: .touchUpInside)
@@ -35,7 +41,7 @@ final class ChooseTrackerTypeViewController: UIViewController {
         navigationItem.title = "Создание трекера"
     }
     
-    private func setupLayout() {
+    private func setupConstraints() {
         buttonsStack.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(buttonsStack)
@@ -50,13 +56,16 @@ final class ChooseTrackerTypeViewController: UIViewController {
         ])
     }
     
+    //MARK: - Actions
     @objc private func habbitButtonTapped() {
         let vc = NewTrackerViewController(trackerType: .habit)
+        vc.onCreateTracker = onCreateTracker
         present(UINavigationController(rootViewController: vc), animated: true)
     }
     
     @objc private func eventButtonTapped() {
         let vc = NewTrackerViewController(trackerType: .event)
+        vc.onCreateTracker = onCreateTracker
         present(UINavigationController(rootViewController: vc), animated: true)
     }
 }

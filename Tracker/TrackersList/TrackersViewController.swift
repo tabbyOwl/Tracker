@@ -8,9 +8,21 @@ import UIKit
 
 final class TrackersViewController: UIViewController {
     
-    // MARK: - UI
+    // MARK: - Private properties
+    private var categories: [TrackerCategory] = [] {
+        didSet {
+            updateFilteredCategories()
+            collectionView.reloadData()
+            updateState()
+        }
+    }
     
     private var selectedDate: Date = Date()
+    private var filteredCategories: [TrackerCategory] = []
+    private var completedTrackers: [TrackerRecord] = []
+    
+    // MARK: - UI
+    private let stateView = StateView()
     
     private let datePicker: UIDatePicker = {
         let picker = UIDatePicker()
@@ -25,7 +37,6 @@ final class TrackersViewController: UIViewController {
         label.text = "Трекеры"
         label.font = .systemFont(ofSize: 30, weight: .bold)
         label.textColor = .black
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -33,7 +44,6 @@ final class TrackersViewController: UIViewController {
         let searchBar = UISearchBar()
         searchBar.placeholder = "Поиск"
         searchBar.searchBarStyle = .minimal
-        searchBar.translatesAutoresizingMaskIntoConstraints = false
         return searchBar
     }()
     
@@ -41,33 +51,12 @@ final class TrackersViewController: UIViewController {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 16
         layout.minimumInteritemSpacing = 16
-        
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = .clear
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
     
-    private let stateView: StateView = {
-        let view = StateView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    // MARK: - Data
-    private var categories: [TrackerCategory] = [TrackerCategory(name: "Category", trackers: [Tracker(id: UUID(), name: "name", color: .brown, emoji: "", schedule: [.wednesday])])] {
-        didSet {
-            updateState()
-            updateFilteredCategories()
-            collectionView.reloadData()
-        }
-    }
-    
-    private var filteredCategories: [TrackerCategory] = []
-    
-    var completedTrackers: [TrackerRecord] = []
     // MARK: - Lifecycle
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -77,8 +66,7 @@ final class TrackersViewController: UIViewController {
         updateState()
     }
     
-    // MARK: - Setup
-    
+    // MARK: - Private methods
     private func setupUI() {
         view.backgroundColor = .white
         
@@ -114,6 +102,12 @@ final class TrackersViewController: UIViewController {
     }
     
     private func setupConstraints() {
+        
+        stateView.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 1),
             titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
@@ -138,16 +132,15 @@ final class TrackersViewController: UIViewController {
     
     private func updateFilteredCategories() {
         guard let selectedWeekday = WeekDay(date: selectedDate) else { return }
-        print(selectedWeekday)
         filteredCategories = categories
             .map { category in
-                let trackers = category.trackers.filter {
-                    print($0.schedule)
-                   return $0.schedule.contains(selectedWeekday)
+                let trackers = category.trackers.filter { tracker in
+                    
+                    return tracker.schedule.isEmpty || tracker.schedule.contains(selectedWeekday)
                 }
-                return TrackerCategory(name: category.name, trackers: trackers)
+                return TrackerCategory(id: category.id, name: category.name, trackers: trackers)
             }
-            .filter { !$0.trackers.isEmpty }
+        
     }
     
     private func updateState() {
@@ -158,8 +151,23 @@ final class TrackersViewController: UIViewController {
     
     // MARK: - Actions
     @objc private func didTapAddButton() {
-        let newTrackerViewController = ChooseTrackerTypeViewController()
-        let nav = UINavigationController(rootViewController: newTrackerViewController)
+        let chooseVC = ChooseTrackerTypeViewController()
+        
+        chooseVC.onCreateTracker = { [weak self] draft in
+            guard let self else { return }
+            
+            let tracker = Tracker(
+                id: UUID(),
+                name: draft.name,
+                color: .gray,
+                emoji: "🍎",
+                schedule: draft.schedule
+            )
+            
+            self.addTracker(tracker, to: draft.categoryId)
+        }
+        
+        let nav = UINavigationController(rootViewController: chooseVC)
         present(nav, animated: true)
     }
     
@@ -167,6 +175,19 @@ final class TrackersViewController: UIViewController {
         selectedDate = sender.date
         updateFilteredCategories()
         collectionView.reloadData()
+    }
+    
+    private func addTracker(_ tracker: Tracker, to categoryId: UUID) {
+        if let index = categories.firstIndex(where: { $0.id == categoryId }) {
+            let oldCategory = categories[index]
+            
+            let updatedCategory = TrackerCategory(id: oldCategory.id, name: oldCategory.name, trackers: oldCategory.trackers + [tracker])
+            
+            categories[index] = updatedCategory
+        } else {
+            let newCategory = TrackerCategory(id: categoryId, name: "Дом", trackers: [tracker])
+            categories.append(newCategory)
+        }
     }
 }
 
@@ -228,21 +249,10 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
+//MARK: - TrackerCardCellDelegate
+
 extension TrackersViewController: TrackerCardCellDelegate {
     func actionButtonTapped(_ cell: TrackerCardCell) {
         cell.updateActionButtonAndDaysCount(date: selectedDate)
-    }
-}
-
-extension TrackersViewController: NewHabitViewControllerDelegate {
-    func createHabit(name: String) {
-        let tracker = Tracker(id: UUID(), name: name, color: .brown, emoji: "", schedule: [.saturday])
-        let tracker2 = Tracker(id: UUID(), name: name, color: .brown, emoji: "", schedule: [.wednesday])
-        let newTracker = TrackerCategory(name: "Зима", trackers: [tracker, tracker2])
-        categories.append(newTracker)
-    }
-    
-    func createEvent(name: String) {
-        
     }
 }

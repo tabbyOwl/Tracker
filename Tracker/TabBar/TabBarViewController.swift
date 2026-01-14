@@ -7,25 +7,17 @@
 import UIKit
 
 final class TabBarController: UITabBarController {
+    
     //MARK: - Life cycle
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    override func viewDidLoad() {
+        super.viewDidLoad()
         setControllersToTabBar()
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupTabBar()
-    }
-    
     //MARK: -Private methods
-    private func setupTabBar() {
-        
-    }
-    
     private func setControllersToTabBar() {
         let trackersViewController = TrackersViewController()
-       
+        
         trackersViewController.tabBarItem = UITabBarItem(
             title: "Трекеры",
             image: UIImage(systemName: "circle.circle.fill"),
@@ -35,9 +27,8 @@ final class TabBarController: UITabBarController {
         
         let statisticsViewController = UIViewController()
         statisticsViewController.tabBarItem = UITabBarItem(title: "Статистика",
-                                     image: UIImage(systemName: "hare.fill"),
-                                     selectedImage: nil)
-        
+                                                           image: UIImage(systemName: "hare.fill"),
+                                                           selectedImage: nil)
         
         self.viewControllers = [navTrackersListViewController, statisticsViewController]
     }

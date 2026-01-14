@@ -7,26 +7,33 @@
 import UIKit
 
 final class ScheduleCell: UITableViewCell {
-    
     static let reuseIdentifier = "ScheduleCell"
+    var onSwitchChanged: ((Bool) -> Void)?
     
+    //MARK: -Private properties
     private let dayLabel = UILabel()
     private let toggle = UISwitch()
     
-    var onSwitchChanged: ((Bool) -> Void)?
     
+    //MARK: - Init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        nil
     }
     
+    // MARK: - Private methods
     private func setupUI() {
         selectionStyle = .none
-        
+        contentView.backgroundColor = .projectColor(.backgroundDay)
+        setupConstraints()
+    }
+    
+    private func setupConstraints() {
         contentView.addSubview(dayLabel)
         contentView.addSubview(toggle)
         
@@ -44,12 +51,14 @@ final class ScheduleCell: UITableViewCell {
         toggle.addTarget(self, action: #selector(switchChanged), for: .valueChanged)
     }
     
-    func configure(title: String, isOn: Bool) {
-        dayLabel.text = title
-        toggle.isOn = isOn
-    }
-    
     @objc private func switchChanged() {
         onSwitchChanged?(toggle.isOn)
+    }
+    
+    // MARK: - Public methods
+    func configure(title: String, isOn: Bool) {
+        dayLabel.text = title
+        toggle.onTintColor = .systemBlue
+        toggle.isOn = isOn
     }
 }
