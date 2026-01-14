@@ -7,9 +7,11 @@
 import UIKit
 
 final class TrackersViewController: UIViewController {
-
+    
     // MARK: - UI
-
+    
+    private var selectedDate: Date = Date()
+    
     private let datePicker: UIDatePicker = {
         let picker = UIDatePicker()
         picker.datePickerMode = .date
@@ -17,7 +19,7 @@ final class TrackersViewController: UIViewController {
         picker.locale = Locale(identifier: "ru_RU")
         return picker
     }()
-
+    
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Трекеры"
@@ -26,7 +28,7 @@ final class TrackersViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-
+    
     private let searchBar: UISearchBar = {
         let searchBar = UISearchBar()
         searchBar.placeholder = "Поиск"
@@ -34,59 +36,62 @@ final class TrackersViewController: UIViewController {
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         return searchBar
     }()
-
+    
     private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 16
         layout.minimumInteritemSpacing = 16
-
+        
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = .clear
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
-
+    
     private let stateView: StateView = {
         let view = StateView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-
+    
     // MARK: - Data
-    private var categories: [TrackerCategory] = [TrackerCategory(name: "Дом", trackers: [Tracker(id: UUID(), name: "Помыться", color: .blue, emoji: "😻", schedule: Date())]),
-                                                 TrackerCategory(name: "Работа", trackers: [Tracker(id: UUID(), name: "Сделать задание", color: .brown, emoji: "❤️", schedule: Date()),
-                                                                                            Tracker(id: UUID(), name: "Разобрать папки", color: .green, emoji: "💼", schedule: Date())])] {
+    private var categories: [TrackerCategory] = [TrackerCategory(name: "Category", trackers: [Tracker(id: UUID(), name: "name", color: .brown, emoji: "", schedule: [.wednesday])])] {
         didSet {
             updateState()
+            updateFilteredCategories()
             collectionView.reloadData()
         }
     }
     
+    private var filteredCategories: [TrackerCategory] = []
+    
     var completedTrackers: [TrackerRecord] = []
     // MARK: - Lifecycle
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setupUI()
         setupCollectionView()
+        updateFilteredCategories()
         updateState()
     }
-
+    
     // MARK: - Setup
-
+    
     private func setupUI() {
         view.backgroundColor = .white
-
+        
         setupNavigationBar()
-
+        
         view.addSubview(titleLabel)
         view.addSubview(searchBar)
         view.addSubview(collectionView)
         view.addSubview(stateView)
-
+        
         setupConstraints()
     }
-
+    
     private func setupNavigationBar() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             image: UIImage(systemName: "plus"),
@@ -94,78 +99,91 @@ final class TrackersViewController: UIViewController {
             target: self,
             action: #selector(didTapAddButton)
         )
-
+        
         navigationItem.leftBarButtonItem?.tintColor = .black
-
+        
         datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePicker)
     }
-
+    
     private func setupCollectionView() {
         collectionView.register(TrackerCardCell.self, forCellWithReuseIdentifier: TrackerCardCell.reuseIdentifier)
         collectionView.register(SectionHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeaderView.reuseIdentifier)
         collectionView.dataSource = self
         collectionView.delegate = self
     }
-
+    
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 1),
             titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-
+            
             searchBar.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
             searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
             searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
             searchBar.heightAnchor.constraint(equalToConstant: 36),
-
+            
             collectionView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 16),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-
+            
             stateView.topAnchor.constraint(equalTo: collectionView.topAnchor),
             stateView.leadingAnchor.constraint(equalTo: collectionView.leadingAnchor),
             stateView.trailingAnchor.constraint(equalTo: collectionView.trailingAnchor),
             stateView.bottomAnchor.constraint(equalTo: collectionView.bottomAnchor)
+            
         ])
     }
-
-    // MARK: - Empty State
-
+    
+    private func updateFilteredCategories() {
+        guard let selectedWeekday = WeekDay(date: selectedDate) else { return }
+        print(selectedWeekday)
+        filteredCategories = categories
+            .map { category in
+                let trackers = category.trackers.filter {
+                    print($0.schedule)
+                   return $0.schedule.contains(selectedWeekday)
+                }
+                return TrackerCategory(name: category.name, trackers: trackers)
+            }
+            .filter { !$0.trackers.isEmpty }
+    }
+    
     private func updateState() {
-        let isEmpty = categories.isEmpty
+        let isEmpty = filteredCategories.isEmpty
         stateView.isHidden = !isEmpty
         collectionView.isHidden = isEmpty
     }
-
+    
     // MARK: - Actions
-
     @objc private func didTapAddButton() {
-        // add tracker
+        let newTrackerViewController = ChooseTrackerTypeViewController()
+        let nav = UINavigationController(rootViewController: newTrackerViewController)
+        present(nav, animated: true)
     }
-
+    
     @objc private func datePickerValueChanged(_ sender: UIDatePicker) {
-        let selectedDate = sender.date
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd.MM.yyyy" // Формат даты
-            let formattedDate = dateFormatter.string(from: selectedDate)
-            print("Выбранная дата: \(formattedDate)")
+        selectedDate = sender.date
+        updateFilteredCategories()
+        collectionView.reloadData()
     }
 }
+
 //MARK: - UICollectionViewDataSource
 extension TrackersViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return categories.count
+        return filteredCategories.count
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return categories[section].trackers.count
+        return filteredCategories[section].trackers.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrackerCardCell.reuseIdentifier, for: indexPath) as? TrackerCardCell else { return UICollectionViewCell() }
-        let tracker = categories[indexPath.section].trackers[indexPath.item]
+        let tracker = filteredCategories[indexPath.section].trackers[indexPath.item]
         cell.delegate = self
         cell.configure(emoji: tracker.emoji, name: tracker.name, color: tracker.color)
         return cell
@@ -182,7 +200,7 @@ extension TrackersViewController: UICollectionViewDataSource {
             ) as? SectionHeaderView else {
                 return UICollectionReusableView()
             }
-            let title = categories[indexPath.section].name
+            let title = filteredCategories[indexPath.section].name
             header.configure(title: title)
             return header
         default:
@@ -194,25 +212,37 @@ extension TrackersViewController: UICollectionViewDataSource {
 extension TrackersViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView,layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-
+        
         return CGSize(width: (collectionView.bounds.width - 8) / 2, height: 148
-            )
+        )
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-           return 4
-       }
+        return 4
+    }
     
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         referenceSizeForHeaderInSection section: Int) -> CGSize {
         return CGSize(width: collectionView.frame.width, height: 50)
     }
-   
 }
 
 extension TrackersViewController: TrackerCardCellDelegate {
     func actionButtonTapped(_ cell: TrackerCardCell) {
-        cell.updateActionButton()
+        cell.updateActionButtonAndDaysCount(date: selectedDate)
+    }
+}
+
+extension TrackersViewController: NewHabitViewControllerDelegate {
+    func createHabit(name: String) {
+        let tracker = Tracker(id: UUID(), name: name, color: .brown, emoji: "", schedule: [.saturday])
+        let tracker2 = Tracker(id: UUID(), name: name, color: .brown, emoji: "", schedule: [.wednesday])
+        let newTracker = TrackerCategory(name: "Зима", trackers: [tracker, tracker2])
+        categories.append(newTracker)
+    }
+    
+    func createEvent(name: String) {
+        
     }
 }

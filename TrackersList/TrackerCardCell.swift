@@ -16,6 +16,8 @@ final class TrackerCardCell: UICollectionViewCell {
     static let reuseIdentifier = "TrackerCardCell"
     weak var delegate: TrackerCardCellDelegate?
     // MARK: - Subviews
+    private var daysCounter = 0
+    private var isSelectedState = false
     
     private let cardView: UIView = {
         let view = UIView()
@@ -46,7 +48,6 @@ final class TrackerCardCell: UICollectionViewCell {
     private let daysLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 12)
-        label.text = "0 дней"
         label.textColor = .black
         return label
     }()
@@ -56,7 +57,6 @@ final class TrackerCardCell: UICollectionViewCell {
         button.setImage(UIImage(systemName: "plus"), for: .normal)
         button.tintColor = .white
         button.layer.cornerRadius = 17
-        button.addTarget(self, action: #selector(actionButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -72,6 +72,8 @@ final class TrackerCardCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        setupButton()
+        setDaysLabelText()
         setupViews()
         setupConstraints()
     }
@@ -80,21 +82,34 @@ final class TrackerCardCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func updateActionButton() {
-        actionButton.setImage(UIImage(systemName: "checkmark"), for: .normal)
+    func updateActionButtonAndDaysCount(date: Date) {
+        let currentDate = Date()
+        
+        if date > currentDate {
+            return
+        }
+    
+        isSelectedState.toggle()
+        
+        if isSelectedState {
+            actionButton.setImage(UIImage(systemName: "checkmark"), for: .normal)
+            daysCounter += 1
+        } else {
+            actionButton.setImage(UIImage(systemName: "plus"), for: .normal)
+            daysCounter -= 1
+        }
+        setDaysLabelText()
     }
     // MARK: - Setup
     
     private func setupViews() {
-        footerStack.addArrangedSubview(daysLabel)
-        footerStack.addArrangedSubview(actionButton)
-        
-        cardView.addSubview(emojiLabel)
-        cardView.addSubview(footerStack)
-        cardView.addSubview(nameLabel)
-        
-        contentView.addSubview(cardView)
-        contentView.addSubview(footerStack)
+        footerStack.addArrangedSubviews(daysLabel, actionButton)
+        cardView.addSubviews(emojiLabel, nameLabel)
+        contentView.addSubviews(cardView, footerStack)
+    }
+    
+    private func setupButton() {
+        actionButton.addTarget(self, action: #selector(actionButtonTapped), for: .touchUpInside)
     }
     
     private func setupConstraints() {
@@ -129,6 +144,28 @@ final class TrackerCardCell: UICollectionViewCell {
             footerStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             footerStack.heightAnchor.constraint(equalToConstant: 58)
         ])
+    }
+    
+    private func setDaysLabelText() {
+        let word: String
+
+        let lastDigit = daysCounter % 10
+        let lastTwoDigits = daysCounter % 100
+
+        if lastTwoDigits >= 11 && lastTwoDigits <= 14 {
+            word = "дней"
+        } else {
+            switch lastDigit {
+            case 1:
+                word = "день"
+            case 2, 3, 4:
+                word = "дня"
+            default:
+                word = "дней"
+            }
+        }
+
+        daysLabel.text = "\(daysCounter) \(word)"
     }
     
     @objc private func actionButtonTapped() {

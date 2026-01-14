@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		3F2F34EA2F11F30F000ADB96 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3F8B77042F17504B0005E9BC /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -44,6 +44,16 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		3F5D75BA2F14B0B200524FFD /* Helpers */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		3F8B76FF2F164AC70005E9BC /* Schedule */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Schedule;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,20 +70,14 @@
 		3F2F34E12F11F30F000ADB96 = {
 			isa = PBXGroup;
 			children = (
+				3F5D75BA2F14B0B200524FFD /* Helpers */,
 				3F2F35BD2F12353B000ADB96 /* Models */,
 				3F2F35052F1202F6000ADB96 /* TabBar */,
 				3F2F35042F11FC1D000ADB96 /* TrackersList */,
 				3F2F34EC2F11F30F000ADB96 /* Tracker */,
-				3F2F34EB2F11F30F000ADB96 /* Products */,
+				3F8B76FF2F164AC70005E9BC /* Schedule */,
+				3F8B77042F17504B0005E9BC /* Tracker.app */,
 			);
-			sourceTree = "<group>";
-		};
-		3F2F34EB2F11F30F000ADB96 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				3F2F34EA2F11F30F000ADB96 /* Tracker.app */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -96,12 +100,14 @@
 				3F2F35042F11FC1D000ADB96 /* TrackersList */,
 				3F2F35052F1202F6000ADB96 /* TabBar */,
 				3F2F35BD2F12353B000ADB96 /* Models */,
+				3F5D75BA2F14B0B200524FFD /* Helpers */,
+				3F8B76FF2F164AC70005E9BC /* Schedule */,
 			);
 			name = Tracker;
 			packageProductDependencies = (
 			);
 			productName = Tracker;
-			productReference = 3F2F34EA2F11F30F000ADB96 /* Tracker.app */;
+			productReference = 3F8B77042F17504B0005E9BC /* Tracker.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -129,7 +135,7 @@
 			mainGroup = 3F2F34E12F11F30F000ADB96;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 3F2F34EB2F11F30F000ADB96 /* Products */;
+			productRefGroup = 3F2F34E12F11F30F000ADB96;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
