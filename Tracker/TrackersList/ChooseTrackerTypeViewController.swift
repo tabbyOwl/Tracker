@@ -33,7 +33,7 @@ final class ChooseTrackerTypeViewController: UIViewController {
     
     //MARK: - Private methods
     private func setupButtons() {
-        habitButton.addTarget(self, action: #selector(habbitButtonTapped), for: .touchUpInside)
+        habitButton.addTarget(self, action: #selector(habitButtonTapped), for: .touchUpInside)
         eventButton.addTarget(self, action: #selector(eventButtonTapped), for: .touchUpInside)
     }
     
@@ -57,7 +57,7 @@ final class ChooseTrackerTypeViewController: UIViewController {
     }
     
     //MARK: - Actions
-    @objc private func habbitButtonTapped() {
+    @objc private func habitButtonTapped() {
         let vc = NewTrackerViewController(trackerType: .habit)
         vc.onCreateTracker = onCreateTracker
         present(UINavigationController(rootViewController: vc), animated: true)

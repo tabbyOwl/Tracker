@@ -9,7 +9,7 @@ import UIKit
 final class OptionRowView: UIView {
     
     //MARK: - UI
-    private let titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 17, weight: .regular)
         return label

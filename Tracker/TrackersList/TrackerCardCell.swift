@@ -14,11 +14,7 @@ protocol TrackerCardCellDelegate: AnyObject {
 final class TrackerCardCell: UICollectionViewCell {
     static let reuseIdentifier = "TrackerCardCell"
     weak var delegate: TrackerCardCellDelegate?
-    
-    // MARK: - Private properties
-    private var daysCounter = 0
-    private var isSelectedState = false
-    
+   
     // MARK: - UI
     private let cardView: UIView = {
         let view = UIView()
@@ -72,7 +68,6 @@ final class TrackerCardCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupButton()
-        setDaysLabelText()
         setupViews()
         setupConstraints()
     }
@@ -83,30 +78,18 @@ final class TrackerCardCell: UICollectionViewCell {
     }
     
     //MARK: - Public methods
-    func updateActionButtonAndDaysCount(date: Date) {
-        let currentDate = Date()
-        
-        if date > currentDate {
-            return
-        }
-        
-        isSelectedState.toggle()
-        
-        if isSelectedState {
-            actionButton.setImage(UIImage(systemName: "checkmark"), for: .normal)
-            daysCounter += 1
-        } else {
-            actionButton.setImage(UIImage(systemName: "plus"), for: .normal)
-            daysCounter -= 1
-        }
-        setDaysLabelText()
-    }
-    
-    func configure(emoji: String, name: String, color: UIColor) {
-        emojiLabel.text = emoji
-        nameLabel.text = name
-        cardView.backgroundColor = color
-        actionButton.backgroundColor = color
+    func configure(with tracker: Tracker, markedDates: Set<Date>, for date: Date) {
+        emojiLabel.text = tracker.emoji
+        nameLabel.text = tracker.name
+        cardView.backgroundColor = tracker.color
+        actionButton.backgroundColor = tracker.color
+
+        let day = Calendar.current.startOfDay(for: date)
+        let isMarked = markedDates.contains(day)
+        actionButton.setImage(UIImage(systemName: isMarked ? "checkmark" : "plus"), for: .normal)
+
+        let count = markedDates.count
+        daysLabel.text = "\(count) \(getDayWord(for: count))"
     }
     
     // MARK: - Private methods
@@ -154,26 +137,16 @@ final class TrackerCardCell: UICollectionViewCell {
         ])
     }
     
-    private func setDaysLabelText() {
-        let word: String
+    private func getDayWord(for count: Int) -> String {
+        let lastDigit = count % 10
+        let lastTwoDigits = count % 100
         
-        let lastDigit = daysCounter % 10
-        let lastTwoDigits = daysCounter % 100
-        
-        if lastTwoDigits >= 11 && lastTwoDigits <= 14 {
-            word = "дней"
-        } else {
-            switch lastDigit {
-            case 1:
-                word = "день"
-            case 2, 3, 4:
-                word = "дня"
-            default:
-                word = "дней"
-            }
+        if lastTwoDigits >= 11 && lastTwoDigits <= 14 { return "дней" }
+        switch lastDigit {
+        case 1: return "день"
+        case 2,3,4: return "дня"
+        default: return "дней"
         }
-        
-        daysLabel.text = "\(daysCounter) \(word)"
     }
     
     @objc private func actionButtonTapped() {

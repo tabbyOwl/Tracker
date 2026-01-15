@@ -13,15 +13,15 @@ enum ProjectColor {
     var color: UIColor {
         switch self {
         case .backgroundDay:
-            return UIColor(red: 230/255, green: 232/255, blue: 235/255, alpha: 0.3)
+            UIColor(red: 230/255, green: 232/255, blue: 235/255, alpha: 0.3)
         case .blackDay:
-            return UIColor(red: 26/255, green: 27/255, blue: 34/255, alpha: 1)
+            UIColor(red: 26/255, green: 27/255, blue: 34/255, alpha: 1)
         }
     }
 }
 
 extension UIColor {
     static func projectColor(_ color: ProjectColor) -> UIColor {
-        return color.color
+        color.color
     }
 }

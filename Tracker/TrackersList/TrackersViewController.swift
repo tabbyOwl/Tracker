@@ -17,6 +17,7 @@ final class TrackersViewController: UIViewController {
         }
     }
     
+    private var trackerMarkedDates: [UUID: Set<Date>] = [:]
     private var selectedDate: Date = Date()
     private var filteredCategories: [TrackerCategory] = []
     private var completedTrackers: [TrackerRecord] = []
@@ -206,7 +207,8 @@ extension TrackersViewController: UICollectionViewDataSource {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrackerCardCell.reuseIdentifier, for: indexPath) as? TrackerCardCell else { return UICollectionViewCell() }
         let tracker = filteredCategories[indexPath.section].trackers[indexPath.item]
         cell.delegate = self
-        cell.configure(emoji: tracker.emoji, name: tracker.name, color: tracker.color)
+        let markedDates = trackerMarkedDates[tracker.id] ?? []
+        cell.configure(with: tracker, markedDates: markedDates, for: selectedDate)
         return cell
     }
     
@@ -253,6 +255,21 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
 
 extension TrackersViewController: TrackerCardCellDelegate {
     func actionButtonTapped(_ cell: TrackerCardCell) {
-        cell.updateActionButtonAndDaysCount(date: selectedDate)
+        guard let indexPath = collectionView.indexPath(for: cell) else { return }
+            let tracker = filteredCategories[indexPath.section].trackers[indexPath.item]
+            let day = Calendar.current.startOfDay(for: selectedDate)
+            
+            var dates = trackerMarkedDates[tracker.id] ?? []
+
+            if dates.contains(day) {
+                dates.remove(day)
+            } else {
+                dates.insert(day)
+            }
+
+            trackerMarkedDates[tracker.id] = dates
+            
+            // обновляем ячейку
+            cell.configure(with: tracker, markedDates: dates, for: selectedDate)
     }
 }
