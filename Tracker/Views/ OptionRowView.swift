@@ -9,13 +9,13 @@ import UIKit
 final class OptionRowView: UIView {
     
     //MARK: - UI
-    private lazy var titleLabel: UILabel = {
+    private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 17, weight: .regular)
         return label
     }()
     
-    private let subtitleLabel: UILabel = {
+    private lazy var subtitleLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 17, weight: .regular)
         label.textColor = .systemGray
