@@ -132,15 +132,19 @@ final class TrackersViewController: UIViewController {
     
     private func updateFilteredCategories() {
         guard let selectedWeekday = WeekDay(date: selectedDate) else { return }
+
         filteredCategories = categories
             .map { category in
                 let trackers = category.trackers.filter { tracker in
-                    
-                    return tracker.schedule.isEmpty || tracker.schedule.contains(selectedWeekday)
+                    tracker.schedule.isEmpty || tracker.schedule.contains(selectedWeekday)
                 }
-                return TrackerCategory(id: category.id, name: category.name, trackers: trackers)
+                return TrackerCategory(
+                    id: category.id,
+                    name: category.name,
+                    trackers: trackers
+                )
             }
-        
+            .filter { !$0.trackers.isEmpty }
     }
     
     private func updateState() {
@@ -175,6 +179,7 @@ final class TrackersViewController: UIViewController {
         selectedDate = sender.date
         updateFilteredCategories()
         collectionView.reloadData()
+        updateState()
     }
     
     private func addTracker(_ tracker: Tracker, to categoryId: UUID) {
