@@ -25,7 +25,7 @@ final class ChooseTrackerTypeViewController: UIViewController {
     //MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        setupBackground()
         setupButtons()
         setupNavigationBar()
         setupConstraints()
@@ -35,6 +35,10 @@ final class ChooseTrackerTypeViewController: UIViewController {
     private func setupButtons() {
         habitButton.addTarget(self, action: #selector(habitButtonTapped), for: .touchUpInside)
         eventButton.addTarget(self, action: #selector(eventButtonTapped), for: .touchUpInside)
+    }
+    
+    private func setupBackground() {
+        view.backgroundColor = .white
     }
     
     private func setupNavigationBar() {

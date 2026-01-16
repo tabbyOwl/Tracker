@@ -42,6 +42,7 @@ final class ScheduleViewController: UIViewController {
     
     // MARK: - Private methods
     private func setupUI() {
+        view.backgroundColor = .white
         tableView.backgroundColor = .white
         title = "Расписание"
         

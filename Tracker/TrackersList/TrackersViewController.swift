@@ -17,10 +17,9 @@ final class TrackersViewController: UIViewController {
         }
     }
     
-    private var trackerMarkedDates: [UUID: Set<Date>] = [:]
     private var selectedDate: Date = Date()
     private var filteredCategories: [TrackerCategory] = []
-    private var completedTrackers: [TrackerRecord] = []
+    private var completedTrackers: Set<TrackerRecord> = []
     
     // MARK: - UI
     private let stateView = StateView()
@@ -207,8 +206,11 @@ extension TrackersViewController: UICollectionViewDataSource {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrackerCardCell.reuseIdentifier, for: indexPath) as? TrackerCardCell else { return UICollectionViewCell() }
         let tracker = filteredCategories[indexPath.section].trackers[indexPath.item]
         cell.delegate = self
-        let markedDates = trackerMarkedDates[tracker.id] ?? []
-        cell.configure(with: tracker, markedDates: markedDates, for: selectedDate)
+        let markedDates = completedTrackers
+            .filter { $0.id == tracker.id }
+            .map { $0.date }
+        
+        cell.configure(with: tracker, markedDates: Set(markedDates), for: selectedDate)
         return cell
     }
     
@@ -255,21 +257,25 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
 
 extension TrackersViewController: TrackerCardCellDelegate {
     func actionButtonTapped(_ cell: TrackerCardCell) {
+        let currentDate = Date()
+        if selectedDate > currentDate {
+            return
+        }
         guard let indexPath = collectionView.indexPath(for: cell) else { return }
-            let tracker = filteredCategories[indexPath.section].trackers[indexPath.item]
-            let day = Calendar.current.startOfDay(for: selectedDate)
-            
-            var dates = trackerMarkedDates[tracker.id] ?? []
-
-            if dates.contains(day) {
-                dates.remove(day)
-            } else {
-                dates.insert(day)
-            }
-
-            trackerMarkedDates[tracker.id] = dates
-            
-            // обновляем ячейку
-            cell.configure(with: tracker, markedDates: dates, for: selectedDate)
+        let tracker = filteredCategories[indexPath.section].trackers[indexPath.item]
+        let day = Calendar.current.startOfDay(for: selectedDate)
+        let record = TrackerRecord(id: tracker.id, date: day)
+        
+        if completedTrackers.contains(record) {
+            completedTrackers.remove(record)
+        } else {
+            completedTrackers.insert(record)
+        }
+        
+        let markedDates = completedTrackers
+            .filter { $0.id == tracker.id }
+            .map { $0.date }
+        
+        cell.configure(with: tracker, markedDates: Set(markedDates), for: selectedDate)
     }
 }

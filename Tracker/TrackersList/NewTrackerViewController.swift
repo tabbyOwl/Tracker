@@ -24,10 +24,26 @@ final class NewTrackerViewController: UIViewController {
     private var selectedSchedule: Set<WeekDay> = []
     
     // MARK: - UI
-    private let contentStackView = UIStackView()
+   
     private let categoryRow = OptionRowView(title: "Категория")
-    private let scheduleRow = OptionRowView(title: "Расписание")
-    private let bottomContainer = UIStackView()
+    private lazy var scheduleRow = OptionRowView(title: "Расписание")
+    
+    private let contentStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 24
+        stackView.alignment = .fill
+        stackView.distribution = .fill
+        return stackView
+    }()
+    
+    private let bottomContainer: UIStackView = {
+        let bottomContainer = UIStackView()
+        bottomContainer.axis = .horizontal
+        bottomContainer.spacing = 8
+        bottomContainer.distribution = .fillEqually
+        return bottomContainer
+    }()
     
     private let nameTextField: UITextField = {
         let textField = UITextField()
@@ -37,6 +53,16 @@ final class NewTrackerViewController: UIViewController {
         textField.font = .systemFont(ofSize: 17)
         textField.setLeftPadding(16)
         return textField
+    }()
+    
+    private lazy var errorLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .projectColor(.red)
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 17, weight: .regular)
+        label.numberOfLines = 0
+        label.isHidden = true
+        return label
     }()
     
     private let optionsView: UIView = {
@@ -99,21 +125,23 @@ final class NewTrackerViewController: UIViewController {
     }
     
     private func setupUI() {
+        nameTextField.delegate = self
         view.backgroundColor = .white
-        contentStackView.axis = .vertical
-        contentStackView.spacing = 24
-        
-        bottomContainer.axis = .horizontal
-        bottomContainer.spacing = 8
-        bottomContainer.distribution = .fillEqually
-        
-        createButton.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
-        cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
-        
+        setupButtons()
+        setupScheduleRow()
+    }
+    
+    private func setupScheduleRow() {
         if trackerType == .event {
             scheduleRow.isHidden = true
             separatorView.isHidden = true
         }
+    }
+    
+    private func setupButtons() {
+        createButton.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
+        cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
+        
     }
     
     private func setupGesture() {
@@ -128,7 +156,7 @@ final class NewTrackerViewController: UIViewController {
     
     private func setupConstraints() {
         view.addSubviews(contentStackView, bottomContainer)
-        contentStackView.addArrangedSubviews(nameTextField, optionsView)
+        contentStackView.addArrangedSubviews(nameTextField, errorLabel, optionsView)
         stackView.addArrangedSubviews(categoryRow, separatorView, scheduleRow)
         bottomContainer.addArrangedSubviews(cancelButton, createButton)
         optionsView.addSubview(stackView)
@@ -191,6 +219,15 @@ final class NewTrackerViewController: UIViewController {
         scheduleVC.delegate = self
         present(scheduleVC, animated: true)
     }
+    
+    private func showError(_ message: String) {
+        errorLabel.text = message
+        errorLabel.isHidden = false
+    }
+
+    private func hideError() {
+        errorLabel.isHidden = true
+    }
 }
 //MARK: - ScheduleViewControllerDelegate
 extension NewTrackerViewController: ScheduleViewControllerDelegate {
@@ -206,6 +243,25 @@ extension NewTrackerViewController: ScheduleViewControllerDelegate {
                     .map { $0.shortTitle }
                     .joined(separator: ", ")
             )
+        }
+    }
+}
+
+extension NewTrackerViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField,shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let text = textField.text,
+              let textRange = Range(range, in: text) else {
+            return true
+        }
+        
+        let updatedText = text.replacingCharacters(in: textRange, with: string)
+        
+        if updatedText.count > 38 {
+            showError("Ограничение 38 символов")
+            return false
+        } else {
+            hideError()
+            return true
         }
     }
 }
