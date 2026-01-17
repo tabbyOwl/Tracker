@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		3F2F34EA2F11F30F000ADB96 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3FE78CB22F188725006AB7FD /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		3F2F34FC2F11F310000ADB96 /* Exceptions for "Tracker" folder in "Tracker" target */ = {
+		3F8B78D62F17D1AF0005E9BC /* Exceptions for "Tracker" folder in "Tracker" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -24,7 +24,7 @@
 		3F2F34EC2F11F30F000ADB96 /* Tracker */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				3F2F34FC2F11F310000ADB96 /* Exceptions for "Tracker" folder in "Tracker" target */,
+				3F8B78D62F17D1AF0005E9BC /* Exceptions for "Tracker" folder in "Tracker" target */,
 			);
 			path = Tracker;
 			sourceTree = "<group>";
@@ -46,16 +46,8 @@
 			isa = PBXGroup;
 			children = (
 				3F2F34EC2F11F30F000ADB96 /* Tracker */,
-				3F2F34EB2F11F30F000ADB96 /* Products */,
+				3FE78CB22F188725006AB7FD /* Tracker.app */,
 			);
-			sourceTree = "<group>";
-		};
-		3F2F34EB2F11F30F000ADB96 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				3F2F34EA2F11F30F000ADB96 /* Tracker.app */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -80,7 +72,7 @@
 			packageProductDependencies = (
 			);
 			productName = Tracker;
-			productReference = 3F2F34EA2F11F30F000ADB96 /* Tracker.app */;
+			productReference = 3FE78CB22F188725006AB7FD /* Tracker.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -108,7 +100,7 @@
 			mainGroup = 3F2F34E12F11F30F000ADB96;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 3F2F34EB2F11F30F000ADB96 /* Products */;
+			productRefGroup = 3F2F34E12F11F30F000ADB96;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -149,9 +141,8 @@
 				INFOPLIST_FILE = Tracker/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -180,9 +171,8 @@
 				INFOPLIST_FILE = Tracker/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
