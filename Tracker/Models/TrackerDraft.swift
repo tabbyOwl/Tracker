@@ -4,11 +4,13 @@
 //
 //  Created by Svetlana on 2026/1/14.
 //
-import Foundation
+import UIKit
 
 struct TrackerDraft {
     let type: TrackerType
     let name: String
+    let emoji: String
+    let color: UIColor
     let schedule: Set<WeekDay>
     let categoryId: UUID
 }

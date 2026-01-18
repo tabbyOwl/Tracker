@@ -38,6 +38,11 @@ final class ScheduleViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         setupConstraints()
+        
+    }
+    
+    func setSelectedDays(_ days: Set<WeekDay> ) {
+        selectedDays = days
     }
     
     // MARK: - Private methods
@@ -98,10 +103,7 @@ extension ScheduleViewController: UITableViewDataSource, UITableViewDelegate {
         }
         
         let day = orderedWeekDays[indexPath.row]
-        cell.configure(
-            title: day.title,
-            isOn: selectedDays.contains(day)
-        )
+        cell.configure(title: day.title, isOn: selectedDays.contains(day))
         
         cell.onSwitchChanged = { [weak self] isOn in
             if isOn {

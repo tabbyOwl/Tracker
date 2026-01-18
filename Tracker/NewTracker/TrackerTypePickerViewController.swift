@@ -6,7 +6,7 @@
 //
 import UIKit
 
-final class ChooseTrackerTypeViewController: UIViewController {
+final class TrackerTypePickerViewController: UIViewController {
     
     var onCreateTracker: ((TrackerDraft) -> Void)?
     

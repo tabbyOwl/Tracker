@@ -1,0 +1,91 @@
+//
+//  RowCell.swift
+//  Tracker
+//
+//  Created by Svetlana on 2026/1/17.
+//
+import UIKit
+
+final class RowCell: UITableViewCell {
+    
+    static let identifier = "FormRowCell"
+    
+    var onSelect: ((String) -> Void)?
+  
+    private lazy var subtitleLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 17)
+        label.textColor = .projectColor(.gray)
+        return label
+    }()
+    
+    private lazy var titleLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 17)
+        return label
+    }()
+    
+    private lazy var image: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(systemName: "chevron.right")
+        imageView.tintColor = .projectColor(.gray)
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
+    private let horizontalStack: UIStackView = {
+        let stack = UIStackView()
+        stack.spacing = 8
+        return stack
+    }()
+    
+    private let verticalStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .vertical
+        stack.spacing = 8
+        return stack
+    }()
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        contentView.backgroundColor = .projectColor(.backgroundDay)
+        
+        setupConstraints()
+    }
+    
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        nil
+    }
+    
+    func configure(title: String, subtitle: String) {
+        titleLabel.text = title
+        subtitleLabel.text = subtitle
+    }
+    
+    private func setupConstraints() {
+        
+        contentView.addSubviews(horizontalStack)
+        
+        verticalStack.addArrangedSubviews(titleLabel, subtitleLabel)
+        horizontalStack.addArrangedSubviews(verticalStack, image)
+        
+        
+        horizontalStack.translatesAutoresizingMaskIntoConstraints = false
+        
+        titleLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        subtitleLabel.setContentHuggingPriority(.required, for: .vertical)
+        subtitleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+        image.setContentHuggingPriority(.required, for: .horizontal)
+        image.setContentCompressionResistancePriority(.required, for: .horizontal)
+        
+        
+        NSLayoutConstraint.activate([
+            horizontalStack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
+            horizontalStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16),
+            horizontalStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            horizontalStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16)
+        ])
+    }
+}
+

@@ -155,7 +155,7 @@ final class TrackersViewController: UIViewController {
     
     // MARK: - Actions
     @objc private func didTapAddButton() {
-        let chooseVC = ChooseTrackerTypeViewController()
+        let chooseVC = TrackerTypePickerViewController()
         
         chooseVC.onCreateTracker = { [weak self] draft in
             guard let self else { return }
@@ -163,8 +163,8 @@ final class TrackersViewController: UIViewController {
             let tracker = Tracker(
                 id: UUID(),
                 name: draft.name,
-                color: .gray,
-                emoji: "🍎",
+                color: draft.color,
+                emoji: draft.emoji,
                 schedule: draft.schedule
             )
             
