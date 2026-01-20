@@ -34,7 +34,7 @@ final class ItemCell: UICollectionViewCell {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        contentView.layer.cornerRadius = 16
+        contentView.layer.cornerRadius = 8
         contentView.clipsToBounds = true
 
         contentView.addSubview(backView)
@@ -79,12 +79,14 @@ final class ItemCell: UICollectionViewCell {
         switch item {
         case .emoji(_, let emoji):
             label.text = emoji
+            backView.backgroundColor = isSelected ? .projectColor(.lightGray) : .white
         case .color(_, let color):
             label.text = nil
             colorSquareView.backgroundColor = color
+            let borderColor = color.withAlphaComponent(0.3).cgColor
+            contentView.layer.borderColor = borderColor
+            contentView.layer.borderWidth = isSelected ? 3 : 0
         }
-
-        backView.backgroundColor = isSelected ? .projectColor(.lightGray) : .white
     }
    
 }
