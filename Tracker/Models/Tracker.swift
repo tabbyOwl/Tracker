@@ -13,3 +13,15 @@ struct Tracker {
     let emoji: String
     let schedule: Set<WeekDay>
 }
+
+extension Tracker {
+    init(coreData: TrackerCoreData) {
+        self.init(
+            id: coreData.id,
+            name: coreData.name,
+            color: coreData.color,
+            emoji: coreData.emoji,
+            schedule: Set((coreData.schedule as? [Int] ?? []).compactMap(WeekDay.init))
+        )
+    }
+}

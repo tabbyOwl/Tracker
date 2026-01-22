@@ -7,8 +7,21 @@
 import Foundation
 
 struct TrackerCategory {
-    static let defaultId = UUID()
+    static let defaultId = UUID(uuidString: "550E8400-E29B-41D4-A716-446655440000")!
     let id: UUID
     let name: String
     let trackers: [Tracker]
+}
+
+extension TrackerCategory {
+    init(coreData: TrackerCategoryCoreData) {
+        let trackers = (coreData.trackers as? Set<TrackerCoreData> ?? [])
+            .map(Tracker.init)
+
+        self.init(
+            id: coreData.id,
+            name: coreData.name,
+            trackers: trackers
+        )
+    }
 }
