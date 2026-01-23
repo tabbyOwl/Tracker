@@ -10,6 +10,8 @@ enum ProjectColor {
     case backgroundDay
     case blackDay
     case red
+    case gray
+    case lightGray
     
     var color: UIColor {
         switch self {
@@ -19,6 +21,10 @@ enum ProjectColor {
             UIColor(red: 26/255, green: 27/255, blue: 34/255, alpha: 1)
         case .red:
             UIColor(red: 245/255, green: 107/255, blue: 108/255, alpha: 1)
+        case .gray:
+            UIColor(red: 174/255, green: 175/255, blue: 180/255, alpha: 1)
+        case .lightGray:
+            UIColor(red: 230/255, green: 232/255, blue: 235/255, alpha: 1)
         }
     }
 }

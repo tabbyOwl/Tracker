@@ -10,3 +10,9 @@ struct TrackerRecord: Hashable {
     let id: UUID
     let date: Date
 }
+
+extension TrackerRecord {
+    init(coreData: TrackerRecordCoreData) {
+        self.init(id: coreData.id, date: coreData.date)
+    }
+}

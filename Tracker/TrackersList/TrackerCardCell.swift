@@ -76,19 +76,19 @@ final class TrackerCardCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         nil
     }
-    
+   
     //MARK: - Public methods
-    func configure(with tracker: Tracker, markedDates: Set<Date>, for date: Date) {
+    func configure(with tracker: Tracker, isCompleted: Bool, completedDaysCount: Int, for date: Date) {
         emojiLabel.text = tracker.emoji
         nameLabel.text = tracker.name
         cardView.backgroundColor = tracker.color
         actionButton.backgroundColor = tracker.color
 
         let day = Calendar.current.startOfDay(for: date)
-        let isMarked = markedDates.contains(day)
-        actionButton.setImage(UIImage(systemName: isMarked ? "checkmark" : "plus"), for: .normal)
+        let isCompleted = isCompleted
+        actionButton.setImage(UIImage(systemName: isCompleted ? "checkmark" : "plus"), for: .normal)
 
-        let count = markedDates.count
+        let count = completedDaysCount
         daysLabel.text = "\(count) \(getDayWord(for: count))"
     }
     

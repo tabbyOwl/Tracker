@@ -6,7 +6,26 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		3F98EDDB2F2337CE00A92E8C /* InMemoryLogging in Frameworks */ = {isa = PBXBuildFile; productRef = 3F98EDDA2F2337CE00A92E8C /* InMemoryLogging */; };
+		3F98EDDD2F2337CE00A92E8C /* Logging in Frameworks */ = {isa = PBXBuildFile; productRef = 3F98EDDC2F2337CE00A92E8C /* Logging */; };
+		3FA470B22F20D97500DF01CB /* TrackerDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3FA470B02F20D97500DF01CB /* TrackerDataModel.xcdatamodeld */; };
+		3FA470B92F20DB1700DF01CB /* TrackerCategoryCoreData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA470B32F20DB1700DF01CB /* TrackerCategoryCoreData+CoreDataClass.swift */; };
+		3FA470BA2F20DB1700DF01CB /* TrackerRecordCoreData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA470B72F20DB1700DF01CB /* TrackerRecordCoreData+CoreDataClass.swift */; };
+		3FA470BB2F20DB1700DF01CB /* TrackerCategoryCoreData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA470B42F20DB1700DF01CB /* TrackerCategoryCoreData+CoreDataProperties.swift */; };
+		3FA470BC2F20DB1700DF01CB /* TrackerRecordCoreData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA470B82F20DB1700DF01CB /* TrackerRecordCoreData+CoreDataProperties.swift */; };
+		3FA470BD2F20DB1700DF01CB /* TrackerCoreData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA470B62F20DB1700DF01CB /* TrackerCoreData+CoreDataProperties.swift */; };
+		3FA470BE2F20DB1700DF01CB /* TrackerCoreData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA470B52F20DB1700DF01CB /* TrackerCoreData+CoreDataClass.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
+		3FA470B12F20D97500DF01CB /* TrackerDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TrackerDataModel.xcdatamodel; sourceTree = "<group>"; };
+		3FA470B32F20DB1700DF01CB /* TrackerCategoryCoreData+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TrackerCategoryCoreData+CoreDataClass.swift"; sourceTree = "<group>"; };
+		3FA470B42F20DB1700DF01CB /* TrackerCategoryCoreData+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TrackerCategoryCoreData+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		3FA470B52F20DB1700DF01CB /* TrackerCoreData+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TrackerCoreData+CoreDataClass.swift"; sourceTree = "<group>"; };
+		3FA470B62F20DB1700DF01CB /* TrackerCoreData+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TrackerCoreData+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		3FA470B72F20DB1700DF01CB /* TrackerRecordCoreData+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TrackerRecordCoreData+CoreDataClass.swift"; sourceTree = "<group>"; };
+		3FA470B82F20DB1700DF01CB /* TrackerRecordCoreData+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TrackerRecordCoreData+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		3FE78CB22F188725006AB7FD /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -36,6 +55,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F98EDDD2F2337CE00A92E8C /* Logging in Frameworks */,
+				3F98EDDB2F2337CE00A92E8C /* InMemoryLogging in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -45,6 +66,13 @@
 		3F2F34E12F11F30F000ADB96 = {
 			isa = PBXGroup;
 			children = (
+				3FA470B32F20DB1700DF01CB /* TrackerCategoryCoreData+CoreDataClass.swift */,
+				3FA470B42F20DB1700DF01CB /* TrackerCategoryCoreData+CoreDataProperties.swift */,
+				3FA470B52F20DB1700DF01CB /* TrackerCoreData+CoreDataClass.swift */,
+				3FA470B62F20DB1700DF01CB /* TrackerCoreData+CoreDataProperties.swift */,
+				3FA470B72F20DB1700DF01CB /* TrackerRecordCoreData+CoreDataClass.swift */,
+				3FA470B82F20DB1700DF01CB /* TrackerRecordCoreData+CoreDataProperties.swift */,
+				3FA470B02F20D97500DF01CB /* TrackerDataModel.xcdatamodeld */,
 				3F2F34EC2F11F30F000ADB96 /* Tracker */,
 				3FE78CB22F188725006AB7FD /* Tracker.app */,
 			);
@@ -70,6 +98,8 @@
 			);
 			name = Tracker;
 			packageProductDependencies = (
+				3F98EDDA2F2337CE00A92E8C /* InMemoryLogging */,
+				3F98EDDC2F2337CE00A92E8C /* Logging */,
 			);
 			productName = Tracker;
 			productReference = 3FE78CB22F188725006AB7FD /* Tracker.app */;
@@ -99,6 +129,9 @@
 			);
 			mainGroup = 3F2F34E12F11F30F000ADB96;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				3F98EDD92F2337CE00A92E8C /* XCRemoteSwiftPackageReference "swift-log" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3F2F34E12F11F30F000ADB96;
 			projectDirPath = "";
@@ -124,6 +157,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3FA470B92F20DB1700DF01CB /* TrackerCategoryCoreData+CoreDataClass.swift in Sources */,
+				3FA470BA2F20DB1700DF01CB /* TrackerRecordCoreData+CoreDataClass.swift in Sources */,
+				3FA470BB2F20DB1700DF01CB /* TrackerCategoryCoreData+CoreDataProperties.swift in Sources */,
+				3FA470BC2F20DB1700DF01CB /* TrackerRecordCoreData+CoreDataProperties.swift in Sources */,
+				3FA470BD2F20DB1700DF01CB /* TrackerCoreData+CoreDataProperties.swift in Sources */,
+				3FA470BE2F20DB1700DF01CB /* TrackerCoreData+CoreDataClass.swift in Sources */,
+				3FA470B22F20D97500DF01CB /* TrackerDataModel.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -331,6 +371,43 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		3F98EDD92F2337CE00A92E8C /* XCRemoteSwiftPackageReference "swift-log" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-log";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.9.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3F98EDDA2F2337CE00A92E8C /* InMemoryLogging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F98EDD92F2337CE00A92E8C /* XCRemoteSwiftPackageReference "swift-log" */;
+			productName = InMemoryLogging;
+		};
+		3F98EDDC2F2337CE00A92E8C /* Logging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F98EDD92F2337CE00A92E8C /* XCRemoteSwiftPackageReference "swift-log" */;
+			productName = Logging;
+		};
+/* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		3FA470B02F20D97500DF01CB /* TrackerDataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				3FA470B12F20D97500DF01CB /* TrackerDataModel.xcdatamodel */,
+			);
+			currentVersion = 3FA470B12F20D97500DF01CB /* TrackerDataModel.xcdatamodel */;
+			path = TrackerDataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 3F2F34E22F11F30F000ADB96 /* Project object */;
 }
