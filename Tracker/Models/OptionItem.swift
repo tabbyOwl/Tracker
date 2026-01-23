@@ -5,7 +5,6 @@
 //  Created by Svetlana on 2026/1/17.
 //
 
-import Foundation
 import UIKit
 
 enum OptionItem {

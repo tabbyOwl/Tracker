@@ -35,7 +35,7 @@ final class UIColorTransformer: ValueTransformer {
         guard let data = value as? Data else { return nil }
 
         do {
-            return try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? UIColor
+            return try NSKeyedUnarchiver.unarchivedObject(ofClass: UIColor.self, from: data)
         } catch {
             return nil
         }

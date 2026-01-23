@@ -4,9 +4,6 @@
 //
 //  Created by Svetlana on 2026/1/21.
 //
-
-import CoreData
-
 import CoreData
 
 final class TrackerCategoryStore {

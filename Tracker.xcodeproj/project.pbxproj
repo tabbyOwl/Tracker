@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3F98EDDB2F2337CE00A92E8C /* InMemoryLogging in Frameworks */ = {isa = PBXBuildFile; productRef = 3F98EDDA2F2337CE00A92E8C /* InMemoryLogging */; };
+		3F98EDDD2F2337CE00A92E8C /* Logging in Frameworks */ = {isa = PBXBuildFile; productRef = 3F98EDDC2F2337CE00A92E8C /* Logging */; };
 		3FA470B22F20D97500DF01CB /* TrackerDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3FA470B02F20D97500DF01CB /* TrackerDataModel.xcdatamodeld */; };
 		3FA470B92F20DB1700DF01CB /* TrackerCategoryCoreData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA470B32F20DB1700DF01CB /* TrackerCategoryCoreData+CoreDataClass.swift */; };
 		3FA470BA2F20DB1700DF01CB /* TrackerRecordCoreData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA470B72F20DB1700DF01CB /* TrackerRecordCoreData+CoreDataClass.swift */; };
@@ -53,6 +55,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F98EDDD2F2337CE00A92E8C /* Logging in Frameworks */,
+				3F98EDDB2F2337CE00A92E8C /* InMemoryLogging in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -94,6 +98,8 @@
 			);
 			name = Tracker;
 			packageProductDependencies = (
+				3F98EDDA2F2337CE00A92E8C /* InMemoryLogging */,
+				3F98EDDC2F2337CE00A92E8C /* Logging */,
 			);
 			productName = Tracker;
 			productReference = 3FE78CB22F188725006AB7FD /* Tracker.app */;
@@ -123,6 +129,9 @@
 			);
 			mainGroup = 3F2F34E12F11F30F000ADB96;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				3F98EDD92F2337CE00A92E8C /* XCRemoteSwiftPackageReference "swift-log" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3F2F34E12F11F30F000ADB96;
 			projectDirPath = "";
@@ -362,6 +371,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		3F98EDD92F2337CE00A92E8C /* XCRemoteSwiftPackageReference "swift-log" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-log";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.9.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3F98EDDA2F2337CE00A92E8C /* InMemoryLogging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F98EDD92F2337CE00A92E8C /* XCRemoteSwiftPackageReference "swift-log" */;
+			productName = InMemoryLogging;
+		};
+		3F98EDDC2F2337CE00A92E8C /* Logging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3F98EDD92F2337CE00A92E8C /* XCRemoteSwiftPackageReference "swift-log" */;
+			productName = Logging;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		3FA470B02F20D97500DF01CB /* TrackerDataModel.xcdatamodeld */ = {

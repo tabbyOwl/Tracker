@@ -59,8 +59,8 @@ final class NewTrackerViewController: UIViewController {
         
         var title: String {
             switch self {
-            case .emoji: return "Emoji"
-            case .color: return "Цвет"
+            case .emoji: "Emoji"
+            case .color: "Цвет"
             }
         }
     }
@@ -314,11 +314,11 @@ extension NewTrackerViewController: UITextFieldDelegate {
               let textRange = Range(range, in: text) else {
             return true
         }
-        
+        let maxCount = 38
         let updatedText = text.replacingCharacters(in: textRange, with: string)
         
-        if updatedText.count > 38 {
-            showError("Ограничение 38 символов")
+        if updatedText.count > maxCount {
+            showError("Ограничение \(maxCount) символов")
             return false
         } else {
             hideError()

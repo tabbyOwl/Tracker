@@ -5,7 +5,7 @@
 //  Created by Svetlana on 2026/1/17.
 //
 
-import UIKit
+import Foundation
 
 enum EmojiLibrary {
 

@@ -6,7 +6,6 @@
 //
 //
 public import UIKit
-public import Foundation
 public import CoreData
 
 

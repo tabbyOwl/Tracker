@@ -47,8 +47,9 @@ final class OptionRowCollectionView: UIView {
         setupLayout()
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
-        fatalError()
+        nil
     }
     
     func updateItems(title: String, items: [OptionItem]) {
