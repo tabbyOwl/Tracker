@@ -26,7 +26,7 @@ final class TrackersViewController: UIViewController {
     private var completedTrackers: Set<TrackerRecord> = []
     
     // MARK: - UI
-    private let stateView = StateView()
+    private let stateView = StateView(text: "Что будем отслеживать?", image: UIImage(resource: .dizzy))
     
     private let datePicker: UIDatePicker = {
         let picker = UIDatePicker()
@@ -186,6 +186,7 @@ final class TrackersViewController: UIViewController {
                 emoji: draft.emoji,
                 schedule: draft.schedule
             )
+            print(tracker.color)
             let categoryName = "Дом"
             
             trackerStore.add(tracker, categoryId: draft.categoryId, categoryName: categoryName)

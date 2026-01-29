@@ -10,14 +10,12 @@ final class StateView: UIView {
 
     private let imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(resource: .dizzy)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
 
     private let label: UILabel = {
         let label = UILabel()
-        label.text = "Что будем отслеживать?"
         label.font = .systemFont(ofSize: 12, weight: .medium)
         label.textAlignment = .center
         label.textColor = .black
@@ -25,8 +23,11 @@ final class StateView: UIView {
         return label
     }()
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(text: String, image: UIImage) {
+        super.init(frame: .zero)
+        label.text = text
+        imageView.image = image
+        
         setupUI()
     }
 

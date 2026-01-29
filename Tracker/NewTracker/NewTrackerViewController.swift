@@ -125,18 +125,18 @@ final class NewTrackerViewController: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            
             stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
             textField.heightAnchor.constraint(equalToConstant: 75),
             
-            
             tableView.topAnchor.constraint(equalTo: stackView.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            
         ])
     }
     
@@ -165,17 +165,19 @@ final class NewTrackerViewController: UIViewController {
     }
     
     private func createTracker() {
-        guard !name.isEmpty else { return }
+        guard !name.isEmpty,
+        !selectedSchedule.isEmpty else { return }
         let defaultEmoji = "🔖"
         let draft = TrackerDraft(
             type: trackerType,
             name: name,
             emoji: selectedEmoji ?? defaultEmoji,
-            color: selectedColor ?? .gray,
+            color: selectedColor ?? UIColor.lightGray,
+            
             schedule: trackerType == .habit ? selectedSchedule : [],
             categoryId: TrackerCategory.defaultId
         )
-        
+        print("selectedColor: \(draft.color)")
         onCreateTracker?(draft)
         presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
     }

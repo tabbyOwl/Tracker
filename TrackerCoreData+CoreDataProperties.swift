@@ -19,9 +19,9 @@ extension TrackerCoreData {
 
     @NSManaged public var id: UUID
     @NSManaged public var name: String
-    @NSManaged public var color: UIColor
+    @NSManaged public var color: String
     @NSManaged public var emoji: String
-    @NSManaged public var schedule: [Int]
+    @NSManaged public var schedule: Data
     @NSManaged public var category: TrackerCategoryCoreData
     @NSManaged public var records: NSSet
 

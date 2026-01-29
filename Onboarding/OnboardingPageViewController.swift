@@ -40,6 +40,7 @@ final class OnboardingPageViewController: UIPageViewController {
         button.layer.cornerRadius = 16
         return button
     }()
+
     
     override func viewDidLoad() {
         super.viewDidLoad()

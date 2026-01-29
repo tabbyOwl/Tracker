@@ -6,6 +6,7 @@
 //
 import CoreData
 
+
 final class TrackerCategoryStore {
 
     private let context: NSManagedObjectContext
