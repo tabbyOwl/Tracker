@@ -186,10 +186,8 @@ final class TrackersViewController: UIViewController {
                 emoji: draft.emoji,
                 schedule: draft.schedule
             )
-            print(tracker.color)
-            let categoryName = "Дом"
             
-            trackerStore.add(tracker, categoryId: draft.categoryId, categoryName: categoryName)
+            trackerStore.add(tracker, categoryId: draft.category.id, categoryName: draft.category.name)
         }
         
         let nav = UINavigationController(rootViewController: chooseVC)

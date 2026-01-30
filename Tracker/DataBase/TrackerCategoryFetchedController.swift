@@ -29,7 +29,6 @@ final class TrackerCategoryFetchedController: NSObject {
     }
 
     func categories() -> [TrackerCategory] {
-        
         fetchedResultsController.fetchedObjects?.map(TrackerCategory.init) ?? []
     }
 }

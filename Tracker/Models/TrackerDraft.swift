@@ -12,5 +12,5 @@ struct TrackerDraft {
     let emoji: String
     let color: UIColor
     let schedule: Set<WeekDay>
-    let categoryId: UUID
+    let category: TrackerCategory
 }

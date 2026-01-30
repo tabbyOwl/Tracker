@@ -26,8 +26,6 @@ final class TrackerStore {
         object.id = tracker.id
         object.name = tracker.name
         object.emoji = tracker.emoji
-        print("TRACKER STORE")
-        print(tracker.color)
         object.color = tracker.color.hexString
         object.schedule = ScheduleMapper.encode(tracker.schedule)
         object.category = category

@@ -37,7 +37,7 @@ final class TrackerFooterView: UIView {
         cancelButton.layer.cornerRadius = 16
 
         createButton.setTitle("Создать", for: .normal)
-        createButton.backgroundColor = .systemGray
+        createButton.backgroundColor = .projectColor(.blackDay)
         createButton.setTitleColor(.white, for: .normal)
         createButton.layer.cornerRadius = 16
 

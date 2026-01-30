@@ -9,7 +9,6 @@ import UIKit
 import UIKit
 
 extension UIColor {
-
     var hexString: String {
         var r: CGFloat = 0
         var g: CGFloat = 0

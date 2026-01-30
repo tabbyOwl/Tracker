@@ -18,9 +18,10 @@ final class NewTrackerViewController: UIViewController {
     private var selectedColor: UIColor?
     private var selectedSchedule: Set<WeekDay> = []
     private var scheduleIndexPath: IndexPath?
+    private var categoryIndexPath: IndexPath?
+    private var category: TrackerCategory?
     
     // MARK: - Sections
-    
     private let stackView: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
@@ -165,25 +166,40 @@ final class NewTrackerViewController: UIViewController {
     }
     
     private func createTracker() {
-        guard !name.isEmpty,
-        !selectedSchedule.isEmpty else { return }
-        let defaultEmoji = "🔖"
+        guard !name.isEmpty else { return }
+        
+        guard
+            let category = category,
+            let selectedEmoji = selectedEmoji,
+            let selectedColor = selectedColor
+        else { return }
+        
+        if trackerType == .habit && selectedSchedule.isEmpty {
+                return
+            }
+
         let draft = TrackerDraft(
             type: trackerType,
             name: name,
-            emoji: selectedEmoji ?? defaultEmoji,
-            color: selectedColor ?? UIColor.lightGray,
-            
+            emoji: selectedEmoji,
+            color: selectedColor,
             schedule: trackerType == .habit ? selectedSchedule : [],
-            categoryId: TrackerCategory.defaultId
+            category: category
         )
-        print("selectedColor: \(draft.color)")
+        
         onCreateTracker?(draft)
         presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
     }
     
     private func categoryTapped() {
-        // TODO
+        let vc = CategoryPickerViewController()
+        vc.onCategorySelected = { [weak self] category in
+            self?.category = category
+            guard let indexPath = self?.categoryIndexPath else { return }
+            self?.tableView.reloadRows(at: [indexPath], with: .automatic)
+        }
+        let navVC = UINavigationController(rootViewController: vc)
+        present(navVC, animated: true)
     }
     
     private func scheduleTapped() {
@@ -196,7 +212,6 @@ final class NewTrackerViewController: UIViewController {
     @objc private func textFieldDidChange(_ textField: UITextField) {
         name = textField.text ?? ""
     }
-    
 }
 
 //MARK: - UITableViewDataSource
@@ -228,10 +243,12 @@ extension NewTrackerViewController: UITableViewDataSource {
         case .options:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: RowCell.identifier, for: indexPath) as? RowCell else { return UITableViewCell() }
             
+            let image = UIImage(systemName: "chevron.right")
             if indexPath.row == 0 {
-                cell.configure(title: "Категория", subtitle: "")
+                cell.configure(title: "Категория", subtitle: category?.name ?? "", image: image)
+                categoryIndexPath = indexPath
             } else {
-                cell.configure(title: "Расписание", subtitle: scheduleSubtitle ?? "")
+                cell.configure(title: "Расписание", subtitle: scheduleSubtitle ?? "", image: image)
                 scheduleIndexPath = indexPath
             }
             
