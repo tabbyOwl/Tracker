@@ -22,32 +22,7 @@ final class NewTrackerViewController: UIViewController {
     private var category: TrackerCategory?
     
     // MARK: - Sections
-    private let stackView: UIStackView = {
-        let stack = UIStackView()
-        stack.axis = .vertical
-        stack.distribution = .fill
-        stack.spacing = 8
-        return stack
-    }()
-    
-    private let textField: UITextField = {
-        let textField = UITextField()
-        textField.placeholder = "Введите название трекера"
-        textField.backgroundColor = .projectColor(.backgroundDay)
-        textField.layer.cornerRadius = 16
-        textField.font = .systemFont(ofSize: 17)
-        textField.setLeftPadding(16)
-        return textField
-    }()
-    
-    private lazy var errorLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 17)
-        label.textColor = .projectColor(.red)
-        label.textAlignment = .center
-        label.isHidden = true
-        return label
-    }()
+    private let textField = TextFieldView(placeholder: "Введите название трекера")
     
     private enum Section: Int, CaseIterable {
         case options
@@ -105,8 +80,8 @@ final class NewTrackerViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        textField.delegate = self
-        textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+    
+        setupTextField()
         setupUI()
         setupNavigationBar()
         registerCells()
@@ -117,28 +92,31 @@ final class NewTrackerViewController: UIViewController {
         view.backgroundColor = .white
         tableView.backgroundColor = .white
         
-        stackView.addArrangedSubviews(textField, errorLabel)
         
-        view.addSubviews(stackView, tableView)
+        view.addSubviews(textField, tableView)
         
         
-        stackView.translatesAutoresizingMaskIntoConstraints = false
+        textField.translatesAutoresizingMaskIntoConstraints = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            textField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            textField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            textField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
-            textField.heightAnchor.constraint(equalToConstant: 75),
-            
-            tableView.topAnchor.constraint(equalTo: stackView.bottomAnchor),
+            tableView.topAnchor.constraint(equalTo: textField.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
             
         ])
+    }
+    
+    private func setupTextField() {
+        textField.onTextChanged = { [weak self] text in
+            self?.name = text
+        }
     }
     
     private func setupNavigationBar() {
@@ -322,35 +300,5 @@ extension NewTrackerViewController: ScheduleViewControllerDelegate {
         guard let indexPath = scheduleIndexPath else { return }
         selectedSchedule = days
         tableView.reloadRows(at: [indexPath], with: .automatic)
-    }
-}
-
-
-extension NewTrackerViewController: UITextFieldDelegate {
-    
-    func textField(_ textField: UITextField,shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        guard let text = textField.text,
-              let textRange = Range(range, in: text) else {
-            return true
-        }
-        let maxCount = 38
-        let updatedText = text.replacingCharacters(in: textRange, with: string)
-        
-        if updatedText.count > maxCount {
-            showError("Ограничение \(maxCount) символов")
-            return false
-        } else {
-            hideError()
-            return true
-        }
-    }
-    
-    private func showError(_ message: String) {
-        errorLabel.text = message
-        errorLabel.isHidden = false
-    }
-    
-    private func hideError() {
-        errorLabel.isHidden = true
     }
 }
