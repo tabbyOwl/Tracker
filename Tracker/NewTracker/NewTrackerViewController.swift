@@ -184,7 +184,7 @@ final class NewTrackerViewController: UIViewController {
             emoji: selectedEmoji,
             color: selectedColor,
             schedule: trackerType == .habit ? selectedSchedule : [],
-            category: category
+            categoryId: category.id
         )
         
         onCreateTracker?(draft)

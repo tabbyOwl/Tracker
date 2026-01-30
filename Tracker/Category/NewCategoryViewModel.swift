@@ -1,0 +1,7 @@
+//
+//  NewCategoryViewModel.swift
+//  Tracker
+//
+//  Created by Svetlana on 2026/1/30.
+//
+

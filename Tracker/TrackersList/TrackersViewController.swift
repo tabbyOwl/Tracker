@@ -187,7 +187,7 @@ final class TrackersViewController: UIViewController {
                 schedule: draft.schedule
             )
             
-            trackerStore.add(tracker, categoryId: draft.category.id, categoryName: draft.category.name)
+            trackerStore.add(tracker, categoryId: draft.categoryId)
         }
         
         let nav = UINavigationController(rootViewController: chooseVC)
