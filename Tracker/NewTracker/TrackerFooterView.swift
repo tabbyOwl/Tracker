@@ -37,7 +37,7 @@ final class TrackerFooterView: UIView {
         cancelButton.layer.cornerRadius = 16
 
         createButton.setTitle("Создать", for: .normal)
-        createButton.backgroundColor = .projectColor(.blackDay)
+        createButton.backgroundColor = .lightGray
         createButton.setTitleColor(.white, for: .normal)
         createButton.layer.cornerRadius = 16
 
@@ -55,6 +55,10 @@ final class TrackerFooterView: UIView {
         createButton.addTarget(self, action: #selector(createTapped), for: .touchUpInside)
     }
 
+    func setCreateButtonState(_ isEnabled: Bool) {
+        createButton.isEnabled = isEnabled
+                createButton.backgroundColor = isEnabled ? .black : .lightGray
+    }
     @objc private func cancelTapped() {
         onCancel?()
     }

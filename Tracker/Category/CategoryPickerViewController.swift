@@ -11,9 +11,7 @@ final class CategoryPickerViewController: UIViewController {
     var onCategorySelected: ((TrackerCategory) -> Void)?
     
     private(set) var selectedIndexPath: IndexPath?
-    private let viewModel = CategoryPickerViewModel(
-        store: TrackerCategoryStore()
-    )
+    private let viewModel = CategoryPickerViewModel(store: TrackerCategoryStore())
 
     private let stateView = StateView(
         text: "Привычки и события можно объединить по смыслу",

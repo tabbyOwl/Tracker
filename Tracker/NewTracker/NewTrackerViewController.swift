@@ -8,22 +8,12 @@ import UIKit
 
 final class NewTrackerViewController: UIViewController {
     
-    // MARK: - Public
-    let trackerType: TrackerType
     var onCreateTracker: ((TrackerDraft) -> Void)?
+    private let viewModel: NewTrackerViewModel
     
-    // MARK: - State
-    private var name: String = ""
-    private var selectedEmoji: String?
-    private var selectedColor: UIColor?
-    private var selectedSchedule: Set<WeekDay> = []
-    private var scheduleIndexPath: IndexPath?
-    private var categoryIndexPath: IndexPath?
-    private var category: TrackerCategory?
-    
-    // MARK: - Sections
     private let textField = TextFieldView(placeholder: "Введите название трекера")
     
+    // MARK: - Sections
     private enum Section: Int, CaseIterable {
         case options
         case collection
@@ -41,19 +31,6 @@ final class NewTrackerViewController: UIViewController {
         }
     }
     
-    private var scheduleSubtitle: String? {
-        guard !selectedSchedule.isEmpty else { return nil }
-        
-        if selectedSchedule.count == WeekDay.allCases.count {
-            return "Каждый день"
-        }
-        
-        return selectedSchedule
-            .sorted { $0.displayOrder < $1.displayOrder }
-            .map { $0.shortTitle }
-            .joined(separator: ", ")
-    }
-    
     private let collectionTypes: [CollectionType] = [.emoji, .color]
     
     // MARK: - UI
@@ -66,9 +43,11 @@ final class NewTrackerViewController: UIViewController {
         return tableView
     }()
     
+    private var footerView = TrackerFooterView()
+    
     // MARK: - Init
     init(trackerType: TrackerType) {
-        self.trackerType = trackerType
+        self.viewModel = NewTrackerViewModel(trackerType: trackerType)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -80,7 +59,7 @@ final class NewTrackerViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-    
+        bindViewModel()
         setupTextField()
         setupUI()
         setupNavigationBar()
@@ -92,9 +71,7 @@ final class NewTrackerViewController: UIViewController {
         view.backgroundColor = .white
         tableView.backgroundColor = .white
         
-        
         view.addSubviews(textField, tableView)
-        
         
         textField.translatesAutoresizingMaskIntoConstraints = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -115,12 +92,12 @@ final class NewTrackerViewController: UIViewController {
     
     private func setupTextField() {
         textField.onTextChanged = { [weak self] text in
-            self?.name = text
+            self?.viewModel.setName(text)
         }
     }
     
     private func setupNavigationBar() {
-        navigationItem.title = trackerType == .habit ? "Новая привычка" : "Новое нерегулярное событие"
+        navigationItem.title = viewModel.navigationTitle
     }
     
     
@@ -130,51 +107,30 @@ final class NewTrackerViewController: UIViewController {
     }
     
     private func setupFooter() {
-        let footer = TrackerFooterView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 120))
+        footerView = TrackerFooterView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 120))
         
-        footer.onCancel = { [weak self] in
+        footerView.onCancel = { [weak self] in
             self?.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
         }
         
-        footer.onCreate = { [weak self] in
+        footerView.onCreate = { [weak self] in
             self?.createTracker()
         }
         
-        tableView.tableFooterView = footer
+        tableView.tableFooterView = footerView
     }
     
+    
     private func createTracker() {
-        guard !name.isEmpty else { return }
-        
-        guard
-            let category = category,
-            let selectedEmoji = selectedEmoji,
-            let selectedColor = selectedColor
-        else { return }
-        
-        if trackerType == .habit && selectedSchedule.isEmpty {
-                return
-            }
-
-        let draft = TrackerDraft(
-            type: trackerType,
-            name: name,
-            emoji: selectedEmoji,
-            color: selectedColor,
-            schedule: trackerType == .habit ? selectedSchedule : [],
-            categoryId: category.id
-        )
-        
+        guard let draft = viewModel.makeDraft() else { return }
         onCreateTracker?(draft)
         presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
     }
-    
+  
     private func categoryTapped() {
         let vc = CategoryPickerViewController()
         vc.onCategorySelected = { [weak self] category in
-            self?.category = category
-            guard let indexPath = self?.categoryIndexPath else { return }
-            self?.tableView.reloadRows(at: [indexPath], with: .automatic)
+            self?.viewModel.selectCategory(category)
         }
         let navVC = UINavigationController(rootViewController: vc)
         present(navVC, animated: true)
@@ -183,12 +139,29 @@ final class NewTrackerViewController: UIViewController {
     private func scheduleTapped() {
         let vc = ScheduleViewController()
         vc.delegate = self
-        vc.setSelectedDays(selectedSchedule)
+        
+        vc.setSelectedDays(viewModel.getSelectedSchedule())
         present(vc, animated: true)
     }
     
+    private func bindViewModel() {
+        viewModel.onCreateButtonStateChanged = { [weak self] isEnabled in
+            self?.footerView.setCreateButtonState(isEnabled)
+        }
+
+        viewModel.onCategoryChanged = { [weak self] in
+              let indexPath = IndexPath(row: 0, section: Section.options.rawValue)
+              self?.tableView.reloadRows(at: [indexPath], with: .automatic)
+          }
+        
+        viewModel.onScheduleChanged = { [weak self] _ in
+            let indexPath = IndexPath(row: 1, section: Section.options.rawValue)
+            self?.tableView.reloadRows(at: [indexPath], with: .automatic)
+            }
+    }
+    
     @objc private func textFieldDidChange(_ textField: UITextField) {
-        name = textField.text ?? ""
+        viewModel.setName(textField.text ?? "")
     }
 }
 
@@ -204,6 +177,7 @@ extension NewTrackerViewController: UITableViewDataSource {
         
         switch section {
         case .options:
+            let trackerType = viewModel.getTrackerType()
             return trackerType == .habit ? 2 : 1
         case .collection:
             return collectionTypes.count
@@ -223,11 +197,11 @@ extension NewTrackerViewController: UITableViewDataSource {
             
             let image = UIImage(systemName: "chevron.right")
             if indexPath.row == 0 {
-                cell.configure(title: "Категория", subtitle: category?.name ?? "", image: image)
-                categoryIndexPath = indexPath
+                let categoryName = viewModel.getCategoryName()
+                cell.configure(title: "Категория", subtitle: categoryName, image: image)
             } else {
-                cell.configure(title: "Расписание", subtitle: scheduleSubtitle ?? "", image: image)
-                scheduleIndexPath = indexPath
+                let scheduleSubtitle = viewModel.scheduleSubtitle
+                cell.configure(title: "Расписание", subtitle: scheduleSubtitle, image: image)
             }
             
             return cell
@@ -252,9 +226,9 @@ extension NewTrackerViewController: OptionCollectionCellDelegate {
     func itemSelected(_ item: OptionItem) {
         switch item {
         case .emoji(_, let value):
-            selectedEmoji = value
+            viewModel.selectEmoji(value)
         case .color(_, let value):
-            selectedColor = value
+            viewModel.selectColor(value)
         }
     }
     
@@ -297,8 +271,6 @@ extension NewTrackerViewController: UITableViewDelegate {
 //MARK: - ScheduleViewControllerDelegate
 extension NewTrackerViewController: ScheduleViewControllerDelegate {
     func didSelectDays(_ days: Set<WeekDay>) {
-        guard let indexPath = scheduleIndexPath else { return }
-        selectedSchedule = days
-        tableView.reloadRows(at: [indexPath], with: .automatic)
+        viewModel.setSchedule(days)
     }
 }

@@ -12,12 +12,12 @@ final class NewCategoryViewController: UIViewController {
     var onCategoryCreated: ((String) -> Void)?
     private var name: String = ""
     
-    private let textFieldView = TextFieldView(placeholder: "Введите название категории")
+    private let textField = TextFieldView(placeholder: "Введите название категории")
     private let doneButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Готово", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .black
+        button.backgroundColor = .lightGray
         button.layer.cornerRadius = 16
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         return button
@@ -26,12 +26,17 @@ final class NewCategoryViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        textFieldView.onTextChanged = { [weak self] text in
-               self?.name = text
-           }
+        setupTextField()
         setupUI()
         setupNavigationBar()
         setupKeyboard()
+    }
+    
+    private func setupTextField() {
+        textField.onTextChanged = { [weak self] text in
+            self?.name = text
+            self?.updateDoneButtonState()
+        }
     }
     
     private func setupNavigationBar() {
@@ -40,11 +45,11 @@ final class NewCategoryViewController: UIViewController {
     
     private func setupKeyboard() {
         let tap = UITapGestureRecognizer(
-                target: self,
-                action: #selector(hideKeyboard)
-            )
-            tap.cancelsTouchesInView = false
-            view.addGestureRecognizer(tap)
+            target: self,
+            action: #selector(hideKeyboard)
+        )
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
     }
     
     @objc private func hideKeyboard() {
@@ -52,14 +57,16 @@ final class NewCategoryViewController: UIViewController {
     }
     
     private func setupUI() {
-        view.addSubviews(textFieldView, doneButton)
+        view.addSubviews(textField, doneButton)
         doneButton.addTarget(self, action: #selector(didTapDoneButton), for: .touchUpInside)
-        textFieldView.translatesAutoresizingMaskIntoConstraints = false
+        
+        textField.translatesAutoresizingMaskIntoConstraints = false
         doneButton.translatesAutoresizingMaskIntoConstraints = false
+        
         NSLayoutConstraint.activate([
-            textFieldView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            textFieldView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            textFieldView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            textField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            textField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            textField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
             doneButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             doneButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
@@ -69,8 +76,14 @@ final class NewCategoryViewController: UIViewController {
         ])
     }
     
+    private func updateDoneButtonState() {
+        let isValid = !name.trimmingCharacters(in: .whitespaces).isEmpty
+
+            doneButton.isEnabled = isValid
+            doneButton.backgroundColor = isValid ? .black : .lightGray
+        }
+    
     @objc private func didTapDoneButton() {
-        guard !name.trimmingCharacters(in: .whitespaces).isEmpty else { return }
         onCategoryCreated?(name)
         dismiss(animated: true)
     }
