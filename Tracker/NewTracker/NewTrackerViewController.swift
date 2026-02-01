@@ -126,11 +126,11 @@ final class NewTrackerViewController: UIViewController {
         onCreateTracker?(draft)
         presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
     }
-  
+    
     private func categoryTapped() {
         let vc = CategoryPickerViewController()
         vc.onCategorySelected = { [weak self] category in
-            self?.viewModel.selectCategory(category)
+            self?.viewModel.setSelectedCategory(category)
         }
         let navVC = UINavigationController(rootViewController: vc)
         present(navVC, animated: true)
@@ -140,7 +140,7 @@ final class NewTrackerViewController: UIViewController {
         let vc = ScheduleViewController()
         vc.delegate = self
         
-        vc.setSelectedDays(viewModel.getSelectedSchedule())
+        vc.setSelectedDays(viewModel.getSchedule())
         present(vc, animated: true)
     }
     
@@ -148,16 +148,16 @@ final class NewTrackerViewController: UIViewController {
         viewModel.onCreateButtonStateChanged = { [weak self] isEnabled in
             self?.footerView.setCreateButtonState(isEnabled)
         }
-
+        
         viewModel.onCategoryChanged = { [weak self] in
-              let indexPath = IndexPath(row: 0, section: Section.options.rawValue)
-              self?.tableView.reloadRows(at: [indexPath], with: .automatic)
-          }
+            let indexPath = IndexPath(row: 0, section: Section.options.rawValue)
+            self?.tableView.reloadRows(at: [indexPath], with: .automatic)
+        }
         
         viewModel.onScheduleChanged = { [weak self] _ in
             let indexPath = IndexPath(row: 1, section: Section.options.rawValue)
             self?.tableView.reloadRows(at: [indexPath], with: .automatic)
-            }
+        }
     }
     
     @objc private func textFieldDidChange(_ textField: UITextField) {
@@ -185,13 +185,11 @@ extension NewTrackerViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         guard let section = Section(rawValue: indexPath.section) else {
             return UITableViewCell()
         }
         
         switch section {
-            
         case .options:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: RowCell.identifier, for: indexPath) as? RowCell else { return UITableViewCell() }
             
@@ -222,13 +220,15 @@ extension NewTrackerViewController: UITableViewDataSource {
     }
 }
 
+//MARK: - OptionCollectionCellDelegate
 extension NewTrackerViewController: OptionCollectionCellDelegate {
+    
     func itemSelected(_ item: OptionItem) {
         switch item {
         case .emoji(_, let value):
-            viewModel.selectEmoji(value)
+            viewModel.setSelectedEmoji(value)
         case .color(_, let value):
-            viewModel.selectColor(value)
+            viewModel.setSelectedColor(value)
         }
     }
     
@@ -248,7 +248,6 @@ extension NewTrackerViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        
         cell.separatorInset = UIEdgeInsets(top: 0, left: tableView.bounds.size.width, bottom: 0, right: 0)
         
         if indexPath.section == 0 {
@@ -258,6 +257,7 @@ extension NewTrackerViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         guard let section = Section(rawValue: indexPath.section) else { return 60 }
+        
         switch section {
         case .options:
             return 75
@@ -270,6 +270,7 @@ extension NewTrackerViewController: UITableViewDelegate {
 
 //MARK: - ScheduleViewControllerDelegate
 extension NewTrackerViewController: ScheduleViewControllerDelegate {
+    
     func didSelectDays(_ days: Set<WeekDay>) {
         viewModel.setSchedule(days)
     }

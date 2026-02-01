@@ -12,7 +12,20 @@ final class NewTrackerViewModel {
         trackerType == .habit ? "Новая привычка" : "Новое нерегулярное событие"
     }
     
-    // MARK: - Output (bindings)
+    var scheduleSubtitle: String? {
+        guard !selectedSchedule.isEmpty else { return nil }
+        
+        if selectedSchedule.count == WeekDay.allCases.count {
+            return "Каждый день"
+        }
+        
+        return selectedSchedule
+            .sorted { $0.displayOrder < $1.displayOrder }
+            .map { $0.shortTitle }
+            .joined(separator: ", ")
+    }
+    
+    // MARK: - State updates
     var onCreateButtonStateChanged: ((Bool) -> Void)?
     var onScheduleChanged: ((String) -> Void)?
     var onCategoryChanged: (() -> Void)?
@@ -44,20 +57,20 @@ final class NewTrackerViewModel {
         self.trackerType = trackerType
     }
     
-    // MARK: - Inputs (from VC)
+    // MARK: - Setters
     func setName(_ name: String) {
         self.name = name
     }
     
-    func selectEmoji(_ emoji: String) {
+    func setSelectedEmoji(_ emoji: String) {
         selectedEmoji = emoji
     }
     
-    func selectColor(_ color: UIColor) {
+    func setSelectedColor(_ color: UIColor) {
         selectedColor = color
     }
     
-    func selectCategory(_ category: TrackerCategory) {
+    func setSelectedCategory(_ category: TrackerCategory) {
         self.category = category
     }
     
@@ -65,7 +78,8 @@ final class NewTrackerViewModel {
         selectedSchedule = days
     }
     
-    func getSelectedSchedule() -> Set<WeekDay> {
+    // MARK: - Getters
+    func getSchedule() -> Set<WeekDay> {
         return selectedSchedule
     }
     
@@ -77,21 +91,6 @@ final class NewTrackerViewModel {
         return category?.name ?? ""
     }
     
-    // MARK: - Outputs (computed)
-    var scheduleSubtitle: String? {
-        guard !selectedSchedule.isEmpty else { return nil }
-        
-        if selectedSchedule.count == WeekDay.allCases.count {
-            return "Каждый день"
-        }
-        
-        return selectedSchedule
-            .sorted { $0.displayOrder < $1.displayOrder }
-            .map { $0.shortTitle }
-            .joined(separator: ", ")
-    }
-    
-    // MARK: - Actions
     func makeDraft() -> TrackerDraft? {
         guard isFormValid else { return nil }
         guard let category = category,

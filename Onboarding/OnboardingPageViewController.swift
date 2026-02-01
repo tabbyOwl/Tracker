@@ -23,11 +23,8 @@ final class OnboardingPageViewController: UIPageViewController {
         let pageControl = UIPageControl()
         pageControl.numberOfPages = pages.count
         pageControl.currentPage = 0
-        
         pageControl.currentPageIndicatorTintColor = .black
         pageControl.pageIndicatorTintColor = .gray
-        
-        pageControl.translatesAutoresizingMaskIntoConstraints = false
         return pageControl
     }()
     
@@ -40,10 +37,15 @@ final class OnboardingPageViewController: UIPageViewController {
         button.layer.cornerRadius = 16
         return button
     }()
-
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setupPageController()
+        setupLayout()
+    }
+    
+    private func setupPageController() {
         view.backgroundColor = .white
         dataSource = self
         delegate = self
@@ -51,6 +53,10 @@ final class OnboardingPageViewController: UIPageViewController {
         if let first = pages.first {
             setViewControllers([first], direction: .forward, animated: true, completion: nil)
         }
+    }
+    
+    private func setupLayout() {
+        pageControl.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(pageControl)
         view.addSubview(actionButton)
@@ -74,9 +80,9 @@ final class OnboardingPageViewController: UIPageViewController {
             let currentVC = viewControllers?.first,
             let currentIndex = pages.firstIndex(of: currentVC)
         else { return }
-
+        
         let nextIndex = currentIndex + 1
-
+        
         if nextIndex < pages.count {
             let nextVC = pages[nextIndex]
             setViewControllers(
@@ -97,10 +103,10 @@ final class OnboardingPageViewController: UIPageViewController {
             let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
             let window = scene.windows.first
         else { return }
-
+        
         window.rootViewController = tabBarController
         window.makeKeyAndVisible()
-
+        
         UIView.transition(
             with: window,
             duration: 0.3,

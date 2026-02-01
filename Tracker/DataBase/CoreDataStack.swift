@@ -28,9 +28,7 @@ final class CoreDataStack {
     func saveContext() {
         let context = context
         
-        guard context.hasChanges else {
-            return
-        }
+        guard context.hasChanges else { return }
         
         do {
             try context.save()

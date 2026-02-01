@@ -13,6 +13,7 @@ final class NewCategoryViewController: UIViewController {
     private var name: String = ""
     
     private let textField = TextFieldView(placeholder: "Введите название категории")
+    
     private let doneButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Готово", for: .normal)
@@ -78,10 +79,9 @@ final class NewCategoryViewController: UIViewController {
     
     private func updateDoneButtonState() {
         let isValid = !name.trimmingCharacters(in: .whitespaces).isEmpty
-
-            doneButton.isEnabled = isValid
-            doneButton.backgroundColor = isValid ? .black : .lightGray
-        }
+        doneButton.isEnabled = isValid
+        doneButton.backgroundColor = isValid ? .black : .lightGray
+    }
     
     @objc private func didTapDoneButton() {
         onCategoryCreated?(name)

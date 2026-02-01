@@ -34,6 +34,7 @@ final class TrackerCategoryFetchedController: NSObject {
 }
 
 extension TrackerCategoryFetchedController: NSFetchedResultsControllerDelegate {
+    
     func controllerDidChangeContent(
         _ controller: NSFetchedResultsController<NSFetchRequestResult>
     ) {

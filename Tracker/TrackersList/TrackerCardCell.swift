@@ -14,7 +14,7 @@ protocol TrackerCardCellDelegate: AnyObject {
 final class TrackerCardCell: UICollectionViewCell {
     static let reuseIdentifier = "TrackerCardCell"
     weak var delegate: TrackerCardCellDelegate?
-   
+    
     // MARK: - UI
     private let cardView: UIView = {
         let view = UIView()
@@ -76,18 +76,17 @@ final class TrackerCardCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         nil
     }
-   
+    
     //MARK: - Public methods
-    func configure(with tracker: Tracker, isCompleted: Bool, completedDaysCount: Int, for date: Date) {
+    func configure(with tracker: Tracker, isCompleted: Bool, completedDaysCount: Int) {
         emojiLabel.text = tracker.emoji
         nameLabel.text = tracker.name
         cardView.backgroundColor = tracker.color
         actionButton.backgroundColor = tracker.color
-
-        let day = Calendar.current.startOfDay(for: date)
+        
         let isCompleted = isCompleted
         actionButton.setImage(UIImage(systemName: isCompleted ? "checkmark" : "plus"), for: .normal)
-
+        
         let count = completedDaysCount
         daysLabel.text = "\(count) \(getDayWord(for: count))"
     }

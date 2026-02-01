@@ -38,7 +38,6 @@ final class OnboardingContentViewController: UIViewController {
         backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
-    
         view.addSubview(backgroundImageView)
         view.addSubview(titleLabel)
         

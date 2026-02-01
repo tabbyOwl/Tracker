@@ -11,10 +11,11 @@ final class RowCell: UITableViewCell {
     static let identifier = "FormRowCell"
     
     var onSelect: ((String) -> Void)?
-  
+    
     private lazy var subtitleLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 17)
+        label.numberOfLines = 0
         label.textColor = .projectColor(.gray)
         return label
     }()
@@ -59,14 +60,14 @@ final class RowCell: UITableViewCell {
     
     func configure(title: String, subtitle: String? = nil, image: UIImage? = nil) {
         titleLabel.text = title
-
+        
         if let subtitle {
             subtitleLabel.text = subtitle
             subtitleLabel.isHidden = false
         } else {
             subtitleLabel.isHidden = true
         }
-
+        
         if let image {
             self.image.image = image
             self.image.isHidden = false
@@ -83,17 +84,14 @@ final class RowCell: UITableViewCell {
     private func setupConstraints() {
         contentView.addSubviews(horizontalStack)
         
+        horizontalStack.translatesAutoresizingMaskIntoConstraints = false
+        
         verticalStack.addArrangedSubviews(titleLabel, subtitleLabel)
         horizontalStack.addArrangedSubviews(verticalStack, image)
         
-        horizontalStack.translatesAutoresizingMaskIntoConstraints = false
-        
-        titleLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        titleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         subtitleLabel.setContentHuggingPriority(.required, for: .vertical)
         subtitleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         image.setContentHuggingPriority(.required, for: .horizontal)
-        image.setContentCompressionResistancePriority(.required, for: .horizontal)
         
         NSLayoutConstraint.activate([
             horizontalStack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),

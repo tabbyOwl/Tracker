@@ -15,6 +15,16 @@ final class EditCategoryViewController: UIViewController {
     
     private let nameTextField = UITextField()
     
+    private let doneButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Готово", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .black
+        button.layer.cornerRadius = 16
+        button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
+        return button
+    }()
+    
     // MARK: - Initializer
     init(category: TrackerCategory) {
         self.category = category
@@ -33,46 +43,44 @@ final class EditCategoryViewController: UIViewController {
     
     // MARK: - UI Setup
     private func setupUI() {
+        
+        doneButton.addTarget(self, action: #selector(didTapDone), for: .touchUpInside)
         view.backgroundColor = .white
         navigationItem.title = "Редактировать категорию"
         
-        // Setup the text field for the category name
         nameTextField.text = category.name
         nameTextField.font = .systemFont(ofSize: 16)
         nameTextField.borderStyle = .roundedRect
         nameTextField.autocorrectionType = .no
         
         view.addSubview(nameTextField)
+        view.addSubview(doneButton)
         
         nameTextField.translatesAutoresizingMaskIntoConstraints = false
+        doneButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             nameTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             nameTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
             nameTextField.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
-            nameTextField.heightAnchor.constraint(equalToConstant: 40)
+            nameTextField.heightAnchor.constraint(equalToConstant: 60),
+            
+            
+            doneButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            doneButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            doneButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+            doneButton.heightAnchor.constraint(equalToConstant: 60)
+            
         ])
         
-        // "Готово" button
-        let doneButton = UIBarButtonItem(title: "Готово", style: .done, target: self, action: #selector(didTapDone))
-        navigationItem.rightBarButtonItem = doneButton
     }
     
     // MARK: - Actions
     @objc private func didTapDone() {
         let newName = nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
 
-        guard
-            let newName,
-            !newName.isEmpty
-        else {
-            return
-        }
+        guard let newName, !newName.isEmpty else { return }
 
-        let updatedCategory = TrackerCategory(
-            id: category.id,
-            name: newName,
-            trackers: category.trackers
-        )
+        let updatedCategory = TrackerCategory(id: category.id, name: newName, trackers: category.trackers)
 
         onCategoryUpdated?(updatedCategory)
 
