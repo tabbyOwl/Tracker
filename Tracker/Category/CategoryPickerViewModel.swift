@@ -56,17 +56,6 @@ final class CategoryPickerViewModel {
         UserDefaults.standard.set(category.id.uuidString, forKey: "selectedCategoryId")
     }
     
-    private func restoreSelection() {
-        guard
-            let idString = UserDefaults.standard.string(forKey: "selectedCategoryId"),
-            let id = UUID(uuidString: idString),
-            let index = categories.firstIndex(where: { $0.id == id })
-        else { return }
-        
-        selectedCategoryId = id
-        onSelectionRestored?(IndexPath(row: index, section: 0))
-    }
-    
     func addCategory(name: String) {
         let category = TrackerCategory(id: UUID(), name: name, trackers: [])
         store.addCategory(id: category.id, name: category.name)
@@ -88,6 +77,17 @@ final class CategoryPickerViewModel {
             categories.remove(at: index)
             onDataChanged?()
         }
+    }
+    
+    private func restoreSelection() {
+        guard
+            let idString = UserDefaults.standard.string(forKey: "selectedCategoryId"),
+            let id = UUID(uuidString: idString),
+            let index = categories.firstIndex(where: { $0.id == id })
+        else { return }
+        
+        selectedCategoryId = id
+        onSelectionRestored?(IndexPath(row: index, section: 0))
     }
     
 }
