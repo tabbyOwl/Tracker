@@ -87,8 +87,10 @@ final class TrackerCardCell: UICollectionViewCell {
         let isCompleted = isCompleted
         actionButton.setImage(UIImage(systemName: isCompleted ? "checkmark" : "plus"), for: .normal)
         
-        let count = completedDaysCount
-        daysLabel.text = "\(count) \(getDayWord(for: count))"
+        daysLabel.text = String.localizedStringWithFormat(
+            NSLocalizedString("days_count", comment: ""),
+            completedDaysCount
+        )
     }
     
     // MARK: - Private methods
@@ -134,18 +136,6 @@ final class TrackerCardCell: UICollectionViewCell {
             footerStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             footerStack.heightAnchor.constraint(equalToConstant: 58)
         ])
-    }
-    
-    private func getDayWord(for count: Int) -> String {
-        let lastDigit = count % 10
-        let lastTwoDigits = count % 100
-        
-        if lastTwoDigits >= 11 && lastTwoDigits <= 14 { return "дней" }
-        switch lastDigit {
-        case 1: return "день"
-        case 2,3,4: return "дня"
-        default: return "дней"
-        }
     }
     
     @objc private func actionButtonTapped() {
