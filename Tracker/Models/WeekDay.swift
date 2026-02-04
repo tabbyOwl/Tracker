@@ -6,7 +6,7 @@
 //
 import Foundation
 
-enum WeekDay: Int, CaseIterable {
+enum WeekDay: Int, CaseIterable, Codable {
     
     init?(date: Date) {
             let calendar = Calendar.current

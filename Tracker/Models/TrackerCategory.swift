@@ -7,7 +7,6 @@
 import Foundation
 
 struct TrackerCategory {
-    static let defaultId = UUID(uuidString: "550E8400-E29B-41D4-A716-446655440000")!
     let id: UUID
     let name: String
     let trackers: [Tracker]

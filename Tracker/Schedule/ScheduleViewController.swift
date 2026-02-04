@@ -80,6 +80,7 @@ final class ScheduleViewController: UIViewController {
     
     // MARK: - Actions
     @objc private func doneTapped() {
+        guard !selectedDays.isEmpty else { return }
         delegate?.didSelectDays(selectedDays)
         dismiss(animated: true)
     }

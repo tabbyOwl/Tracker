@@ -8,25 +8,10 @@ import UIKit
 
 final class TrackersViewController: UIViewController {
     
-    // MARK: - Private properties
-    private var categories: [TrackerCategory] = [] {
-        didSet {
-            updateFilteredCategories()
-            collectionView.reloadData()
-            updateState()
-        }
-    }
-    
-    private let trackerStore = TrackerStore()
-    private let recordStore = TrackerRecordStore()
-    private let fetchedController = TrackerCategoryFetchedController()
-    
-    private var selectedDate: Date = Date()
-    private var filteredCategories: [TrackerCategory] = []
-    private var completedTrackers: Set<TrackerRecord> = []
+    private let viewModel =  TrackersViewModel()
     
     // MARK: - UI
-    private let stateView = StateView()
+    private let stateView = StateView(text: "Что будем отслеживать?", image: UIImage(resource: .dizzy))
     
     private let datePicker: UIDatePicker = {
         let picker = UIDatePicker()
@@ -61,41 +46,18 @@ final class TrackersViewController: UIViewController {
     }()
     
     // MARK: - Lifecycle
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        reloadCompleted()
-        collectionView.reloadData()
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        fetchCategories()
         setupUI()
         setupCollectionView()
-        updateFilteredCategories()
-        updateState()
-    }
-    
-    // MARK: - Private methods
-    private func fetchCategories() {
-        fetchedController.onChange = { [weak self] in
-            self?.categories = self?.fetchedController.categories() ?? []
-        }
-        
-        categories = fetchedController.categories()
+        bindViewModel()
+        viewModel.loadCategories()
     }
     
     private func setupUI() {
         view.backgroundColor = .white
-        
         setupNavigationBar()
-        
-        view.addSubview(titleLabel)
-        view.addSubview(searchBar)
-        view.addSubview(collectionView)
-        view.addSubview(stateView)
-        
         setupConstraints()
     }
     
@@ -121,6 +83,10 @@ final class TrackersViewController: UIViewController {
     }
     
     private func setupConstraints() {
+        view.addSubview(titleLabel)
+        view.addSubview(searchBar)
+        view.addSubview(collectionView)
+        view.addSubview(stateView)
         
         stateView.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -149,27 +115,17 @@ final class TrackersViewController: UIViewController {
         ])
     }
     
-    private func updateFilteredCategories() {
-        guard let selectedWeekday = WeekDay(date: selectedDate) else { return }
-        
-        filteredCategories = categories
-            .map { category in
-                let trackers = category.trackers.filter { tracker in
-                    tracker.schedule.isEmpty || tracker.schedule.contains(selectedWeekday)
-                }
-                return TrackerCategory(
-                    id: category.id,
-                    name: category.name,
-                    trackers: trackers
-                )
-            }
-            .filter { !$0.trackers.isEmpty }
-    }
-    
     private func updateState() {
-        let isEmpty = filteredCategories.isEmpty
+        let isEmpty = viewModel.isEmpty
         stateView.isHidden = !isEmpty
         collectionView.isHidden = isEmpty
+    }
+    
+    private func bindViewModel() {
+        viewModel.onDataChanged = { [weak self] in
+            self?.collectionView.reloadData()
+            self?.updateState()
+        }
     }
     
     // MARK: - Actions
@@ -178,17 +134,7 @@ final class TrackersViewController: UIViewController {
         
         chooseVC.onCreateTracker = { [weak self] draft in
             guard let self else { return }
-            
-            let tracker = Tracker(
-                id: UUID(),
-                name: draft.name,
-                color: draft.color,
-                emoji: draft.emoji,
-                schedule: draft.schedule
-            )
-            let categoryName = "Дом"
-            
-            trackerStore.add(tracker, categoryId: draft.categoryId, categoryName: categoryName)
+            viewModel.createTracker(draft: draft)
         }
         
         let nav = UINavigationController(rootViewController: chooseVC)
@@ -196,29 +142,9 @@ final class TrackersViewController: UIViewController {
     }
     
     @objc private func datePickerValueChanged(_ sender: UIDatePicker) {
-        selectedDate = sender.date
-        updateFilteredCategories()
-        updateState()
-        reloadCompleted()
-        collectionView.reloadData()
-    }
-    
-    func reloadCompleted() {
-        let day = Calendar.current.startOfDay(for: selectedDate)
-        completedTrackers = recordStore.fetch(for: day)
-    }
-    
-    private func addTracker(_ tracker: Tracker, to categoryId: UUID) {
-        if let index = categories.firstIndex(where: { $0.id == categoryId }) {
-            let oldCategory = categories[index]
-            
-            let updatedCategory = TrackerCategory(id: oldCategory.id, name: oldCategory.name, trackers: oldCategory.trackers + [tracker])
-            
-            categories[index] = updatedCategory
-        } else {
-            let newCategory = TrackerCategory(id: categoryId, name: "Дом", trackers: [tracker])
-            categories.append(newCategory)
-        }
+        viewModel.setSelectedDate(sender.date)
+        viewModel.updateFilteredCategories()
+        viewModel.reloadCompletedTrackers()
     }
 }
 
@@ -226,23 +152,22 @@ final class TrackersViewController: UIViewController {
 extension TrackersViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return filteredCategories.count
+        viewModel.numberOfRows
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return filteredCategories[section].trackers.count
+        viewModel.getTrackers(for: section)
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrackerCardCell.reuseIdentifier, for: indexPath) as? TrackerCardCell else { return UICollectionViewCell() }
-        let tracker = filteredCategories[indexPath.section].trackers[indexPath.item]
+        let tracker = viewModel.getTrackerForCell(section: indexPath.section, item: indexPath.item)
         cell.delegate = self
-        let isCompletedToday = completedTrackers.contains {
-            $0.id == tracker.id
-        }
         
-        let completedDaysCount = recordStore.completedDaysCount(trackerId: tracker.id)
-        cell.configure(with: tracker, isCompleted: isCompletedToday, completedDaysCount: completedDaysCount, for: selectedDate)
+        let isCompletedToday = viewModel.isCompletedToday(for: tracker.id)
+        let completedDaysCount = viewModel.getCompletedDaysCount(for: tracker.id)
+        
+        cell.configure(with: tracker, isCompleted: isCompletedToday, completedDaysCount: completedDaysCount)
         return cell
     }
     
@@ -257,7 +182,7 @@ extension TrackersViewController: UICollectionViewDataSource {
             ) as? SectionHeaderView else {
                 return UICollectionReusableView()
             }
-            let title = filteredCategories[indexPath.section].name
+            let title = viewModel.getTitle(for: indexPath.section)
             header.configure(title: title)
             return header
         default:
@@ -270,35 +195,31 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView,layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        return CGSize(width: (collectionView.bounds.width - 8) / 2, height: 148
-        )
+        CGSize(width: (collectionView.bounds.width - 8) / 2, height: 148)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 4
+        4
     }
     
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: collectionView.frame.width, height: 50)
+        CGSize(width: collectionView.frame.width, height: 50)
     }
 }
 
 //MARK: - TrackerCardCellDelegate
 
 extension TrackersViewController: TrackerCardCellDelegate {
+    
     func actionButtonTapped(_ cell: TrackerCardCell) {
-        if selectedDate > Date() { return }
-        
+        guard !viewModel.isFutureDate else { return }
         guard let indexPath = collectionView.indexPath(for: cell) else { return }
+        let tracker = viewModel.getTrackerForCell(section: indexPath.section, item: indexPath.item)
         
-        let tracker = filteredCategories[indexPath.section].trackers[indexPath.item]
-        let day = Calendar.current.startOfDay(for: selectedDate)
-        
-        recordStore.toggle(trackerId: tracker.id, date: day)
-        completedTrackers = recordStore.fetch(for: day)
-        
+        viewModel.toggleRecords(for: tracker.id)
+        viewModel.reloadCompletedTrackers()
         collectionView.reloadItems(at: [indexPath])
     }
 }

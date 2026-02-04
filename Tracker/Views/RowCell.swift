@@ -11,10 +11,11 @@ final class RowCell: UITableViewCell {
     static let identifier = "FormRowCell"
     
     var onSelect: ((String) -> Void)?
-  
+    
     private lazy var subtitleLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 17)
+        label.numberOfLines = 0
         label.textColor = .projectColor(.gray)
         return label
     }()
@@ -27,7 +28,6 @@ final class RowCell: UITableViewCell {
     
     private lazy var image: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "chevron.right")
         imageView.tintColor = .projectColor(.gray)
         imageView.contentMode = .scaleAspectFit
         return imageView
@@ -58,27 +58,40 @@ final class RowCell: UITableViewCell {
         nil
     }
     
-    func configure(title: String, subtitle: String) {
+    func configure(title: String, subtitle: String? = nil, image: UIImage? = nil) {
         titleLabel.text = title
-        subtitleLabel.text = subtitle
+        
+        if let subtitle {
+            subtitleLabel.text = subtitle
+            subtitleLabel.isHidden = false
+        } else {
+            subtitleLabel.isHidden = true
+        }
+        
+        if let image {
+            self.image.image = image
+            self.image.isHidden = false
+        } else {
+            self.image.isHidden = true
+        }
+    }
+    
+    func setCheckmark() {
+        image.image = UIImage(systemName: "checkmark")
+        image.isHidden = false
     }
     
     private func setupConstraints() {
-        
         contentView.addSubviews(horizontalStack)
+        
+        horizontalStack.translatesAutoresizingMaskIntoConstraints = false
         
         verticalStack.addArrangedSubviews(titleLabel, subtitleLabel)
         horizontalStack.addArrangedSubviews(verticalStack, image)
         
-        
-        horizontalStack.translatesAutoresizingMaskIntoConstraints = false
-        
-        titleLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
         subtitleLabel.setContentHuggingPriority(.required, for: .vertical)
         subtitleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
         image.setContentHuggingPriority(.required, for: .horizontal)
-        image.setContentCompressionResistancePriority(.required, for: .horizontal)
-        
         
         NSLayoutConstraint.activate([
             horizontalStack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),

@@ -48,23 +48,6 @@ final class TrackerRecordStore {
         }
     }
     
-    func fetchAll() -> Set<TrackerRecord> {
-        let request = TrackerRecordCoreData.fetchRequest()
-        
-        do {
-            let result = try context.fetch(request)
-            return Set(result.map(TrackerRecord.init))
-        } catch {
-            logger.error(
-                "Failed to fetch all tracker records",
-                metadata: ["error": "\(error)"]
-            )
-            
-            assertionFailure("Fetch all tracker records failed: \(error)")
-            return []
-        }
-    }
-    
     func fetch(for date: Date) -> Set<TrackerRecord> {
         let day = Calendar.current.startOfDay(for: date)
         

@@ -40,6 +40,11 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		3F28EB3D2F26098B00E92437 /* Onboarding */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
 		3F2F34EC2F11F30F000ADB96 /* Tracker */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -73,6 +78,7 @@
 				3FA470B72F20DB1700DF01CB /* TrackerRecordCoreData+CoreDataClass.swift */,
 				3FA470B82F20DB1700DF01CB /* TrackerRecordCoreData+CoreDataProperties.swift */,
 				3FA470B02F20D97500DF01CB /* TrackerDataModel.xcdatamodeld */,
+				3F28EB3D2F26098B00E92437 /* Onboarding */,
 				3F2F34EC2F11F30F000ADB96 /* Tracker */,
 				3FE78CB22F188725006AB7FD /* Tracker.app */,
 			);
@@ -94,6 +100,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				3F28EB3D2F26098B00E92437 /* Onboarding */,
 				3F2F34EC2F11F30F000ADB96 /* Tracker */,
 			);
 			name = Tracker;

@@ -17,33 +17,25 @@ final class OptionRowCollectionView: UIView {
     // MARK: - Private
     private let titleLabel = UILabel()
     private let collectionView: UICollectionView
-    private var items: [OptionItem]
+    private var items: [OptionItem] = []
     
     private var selectedItem: OptionItem?
     
     // MARK: - Init
-    init(title: String, items: [OptionItem]) {
-        self.items = items
-        
+    init() {
         let layout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: 52, height: 52)
         
-        self.collectionView = UICollectionView(
+        collectionView = UICollectionView(
             frame: .zero,
             collectionViewLayout: layout
         )
         
         super.init(frame: .zero)
         
-        titleLabel.text = title
         titleLabel.font = .boldSystemFont(ofSize: 17)
         
-        collectionView.backgroundColor = .clear
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        collectionView.isScrollEnabled = false
-        collectionView.register(ItemCell.self, forCellWithReuseIdentifier: ItemCell.reuseIdentifier)
-        
+        setupCollectionView()
         setupLayout()
     }
     
@@ -59,6 +51,15 @@ final class OptionRowCollectionView: UIView {
     }
     
     // MARK: - Layout
+    
+    private func setupCollectionView() {
+        collectionView.backgroundColor = .clear
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.isScrollEnabled = false
+        collectionView.register(ItemCell.self, forCellWithReuseIdentifier: ItemCell.reuseIdentifier)
+    }
+    
     private func setupLayout() {
         addSubview(titleLabel)
         addSubview(collectionView)
@@ -79,7 +80,6 @@ final class OptionRowCollectionView: UIView {
 }
 
 extension OptionRowCollectionView: UICollectionViewDataSource {
-    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         items.count
     }

@@ -13,13 +13,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
-        
-        ValueTransformer.setValueTransformer(
-            UIColorTransformer(),
-            forName: NSValueTransformerName("UIColorTransformer")
-        )
-        
-        return true
+        true
     }
 }
 

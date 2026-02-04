@@ -6,7 +6,14 @@
 //
 import CoreData
 
-final class TrackerCategoryStore {
+protocol TrackerCategoryStoreProtocol {
+    func fetchAll() -> [TrackerCategory]
+    func addCategory(id: UUID, name: String)
+    func updateCategory(id: UUID, newName: String)
+    func deleteCategory(id: UUID)
+}
+
+final class TrackerCategoryStore: TrackerCategoryStoreProtocol {
 
     private let context: NSManagedObjectContext
 
@@ -20,17 +27,43 @@ final class TrackerCategoryStore {
         return result.map(TrackerCategory.init)
     }
 
-    func getOrCreate(id: UUID, name: String) -> TrackerCategoryCoreData {
-        let request = TrackerCategoryCoreData.fetchRequest()
-        request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+    func fetchCategory(by id: UUID) -> TrackerCategoryCoreData? {
+            let request = TrackerCategoryCoreData.fetchRequest()
+            request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+            request.fetchLimit = 1
 
-        if let category = try? context.fetch(request).first {
-            return category
+            return try? context.fetch(request).first
         }
-
+    
+    func addCategory(id: UUID, name: String) {
         let category = TrackerCategoryCoreData(context: context)
         category.id = id
         category.name = name
-        return category
+
+        CoreDataStack.shared.saveContext()
+    }
+    
+    func updateCategory(id: UUID, newName: String) {
+        let request = TrackerCategoryCoreData.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+
+        guard let category = try? context.fetch(request).first else {
+            return
+        }
+
+        category.name = newName
+        CoreDataStack.shared.saveContext()
+    }
+    
+    func deleteCategory(id: UUID) {
+        let request = TrackerCategoryCoreData.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+
+        guard let category = try? context.fetch(request).first else {
+            return
+        }
+
+        context.delete(category)
+        CoreDataStack.shared.saveContext()
     }
 }

@@ -15,7 +15,7 @@ final class CollectionCell: UITableViewCell {
     static let identifier = "OptionCollectionCell"
     
     weak var delegate: OptionCollectionCellDelegate?
-    private let optionRowView = OptionRowCollectionView(title: "", items: [])
+    private let optionRowView = OptionRowCollectionView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

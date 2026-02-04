@@ -19,9 +19,9 @@ extension Tracker {
         self.init(
             id: coreData.id,
             name: coreData.name,
-            color: coreData.color,
+            color: UIColor(hex: coreData.color),
             emoji: coreData.emoji,
-            schedule: Set((coreData.schedule as? [Int] ?? []).compactMap(WeekDay.init))
+            schedule: ScheduleMapper.decode(coreData.schedule)
         )
     }
 }

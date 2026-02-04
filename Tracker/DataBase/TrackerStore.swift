@@ -19,15 +19,18 @@ final class TrackerStore {
         self.categoryStore = categoryStore
     }
 
-    func add(_ tracker: Tracker, categoryId: UUID, categoryName: String) {
-        let category = categoryStore.getOrCreate(id: categoryId, name: categoryName)
+    func add(_ tracker: Tracker, categoryId: UUID) {
+        guard let category = categoryStore.fetchCategory(by: categoryId) else {
+            assertionFailure("Category with id \(categoryId) not found")
+            return
+        }
 
         let object = TrackerCoreData(context: context)
         object.id = tracker.id
         object.name = tracker.name
         object.emoji = tracker.emoji
-        object.color = tracker.color
-        object.schedule = tracker.schedule.map { $0.rawValue }
+        object.color = tracker.color.hexString
+        object.schedule = ScheduleMapper.encode(tracker.schedule)
         object.category = category
 
         CoreDataStack.shared.saveContext()

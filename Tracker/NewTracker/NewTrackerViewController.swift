@@ -8,46 +8,12 @@ import UIKit
 
 final class NewTrackerViewController: UIViewController {
     
-    // MARK: - Public
-    let trackerType: TrackerType
     var onCreateTracker: ((TrackerDraft) -> Void)?
+    private let viewModel: NewTrackerViewModel
     
-    // MARK: - State
-    private var name: String = ""
-    private var selectedEmoji: String?
-    private var selectedColor: UIColor?
-    private var selectedSchedule: Set<WeekDay> = []
-    private var scheduleIndexPath: IndexPath?
+    private let textField = TextFieldView(placeholder: "Введите название трекера")
     
     // MARK: - Sections
-    
-    private let stackView: UIStackView = {
-        let stack = UIStackView()
-        stack.axis = .vertical
-        stack.distribution = .fill
-        stack.spacing = 8
-        return stack
-    }()
-    
-    private let textField: UITextField = {
-        let textField = UITextField()
-        textField.placeholder = "Введите название трекера"
-        textField.backgroundColor = .projectColor(.backgroundDay)
-        textField.layer.cornerRadius = 16
-        textField.font = .systemFont(ofSize: 17)
-        textField.setLeftPadding(16)
-        return textField
-    }()
-    
-    private lazy var errorLabel: UILabel = {
-        let label = UILabel()
-        label.font = .systemFont(ofSize: 17)
-        label.textColor = .projectColor(.red)
-        label.textAlignment = .center
-        label.isHidden = true
-        return label
-    }()
-    
     private enum Section: Int, CaseIterable {
         case options
         case collection
@@ -65,19 +31,6 @@ final class NewTrackerViewController: UIViewController {
         }
     }
     
-    private var scheduleSubtitle: String? {
-        guard !selectedSchedule.isEmpty else { return nil }
-        
-        if selectedSchedule.count == WeekDay.allCases.count {
-            return "Каждый день"
-        }
-        
-        return selectedSchedule
-            .sorted { $0.displayOrder < $1.displayOrder }
-            .map { $0.shortTitle }
-            .joined(separator: ", ")
-    }
-    
     private let collectionTypes: [CollectionType] = [.emoji, .color]
     
     // MARK: - UI
@@ -90,9 +43,11 @@ final class NewTrackerViewController: UIViewController {
         return tableView
     }()
     
+    private var footerView = TrackerFooterView()
+    
     // MARK: - Init
     init(trackerType: TrackerType) {
-        self.trackerType = trackerType
+        self.viewModel = NewTrackerViewModel(trackerType: trackerType)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -104,8 +59,8 @@ final class NewTrackerViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        textField.delegate = self
-        textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+        bindViewModel()
+        setupTextField()
         setupUI()
         setupNavigationBar()
         registerCells()
@@ -116,32 +71,33 @@ final class NewTrackerViewController: UIViewController {
         view.backgroundColor = .white
         tableView.backgroundColor = .white
         
-        stackView.addArrangedSubviews(textField, errorLabel)
+        view.addSubviews(textField, tableView)
         
-        view.addSubviews(stackView, tableView)
-        
-        
-        stackView.translatesAutoresizingMaskIntoConstraints = false
+        textField.translatesAutoresizingMaskIntoConstraints = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
+            textField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            textField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            textField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
-            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            
-            textField.heightAnchor.constraint(equalToConstant: 75),
-            
-            
-            tableView.topAnchor.constraint(equalTo: stackView.bottomAnchor),
+            tableView.topAnchor.constraint(equalTo: textField.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            
         ])
     }
     
+    private func setupTextField() {
+        textField.onTextChanged = { [weak self] text in
+            self?.viewModel.setName(text)
+        }
+    }
+    
     private func setupNavigationBar() {
-        navigationItem.title = trackerType == .habit ? "Новая привычка" : "Новое нерегулярное событие"
+        navigationItem.title = viewModel.navigationTitle
     }
     
     
@@ -151,50 +107,62 @@ final class NewTrackerViewController: UIViewController {
     }
     
     private func setupFooter() {
-        let footer = TrackerFooterView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 120))
+        footerView = TrackerFooterView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 120))
         
-        footer.onCancel = { [weak self] in
+        footerView.onCancel = { [weak self] in
             self?.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
         }
         
-        footer.onCreate = { [weak self] in
+        footerView.onCreate = { [weak self] in
             self?.createTracker()
         }
         
-        tableView.tableFooterView = footer
+        tableView.tableFooterView = footerView
     }
     
+    
     private func createTracker() {
-        guard !name.isEmpty else { return }
-        let defaultEmoji = "🔖"
-        let draft = TrackerDraft(
-            type: trackerType,
-            name: name,
-            emoji: selectedEmoji ?? defaultEmoji,
-            color: selectedColor ?? .gray,
-            schedule: trackerType == .habit ? selectedSchedule : [],
-            categoryId: TrackerCategory.defaultId
-        )
-        
+        guard let draft = viewModel.makeDraft() else { return }
         onCreateTracker?(draft)
         presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
     }
     
     private func categoryTapped() {
-        // TODO
+        let vc = CategoryPickerViewController()
+        vc.onCategorySelected = { [weak self] category in
+            self?.viewModel.setSelectedCategory(category)
+        }
+        let navVC = UINavigationController(rootViewController: vc)
+        present(navVC, animated: true)
     }
     
     private func scheduleTapped() {
         let vc = ScheduleViewController()
         vc.delegate = self
-        vc.setSelectedDays(selectedSchedule)
+        
+        vc.setSelectedDays(viewModel.getSchedule())
         present(vc, animated: true)
     }
     
-    @objc private func textFieldDidChange(_ textField: UITextField) {
-        name = textField.text ?? ""
+    private func bindViewModel() {
+        viewModel.onCreateButtonStateChanged = { [weak self] isEnabled in
+            self?.footerView.setCreateButtonState(isEnabled)
+        }
+        
+        viewModel.onCategoryChanged = { [weak self] in
+            let indexPath = IndexPath(row: 0, section: Section.options.rawValue)
+            self?.tableView.reloadRows(at: [indexPath], with: .automatic)
+        }
+        
+        viewModel.onScheduleChanged = { [weak self] _ in
+            let indexPath = IndexPath(row: 1, section: Section.options.rawValue)
+            self?.tableView.reloadRows(at: [indexPath], with: .automatic)
+        }
     }
     
+    @objc private func textFieldDidChange(_ textField: UITextField) {
+        viewModel.setName(textField.text ?? "")
+    }
 }
 
 //MARK: - UITableViewDataSource
@@ -209,6 +177,7 @@ extension NewTrackerViewController: UITableViewDataSource {
         
         switch section {
         case .options:
+            let trackerType = viewModel.getTrackerType()
             return trackerType == .habit ? 2 : 1
         case .collection:
             return collectionTypes.count
@@ -216,21 +185,21 @@ extension NewTrackerViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         guard let section = Section(rawValue: indexPath.section) else {
             return UITableViewCell()
         }
         
         switch section {
-            
         case .options:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: RowCell.identifier, for: indexPath) as? RowCell else { return UITableViewCell() }
             
+            let image = UIImage(systemName: "chevron.right")
             if indexPath.row == 0 {
-                cell.configure(title: "Категория", subtitle: "")
+                let categoryName = viewModel.getCategoryName()
+                cell.configure(title: "Категория", subtitle: categoryName, image: image)
             } else {
-                cell.configure(title: "Расписание", subtitle: scheduleSubtitle ?? "")
-                scheduleIndexPath = indexPath
+                let scheduleSubtitle = viewModel.scheduleSubtitle
+                cell.configure(title: "Расписание", subtitle: scheduleSubtitle, image: image)
             }
             
             return cell
@@ -251,13 +220,15 @@ extension NewTrackerViewController: UITableViewDataSource {
     }
 }
 
+//MARK: - OptionCollectionCellDelegate
 extension NewTrackerViewController: OptionCollectionCellDelegate {
+    
     func itemSelected(_ item: OptionItem) {
         switch item {
         case .emoji(_, let value):
-            selectedEmoji = value
+            viewModel.setSelectedEmoji(value)
         case .color(_, let value):
-            selectedColor = value
+            viewModel.setSelectedColor(value)
         }
     }
     
@@ -277,7 +248,6 @@ extension NewTrackerViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        
         cell.separatorInset = UIEdgeInsets(top: 0, left: tableView.bounds.size.width, bottom: 0, right: 0)
         
         if indexPath.section == 0 {
@@ -287,6 +257,7 @@ extension NewTrackerViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         guard let section = Section(rawValue: indexPath.section) else { return 60 }
+        
         switch section {
         case .options:
             return 75
@@ -299,39 +270,8 @@ extension NewTrackerViewController: UITableViewDelegate {
 
 //MARK: - ScheduleViewControllerDelegate
 extension NewTrackerViewController: ScheduleViewControllerDelegate {
+    
     func didSelectDays(_ days: Set<WeekDay>) {
-        guard let indexPath = scheduleIndexPath else { return }
-        selectedSchedule = days
-        tableView.reloadRows(at: [indexPath], with: .automatic)
-    }
-}
-
-
-extension NewTrackerViewController: UITextFieldDelegate {
-    
-    func textField(_ textField: UITextField,shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        guard let text = textField.text,
-              let textRange = Range(range, in: text) else {
-            return true
-        }
-        let maxCount = 38
-        let updatedText = text.replacingCharacters(in: textRange, with: string)
-        
-        if updatedText.count > maxCount {
-            showError("Ограничение \(maxCount) символов")
-            return false
-        } else {
-            hideError()
-            return true
-        }
-    }
-    
-    private func showError(_ message: String) {
-        errorLabel.text = message
-        errorLabel.isHidden = false
-    }
-    
-    private func hideError() {
-        errorLabel.isHidden = true
+        viewModel.setSchedule(days)
     }
 }
