@@ -12,11 +12,11 @@ final class NewCategoryViewController: UIViewController {
     var onCategoryCreated: ((String) -> Void)?
     private var name: String = ""
     
-    private let textField = TextFieldView(placeholder: "Введите название категории")
+    private let textField = TextFieldView(placeholder: L10n.newCategoryPlaceholder)
     
     private let doneButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Готово", for: .normal)
+        button.setTitle(L10n.done, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .lightGray
         button.layer.cornerRadius = 16
@@ -41,7 +41,7 @@ final class NewCategoryViewController: UIViewController {
     }
     
     private func setupNavigationBar() {
-        navigationItem.title = "Новая категория"
+        navigationItem.title = L10n.newCategoryTitle
     }
     
     private func setupKeyboard() {

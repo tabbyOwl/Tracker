@@ -11,7 +11,7 @@ final class NewTrackerViewController: UIViewController {
     var onCreateTracker: ((TrackerDraft) -> Void)?
     private let viewModel: NewTrackerViewModel
     
-    private let textField = TextFieldView(placeholder: "Введите название трекера")
+    private let textField = TextFieldView(placeholder: L10n.newTrackerPlaceholder)
     
     // MARK: - Sections
     private enum Section: Int, CaseIterable {
@@ -22,13 +22,6 @@ final class NewTrackerViewController: UIViewController {
     private enum CollectionType {
         case emoji
         case color
-        
-        var title: String {
-            switch self {
-            case .emoji: "Emoji"
-            case .color: "Цвет"
-            }
-        }
     }
     
     private let collectionTypes: [CollectionType] = [.emoji, .color]
@@ -196,10 +189,10 @@ extension NewTrackerViewController: UITableViewDataSource {
             let image = UIImage(systemName: "chevron.right")
             if indexPath.row == 0 {
                 let categoryName = viewModel.getCategoryName()
-                cell.configure(title: "Категория", subtitle: categoryName, image: image)
+                cell.configure(title: L10n.categoryTitle, subtitle: categoryName, image: image)
             } else {
                 let scheduleSubtitle = viewModel.scheduleSubtitle
-                cell.configure(title: "Расписание", subtitle: scheduleSubtitle, image: image)
+                cell.configure(title: L10n.scheduleTitle, subtitle: scheduleSubtitle, image: image)
             }
             
             return cell
@@ -210,9 +203,9 @@ extension NewTrackerViewController: UITableViewDataSource {
             cell.delegate = self
             switch type {
             case .emoji:
-                cell.configure(title: "Emoji", items: EmojiLibrary.all)
+                cell.configure(title: L10n.emojiTitle, items: EmojiLibrary.all)
             case .color:
-                cell.configure(title: "Цвет", items: ColorLibrary.all)
+                cell.configure(title: L10n.colorTitle, items: ColorLibrary.all)
             }
             
             return cell

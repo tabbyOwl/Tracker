@@ -11,8 +11,9 @@ final class TrackerTypePickerViewController: UIViewController {
     var onCreateTracker: ((TrackerDraft) -> Void)?
     
     //MARK: - UI
-    private let habitButton = TrackerTypeButton(title: "Привычка")
-    private let eventButton = TrackerTypeButton(title: "Нерегулярное событие")
+    private let habitButton = TrackerTypeButton(title: L10n.trackerTypeHabit)
+    private let eventButton = TrackerTypeButton(title: L10n.trackerTypeEvent)
+    
     
     private let buttonsStack: UIStackView = {
         let stack = UIStackView()
@@ -42,7 +43,7 @@ final class TrackerTypePickerViewController: UIViewController {
     }
     
     private func setupNavigationBar() {
-        navigationItem.title = "Создание трекера"
+        navigationItem.title = L10n.trackerCreationTitle
     }
     
     private func setupConstraints() {

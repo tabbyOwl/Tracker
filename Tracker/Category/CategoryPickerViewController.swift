@@ -14,7 +14,7 @@ final class CategoryPickerViewController: UIViewController {
     private let viewModel = CategoryPickerViewModel(store: TrackerCategoryStore())
     
     private let stateView = StateView(
-        text: "Привычки и события можно объединить по смыслу",
+        text: L10n.categoryPickerStateText,
         image: UIImage(resource: .dizzy)
     )
     
@@ -29,7 +29,7 @@ final class CategoryPickerViewController: UIViewController {
     
     private lazy var createCategoryButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Добавить категорию", for: .normal)
+        button.setTitle(L10n.categoryPickerAddButton, for: .normal)
         button.layer.cornerRadius = 16
         button.backgroundColor = .projectColor(.blackDay)
         button.addTarget(
@@ -79,7 +79,7 @@ final class CategoryPickerViewController: UIViewController {
     }
     
     private func setupNavigationBar() {
-        navigationItem.title = "Категория"
+        navigationItem.title = L10n.categoryPickerTitle
     }
     
     private func bindViewModel() {
@@ -116,11 +116,14 @@ final class CategoryPickerViewController: UIViewController {
     }
     
     private func deleteCategory(_ category: TrackerCategory) {
-        let alertController = UIAlertController(title: "Удалить категорию?", message: "Вы уверены, что хотите удалить эту категорию?", preferredStyle: .actionSheet)
+        let title = L10n.categoryDeleteTitle
+        let message = L10n.categoryDeleteMessage
         
-        alertController.addAction(UIAlertAction(title: "Отмена", style: .cancel, handler: nil))
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
         
-        alertController.addAction(UIAlertAction(title: "Удалить", style: .destructive, handler: { _ in
+        alertController.addAction(UIAlertAction(title: L10n.cancel, style: .cancel, handler: nil))
+        
+        alertController.addAction(UIAlertAction(title: L10n.delete, style: .destructive, handler: { _ in
             self.viewModel.deleteCategory(by: category.id)
             self.tableView.reloadData()
         }))
@@ -179,14 +182,14 @@ extension CategoryPickerViewController: UITableViewDelegate {
         return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
             
             let editAction = UIAction(
-                title: "Редактировать",
+                title: L10n.edit,
                 image: UIImage(systemName: "pencil")
             ) { _ in
                 self.showEditView(for: category)
             }
             
             let deleteAction = UIAction(
-                title: "Удалить",
+                title: L10n.delete,
                 image: UIImage(systemName: "trash"),
                 attributes: .destructive
             ) { _ in

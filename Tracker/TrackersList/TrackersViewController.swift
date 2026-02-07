@@ -11,19 +11,18 @@ final class TrackersViewController: UIViewController {
     private let viewModel =  TrackersViewModel()
     
     // MARK: - UI
-    private let stateView = StateView(text: "Что будем отслеживать?", image: UIImage(resource: .dizzy))
+    private let stateView = StateView(text: L10n.trackersStateViewTitle, image: UIImage(resource: .dizzy))
     
     private let datePicker: UIDatePicker = {
         let picker = UIDatePicker()
         picker.datePickerMode = .date
         picker.preferredDatePickerStyle = .compact
-        picker.locale = Locale(identifier: "ru_RU")
         return picker
     }()
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Трекеры"
+        label.text = L10n.trackersTitle
         label.font = .systemFont(ofSize: 30, weight: .bold)
         label.textColor = .black
         return label
@@ -31,7 +30,7 @@ final class TrackersViewController: UIViewController {
     
     private let searchBar: UISearchBar = {
         let searchBar = UISearchBar()
-        searchBar.placeholder = "Поиск"
+        searchBar.placeholder = L10n.searchPlaceholder
         searchBar.searchBarStyle = .minimal
         return searchBar
     }()

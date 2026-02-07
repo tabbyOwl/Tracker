@@ -9,14 +9,14 @@ import UIKit
 final class NewTrackerViewModel {
     
     var navigationTitle: String {
-        trackerType == .habit ? "Новая привычка" : "Новое нерегулярное событие"
+        trackerType == .habit ? L10n.trackerNewHabitTitle : L10n.trackerNewEventTitle
     }
     
     var scheduleSubtitle: String? {
         guard !selectedSchedule.isEmpty else { return nil }
         
         if selectedSchedule.count == WeekDay.allCases.count {
-            return "Каждый день"
+            return L10n.scheduleEveryDay
         }
         
         return selectedSchedule

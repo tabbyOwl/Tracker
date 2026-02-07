@@ -129,9 +129,6 @@ final class TrackersViewModel {
             let updatedCategory = TrackerCategory(id: oldCategory.id, name: oldCategory.name, trackers: oldCategory.trackers + [tracker])
             
             categories[index] = updatedCategory
-        } else {
-            let newCategory = TrackerCategory(id: categoryId, name: "Дом", trackers: [tracker])
-            categories.append(newCategory)
         }
     }
 }

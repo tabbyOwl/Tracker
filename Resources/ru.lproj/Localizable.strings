@@ -1,0 +1,79 @@
+/* 
+  Localizable.strings
+  Tracker
+
+  Created by Svetlana on 2026/2/5.
+  
+*/
+
+/* Category Picker */
+category_picker_state_text = "Привычки и события можно объединить по смыслу";
+category_picker_add_button = "Добавить категорию";
+category_picker_title = "Категория";
+
+category_delete_title = "Удалить категорию?";
+category_delete_message = "Вы уверены, что хотите удалить эту категорию?";
+
+/* Edit */
+edit_category_title = "Редактировать категорию";
+
+/* New Category */
+new_category_title = "Новая категория";
+new_category_placeholder = "Введите название категории";
+
+/* Full Week Day */
+weekday_monday = "Понедельник";
+weekday_tuesday = "Вторник";
+weekday_wednesday = "Среда";
+weekday_thursday = "Четверг";
+weekday_friday = "Пятница";
+weekday_saturday = "Суббота";
+weekday_sunday = "Воскресенье";
+
+/* Short Week Day */
+weekday_short_monday = "Пн";
+weekday_short_tuesday = "Вт";
+weekday_short_wednesday = "Ср";
+weekday_short_thursday = "Чт";
+weekday_short_friday = "Пт";
+weekday_short_saturday = "Сб";
+weekday_short_sunday = "Вс";
+
+/* New Tracker */
+new_tracker_title = "Новый трекер";
+new_tracker_placeholder = "Введите название трекера";
+
+
+tracker_new_habit_title = "Новая привычка";
+tracker_new_event_title = "Новое нерегулярное событие";
+schedule_every_day = "Каждый день";
+
+/* Tracker */
+tracker_type_habit = "Привычка";
+tracker_type_event = "Нерегулярное событие";
+tracker_creation_title = "Создание трекера";
+
+/* Trackers */
+search_placeholder = "Поиск";
+trackers_state_view_title = "Что будем отслеживать?";
+
+/* Tab Bar */
+statistics_title = "Статистика";
+trackers_title = "Трекеры";
+
+/* Onboarding */
+onboarding_first_page_text = "Отслеживайте только то, что хотите";
+onboarding_second_page_text = "Даже если это не литры воды и йога";
+action_button_title = "Вот это технологии!";
+
+/* Common */
+category_title = "Категория";
+schedule_title = "Расписание";
+emoji_title = "Emoji";
+color_title = "Цвет";
+
+done = "Готово";
+cancel = "Отмена";
+delete = "Удалить";
+edit = "Редактировать";
+create = "Создать";

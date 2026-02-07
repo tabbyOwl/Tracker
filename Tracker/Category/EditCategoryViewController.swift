@@ -17,7 +17,7 @@ final class EditCategoryViewController: UIViewController {
     
     private let doneButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Готово", for: .normal)
+        button.setTitle(L10n.done, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .black
         button.layer.cornerRadius = 16
@@ -46,7 +46,7 @@ final class EditCategoryViewController: UIViewController {
         
         doneButton.addTarget(self, action: #selector(didTapDone), for: .touchUpInside)
         view.backgroundColor = .white
-        navigationItem.title = "Редактировать категорию"
+        navigationItem.title = L10n.editCategoryTitle
         
         nameTextField.text = category.name
         nameTextField.font = .systemFont(ofSize: 16)
