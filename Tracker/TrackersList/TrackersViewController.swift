@@ -24,7 +24,6 @@ final class TrackersViewController: UIViewController {
         let label = UILabel()
         label.text = L10n.trackersTitle
         label.font = .systemFont(ofSize: 30, weight: .bold)
-        label.textColor = .black
         return label
     }()
     
@@ -44,6 +43,17 @@ final class TrackersViewController: UIViewController {
         return collectionView
     }()
     
+    private lazy var filterButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle(L10n.filterButton, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 17, weight: .medium)
+        button.backgroundColor = .projectColor(.blue)
+        button.tintColor = .white
+        button.layer.cornerRadius = 16
+        button.addTarget(self, action: #selector(didTapFilterButton), for: .touchUpInside)
+        return button
+    }()
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,8 +64,28 @@ final class TrackersViewController: UIViewController {
         viewModel.loadCategories()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        AnalyticsService.report(
+                event: "open",
+                screen: "Main"
+            )
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        if self.isMovingFromParent || self.isBeingDismissed {
+            AnalyticsService.report(
+                event: "close",
+                screen: "Main"
+            )
+        }
+    }
+    
     private func setupUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         setupNavigationBar()
         setupConstraints()
     }
@@ -68,7 +98,9 @@ final class TrackersViewController: UIViewController {
             action: #selector(didTapAddButton)
         )
         
-        navigationItem.leftBarButtonItem?.tintColor = .black
+        navigationItem.leftBarButtonItem?.tintColor = UIColor { traitCollection in
+            traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black
+        }
         
         datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePicker)
@@ -86,11 +118,14 @@ final class TrackersViewController: UIViewController {
         view.addSubview(searchBar)
         view.addSubview(collectionView)
         view.addSubview(stateView)
+        view.addSubview(filterButton)
+        
         
         stateView.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        filterButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 1),
@@ -109,8 +144,12 @@ final class TrackersViewController: UIViewController {
             stateView.topAnchor.constraint(equalTo: collectionView.topAnchor),
             stateView.leadingAnchor.constraint(equalTo: collectionView.leadingAnchor),
             stateView.trailingAnchor.constraint(equalTo: collectionView.trailingAnchor),
-            stateView.bottomAnchor.constraint(equalTo: collectionView.bottomAnchor)
+            stateView.bottomAnchor.constraint(equalTo: collectionView.bottomAnchor),
             
+            filterButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            filterButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+            filterButton.widthAnchor.constraint(equalToConstant: 114),
+            filterButton.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
     
@@ -129,6 +168,12 @@ final class TrackersViewController: UIViewController {
     
     // MARK: - Actions
     @objc private func didTapAddButton() {
+        AnalyticsService.report(
+                event: "click",
+                screen: "Main",
+                item: "add_track"
+            )
+        
         let chooseVC = TrackerTypePickerViewController()
         
         chooseVC.onCreateTracker = { [weak self] draft in
@@ -138,6 +183,10 @@ final class TrackersViewController: UIViewController {
         
         let nav = UINavigationController(rootViewController: chooseVC)
         present(nav, animated: true)
+    }
+    
+    @objc private func didTapFilterButton() {
+        
     }
     
     @objc private func datePickerValueChanged(_ sender: UIDatePicker) {
@@ -215,6 +264,13 @@ extension TrackersViewController: TrackerCardCellDelegate {
     func actionButtonTapped(_ cell: TrackerCardCell) {
         guard !viewModel.isFutureDate else { return }
         guard let indexPath = collectionView.indexPath(for: cell) else { return }
+        
+        AnalyticsService.report(
+                event: "click",
+                screen: "Main",
+                item: "track"
+            )
+        
         let tracker = viewModel.getTrackerForCell(section: indexPath.section, item: indexPath.item)
         
         viewModel.toggleRecords(for: tracker.id)

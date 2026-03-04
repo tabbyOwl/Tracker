@@ -17,6 +17,9 @@ category_delete_message = "Are you sure you want to delete this category?";
 /* Edit */
 edit_category_title = "Edit category";
 
+/* Filter */
+filter_button = "Filter";
+
 /* New Category */
 new_category_title = "New category";
 new_category_placeholder = "Enter category name";

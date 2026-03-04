@@ -58,6 +58,7 @@ final class NewCategoryViewController: UIViewController {
     }
     
     private func setupUI() {
+        view.backgroundColor = .systemBackground
         view.addSubviews(textField, doneButton)
         doneButton.addTarget(self, action: #selector(didTapDoneButton), for: .touchUpInside)
         

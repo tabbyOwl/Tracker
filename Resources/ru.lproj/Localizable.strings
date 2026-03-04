@@ -14,6 +14,9 @@ category_picker_title = "Категория";
 category_delete_title = "Удалить категорию?";
 category_delete_message = "Вы уверены, что хотите удалить эту категорию?";
 
+/* Filter */
+filter_button = "Фильтры";
+
 /* Edit */
 edit_category_title = "Редактировать категорию";
 

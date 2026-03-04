@@ -44,7 +44,6 @@ final class TrackerCardCell: UICollectionViewCell {
     private let daysLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 12)
-        label.textColor = .black
         return label
     }()
     

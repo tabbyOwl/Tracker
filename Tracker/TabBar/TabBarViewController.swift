@@ -12,6 +12,7 @@ final class TabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setControllersToTabBar()
+        setAppearance()
     }
     
     //MARK: -Private methods
@@ -31,6 +32,24 @@ final class TabBarController: UITabBarController {
                                                            selectedImage: nil)
         
         self.viewControllers = [navTrackersListViewController, statisticsViewController]
+    }
+    
+    private func setAppearance() {
+        let appearance = UITabBarAppearance()
+        appearance.configureWithOpaqueBackground()
+
+        appearance.stackedLayoutAppearance.selected.iconColor = .projectColor(.blue)
+        appearance.stackedLayoutAppearance.selected.titleTextAttributes = [
+            .foregroundColor: UIColor.projectColor(.blue)
+        ]
+
+        appearance.stackedLayoutAppearance.normal.iconColor = .projectColor(.gray)
+        appearance.stackedLayoutAppearance.normal.titleTextAttributes = [
+            .foregroundColor: UIColor.projectColor(.gray)
+        ]
+
+        UITabBar.appearance().standardAppearance = appearance
+        UITabBar.appearance().scrollEdgeAppearance = appearance
     }
 }
 
