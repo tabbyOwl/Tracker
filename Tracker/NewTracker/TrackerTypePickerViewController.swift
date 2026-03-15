@@ -8,7 +8,7 @@ import UIKit
 
 final class TrackerTypePickerViewController: UIViewController {
     
-    var onCreateTracker: ((TrackerDraft) -> Void)?
+    var onCreateTracker: ((Tracker) -> Void)?
     
     //MARK: - UI
     private let habitButton = TrackerTypeButton(title: L10n.trackerTypeHabit)
@@ -63,14 +63,14 @@ final class TrackerTypePickerViewController: UIViewController {
     
     //MARK: - Actions
     @objc private func habitButtonTapped() {
-        let vc = NewTrackerViewController(trackerType: .habit)
-        vc.onCreateTracker = onCreateTracker
+        let vc = TrackerFormViewController(mode: .create(type: .habit))
+        vc.onSaveTracker = onCreateTracker
         present(UINavigationController(rootViewController: vc), animated: true)
     }
     
     @objc private func eventButtonTapped() {
-        let vc = NewTrackerViewController(trackerType: .event)
-        vc.onCreateTracker = onCreateTracker
+        let vc = TrackerFormViewController(mode: .create(type: .event))
+        vc.onSaveTracker = onCreateTracker
         present(UINavigationController(rootViewController: vc), animated: true)
     }
 }

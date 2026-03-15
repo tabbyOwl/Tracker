@@ -10,6 +10,11 @@ final class TextFieldView: UIView {
     
     var onTextChanged: ((String) -> Void)?
     
+    var text: String? {
+        get { textField.text }
+        set { textField.text = newValue }
+    }
+    
     private let textField: UITextField = {
         let textField = UITextField()
         textField.backgroundColor = .projectColor(.backgroundDay)

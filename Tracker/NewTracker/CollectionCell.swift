@@ -39,8 +39,8 @@ final class CollectionCell: UITableViewCell {
         ])
     }
     
-    func configure(title: String, items: [OptionItem]) {
-        optionRowView.updateItems(title: title, items: items)
+    func configure(title: String, items: [OptionItem], selectedItem: OptionItem?) {
+        optionRowView.updateItems(title: title, items: items, selectedItem: selectedItem)
     }
 }
 

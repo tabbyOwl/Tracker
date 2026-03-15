@@ -6,10 +6,15 @@
 //
 import UIKit
 
-final class NewTrackerViewModel {
+final class TrackerFormViewModel {
     
     var navigationTitle: String {
-        trackerType == .habit ? L10n.trackerNewHabitTitle : L10n.trackerNewEventTitle
+        switch mode {
+        case .create:
+            trackerType == .habit ? L10n.trackerNewHabitTitle : L10n.trackerNewEventTitle
+        case .edit:
+            trackerType == .habit ? "Редактирование привычки" : "Редактирование события"
+        }
     }
     
     var scheduleSubtitle: String? {
@@ -31,8 +36,9 @@ final class NewTrackerViewModel {
     var onCategoryChanged: (() -> Void)?
     
     // MARK: - Private state
+    private let mode: TrackerFormMode
+    private var editingTracker: Tracker?
     private let trackerType: TrackerType
-    
     private var name: String = "" { didSet { validate() } }
     private var selectedEmoji: String? { didSet { validate() } }
     private var selectedColor: UIColor? { didSet { validate() } }
@@ -53,8 +59,24 @@ final class NewTrackerViewModel {
     }
     
     // MARK: - Init
-    init(trackerType: TrackerType) {
-        self.trackerType = trackerType
+    init(mode: TrackerFormMode) {
+        self.mode = mode
+
+        switch mode {
+
+        case .create(let type):
+            self.trackerType = type
+
+        case .edit(let tracker, let category):
+            self.trackerType = tracker.type
+            self.editingTracker = tracker
+
+            self.name = tracker.name
+            self.selectedEmoji = tracker.emoji
+            self.selectedColor = tracker.color
+            self.selectedSchedule = tracker.schedule
+            self.category = category
+        }
     }
     
     // MARK: - Setters
@@ -62,12 +84,44 @@ final class NewTrackerViewModel {
         self.name = name
     }
     
+    func getName() -> String {
+        name
+    }
+    
     func setSelectedEmoji(_ emoji: String) {
         selectedEmoji = emoji
     }
     
+    func getSelectedEmojiItem() -> OptionItem? {
+
+        guard let emoji = selectedEmoji else { return nil }
+
+        return EmojiLibrary.all.first {
+
+            if case .emoji(_, let value) = $0 {
+                return value == emoji
+            }
+
+            return false
+        }
+    }
+    
     func setSelectedColor(_ color: UIColor) {
         selectedColor = color
+    }
+    
+    func getSelectedColorItem() -> OptionItem? {
+
+        guard let color = selectedColor else { return nil }
+
+        return ColorLibrary.all.first {
+
+            if case .color(_, let value) = $0 {
+                return value == color
+            }
+
+            return false
+        }
     }
     
     func setSelectedCategory(_ category: TrackerCategory) {
@@ -91,19 +145,27 @@ final class NewTrackerViewModel {
         return category?.name ?? ""
     }
     
-    func makeDraft() -> TrackerDraft? {
+    func validateForm() {
+        validate()
+    }
+    
+    func saveTracker() -> Tracker? {
         guard isFormValid else { return nil }
         guard let category = category,
-              let selectedEmoji = selectedEmoji,
-              let selectedColor = selectedColor else { return nil }
-        
-        return TrackerDraft(
-            type: trackerType,
+              let emoji = selectedEmoji,
+              let color = selectedColor else { return nil }
+
+        let id = editingTracker?.id ?? UUID()
+
+        return Tracker(
+            id: id,
             name: name,
-            emoji: selectedEmoji,
-            color: selectedColor,
+            color: color,
+            emoji: emoji,
+            type: trackerType,
             schedule: trackerType == .habit ? selectedSchedule : [],
-            categoryId: category.id
+            categoryId: category.id,
+            isPinned: false
         )
     }
     

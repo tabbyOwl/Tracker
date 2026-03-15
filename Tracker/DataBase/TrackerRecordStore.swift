@@ -81,6 +81,36 @@ final class TrackerRecordStore {
         }
     }
     
+    func isCompleted(trackerId: UUID, on date: Date) -> Bool {
+        let day = Calendar.current.startOfDay(for: date)
+        
+        let request: NSFetchRequest<TrackerRecordCoreData> =
+        TrackerRecordCoreData.fetchRequest()
+        
+        request.fetchLimit = 1
+        request.predicate = NSPredicate(
+            format: "trackerId == %@ AND date == %@",
+            day as NSDate
+        )
+        
+        do {
+               let count = try context.count(for: request)
+               return count > 0
+           } catch {
+               logger.error(
+                   "Failed to check tracker completion",
+                   metadata: [
+                       "trackerId": "\(trackerId)",
+                       "date": "\(date)",
+                       "error": "\(error)"
+                   ]
+               )
+               assertionFailure("Check tracker completion failed: \(error)")
+               return false
+           }
+        
+    }
+    
     func completedDaysCount(trackerId: UUID) -> Int {
         let request: NSFetchRequest<TrackerRecordCoreData> =
         TrackerRecordCoreData.fetchRequest()

@@ -36,6 +36,11 @@ final class StateView: UIView {
         nil
     }
     
+    func configure(text: String, image: UIImage?) {
+            label.text = text
+            imageView.image = image
+        }
+    
     private func setupUI() {
         addSubview(imageView)
         addSubview(label)

@@ -6,11 +6,17 @@
 //
 import UIKit
 
-final class NewTrackerViewController: UIViewController {
+enum TrackerFormMode {
+    case create(type: TrackerType)
+    case edit(tracker: Tracker, category: TrackerCategory)
+}
+
+final class TrackerFormViewController: UIViewController {
     
-    var onCreateTracker: ((TrackerDraft) -> Void)?
-    private let viewModel: NewTrackerViewModel
+    var onSaveTracker: ((Tracker) -> Void)?
     
+    private let mode: TrackerFormMode
+    private let viewModel: TrackerFormViewModel
     private let textField = TextFieldView(placeholder: L10n.newTrackerPlaceholder)
     
     // MARK: - Sections
@@ -39,8 +45,9 @@ final class NewTrackerViewController: UIViewController {
     private var footerView = TrackerFooterView()
     
     // MARK: - Init
-    init(trackerType: TrackerType) {
-        self.viewModel = NewTrackerViewModel(trackerType: trackerType)
+    init(mode: TrackerFormMode) {
+        self.mode = mode
+        self.viewModel = TrackerFormViewModel(mode: mode)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -53,11 +60,13 @@ final class NewTrackerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         bindViewModel()
+        viewModel.validateForm()
         setupTextField()
         setupUI()
         setupNavigationBar()
         registerCells()
         setupFooter()
+        setupInitialValues()
     }
     
     private func setupUI() {
@@ -93,32 +102,53 @@ final class NewTrackerViewController: UIViewController {
         navigationItem.title = viewModel.navigationTitle
     }
     
-    
     private func registerCells() {
         tableView.register(RowCell.self, forCellReuseIdentifier: RowCell.identifier)
         tableView.register(CollectionCell.self, forCellReuseIdentifier: CollectionCell.identifier)
     }
     
+    private func setupInitialValues() {
+        textField.text = viewModel.getName()
+    }
+    
     private func setupFooter() {
-        footerView = TrackerFooterView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 120))
-        
+        footerView = TrackerFooterView(mode: mode)
+        footerView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: 120)
         footerView.onCancel = { [weak self] in
-            self?.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
+            self?.cancel()
         }
         
         footerView.onCreate = { [weak self] in
-            self?.createTracker()
+            self?.saveTracker()
         }
         
         tableView.tableFooterView = footerView
     }
     
-    
-    private func createTracker() {
-        guard let draft = viewModel.makeDraft() else { return }
-        onCreateTracker?(draft)
-        presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
+    private func cancel() {
+        switch mode {
+        case .create:
+            presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
+        case .edit:
+            dismiss(animated: true)
+        }
     }
+    
+    private func saveTracker() {
+        guard let tracker = viewModel.saveTracker() else { return }
+
+        switch mode {
+        case .create:
+            onSaveTracker?(tracker)
+            presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
+        case .edit:
+            onSaveTracker?(tracker)
+            dismiss(animated: true)
+        }
+
+      
+    }
+  
     
     private func categoryTapped() {
         let vc = CategoryPickerViewController()
@@ -159,7 +189,7 @@ final class NewTrackerViewController: UIViewController {
 }
 
 //MARK: - UITableViewDataSource
-extension NewTrackerViewController: UITableViewDataSource {
+extension TrackerFormViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         Section.allCases.count
@@ -203,9 +233,9 @@ extension NewTrackerViewController: UITableViewDataSource {
             cell.delegate = self
             switch type {
             case .emoji:
-                cell.configure(title: L10n.emojiTitle, items: EmojiLibrary.all)
+                cell.configure(title: L10n.emojiTitle, items: EmojiLibrary.all, selectedItem: viewModel.getSelectedEmojiItem())
             case .color:
-                cell.configure(title: L10n.colorTitle, items: ColorLibrary.all)
+                cell.configure(title: L10n.colorTitle, items: ColorLibrary.all, selectedItem: viewModel.getSelectedColorItem())
             }
             
             return cell
@@ -214,7 +244,7 @@ extension NewTrackerViewController: UITableViewDataSource {
 }
 
 //MARK: - OptionCollectionCellDelegate
-extension NewTrackerViewController: OptionCollectionCellDelegate {
+extension TrackerFormViewController: OptionCollectionCellDelegate {
     
     func itemSelected(_ item: OptionItem) {
         switch item {
@@ -224,11 +254,10 @@ extension NewTrackerViewController: OptionCollectionCellDelegate {
             viewModel.setSelectedColor(value)
         }
     }
-    
 }
 
 //MARK: - UITableViewDelegate
-extension NewTrackerViewController: UITableViewDelegate {
+extension TrackerFormViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
@@ -262,7 +291,7 @@ extension NewTrackerViewController: UITableViewDelegate {
 }
 
 //MARK: - ScheduleViewControllerDelegate
-extension NewTrackerViewController: ScheduleViewControllerDelegate {
+extension TrackerFormViewController: ScheduleViewControllerDelegate {
     
     func didSelectDays(_ days: Set<WeekDay>) {
         viewModel.setSchedule(days)

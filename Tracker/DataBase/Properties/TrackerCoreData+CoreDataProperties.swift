@@ -24,6 +24,7 @@ extension TrackerCoreData {
     @NSManaged public var schedule: Data
     @NSManaged public var category: TrackerCategoryCoreData
     @NSManaged public var records: NSSet
+    @NSManaged public var isPinned: Bool
 
 }
 

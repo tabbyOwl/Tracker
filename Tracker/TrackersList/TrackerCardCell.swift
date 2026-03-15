@@ -9,11 +9,17 @@ import UIKit
 
 protocol TrackerCardCellDelegate: AnyObject {
     func actionButtonTapped(_ cell: TrackerCardCell)
+    func didPinItem(at indexPath: IndexPath)
+    func didDeleteItem(at indexPath: IndexPath)
+    func didEditItem(at indexPath: IndexPath)
+    
 }
 
 final class TrackerCardCell: UICollectionViewCell {
     static let reuseIdentifier = "TrackerCardCell"
     weak var delegate: TrackerCardCellDelegate?
+    var indexPath: IndexPath?
+    private var isPinned: Bool = false
     
     // MARK: - UI
     private let cardView: UIView = {
@@ -63,12 +69,22 @@ final class TrackerCardCell: UICollectionViewCell {
         return stack
     }()
     
+    private let pinImageView: UIImageView = {
+        let view = UIImageView()
+        view.image = UIImage(systemName: "pin.fill")
+        view.tintColor = .white
+        view.contentMode = .scaleAspectFill
+        return view
+    }()
+    
     // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupButton()
         setupViews()
         setupConstraints()
+        let interaction = UIContextMenuInteraction(delegate: self)
+        self.addInteraction(interaction)
     }
     
     @available(*, unavailable)
@@ -77,7 +93,7 @@ final class TrackerCardCell: UICollectionViewCell {
     }
     
     //MARK: - Public methods
-    func configure(with tracker: Tracker, isCompleted: Bool, completedDaysCount: Int) {
+    func configure(with tracker: Tracker, isCompleted: Bool, completedDaysCount: Int, indexPath: IndexPath) {
         emojiLabel.text = tracker.emoji
         nameLabel.text = tracker.name
         cardView.backgroundColor = tracker.color
@@ -90,12 +106,15 @@ final class TrackerCardCell: UICollectionViewCell {
             NSLocalizedString("days_count", comment: ""),
             completedDaysCount
         )
+        isPinned = tracker.isPinned
+        pinImageView.isHidden = !isPinned
+        self.indexPath = indexPath
     }
     
     // MARK: - Private methods
     private func setupViews() {
         footerStack.addArrangedSubviews(daysLabel, actionButton)
-        cardView.addSubviews(emojiLabel, nameLabel)
+        cardView.addSubviews(emojiLabel, nameLabel, pinImageView)
         contentView.addSubviews(cardView, footerStack)
     }
     
@@ -108,6 +127,7 @@ final class TrackerCardCell: UICollectionViewCell {
         footerStack.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         cardView.translatesAutoresizingMaskIntoConstraints = false
+        pinImageView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             cardView.topAnchor.constraint(equalTo: contentView.topAnchor),
@@ -119,6 +139,11 @@ final class TrackerCardCell: UICollectionViewCell {
             emojiLabel.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 12),
             emojiLabel.widthAnchor.constraint(equalToConstant: 24),
             emojiLabel.heightAnchor.constraint(equalToConstant: 24),
+            
+            pinImageView.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 12),
+            pinImageView.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -12),
+            pinImageView.widthAnchor.constraint(equalToConstant: 8),
+            pinImageView.heightAnchor.constraint(equalToConstant: 12),
             
             actionButton.widthAnchor.constraint(equalToConstant: 34),
             actionButton.heightAnchor.constraint(equalToConstant: 34),
@@ -142,3 +167,25 @@ final class TrackerCardCell: UICollectionViewCell {
     }
 }
 
+extension TrackerCardCell: UIContextMenuInteractionDelegate {
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+        guard let indexPath = indexPath else { return nil }
+        let title = isPinned ? "Открепить" : "Закрепить"
+        let pinAction = UIAction(title: title, image: nil) { action in
+            self.delegate?.didPinItem(at: indexPath)
+        }
+        
+        let editAction = UIAction(title: L10n.edit, image: nil) { action in
+            self.delegate?.didEditItem(at: indexPath)
+        }
+        
+        let deleteAction = UIAction(title: L10n.delete, image: nil) { action in
+            self.delegate?.didDeleteItem(at: indexPath)
+        }
+        
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
+            UIMenu(title: "", children: [pinAction, editAction, deleteAction])
+            
+        }
+    }
+}

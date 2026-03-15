@@ -11,7 +11,7 @@ final class TrackersViewController: UIViewController {
     private let viewModel =  TrackersViewModel()
     
     // MARK: - UI
-    private let stateView = StateView(text: L10n.trackersStateViewTitle, image: UIImage(resource: .dizzy))
+    private lazy var stateView = StateView(text: L10n.trackersStateViewTitle, image: UIImage(resource: .dizzy))
     
     private let datePicker: UIDatePicker = {
         let picker = UIDatePicker()
@@ -27,10 +27,11 @@ final class TrackersViewController: UIViewController {
         return label
     }()
     
-    private let searchBar: UISearchBar = {
+    private lazy var searchBar: UISearchBar = {
         let searchBar = UISearchBar()
         searchBar.placeholder = L10n.searchPlaceholder
         searchBar.searchBarStyle = .minimal
+        searchBar.searchTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
         return searchBar
     }()
     
@@ -68,9 +69,9 @@ final class TrackersViewController: UIViewController {
         super.viewDidAppear(animated)
         
         AnalyticsService.report(
-                event: "open",
-                screen: "Main"
-            )
+            event: "open",
+            screen: "Main"
+        )
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -82,6 +83,12 @@ final class TrackersViewController: UIViewController {
                 screen: "Main"
             )
         }
+    }
+    
+    private func setTodayDate() {
+        let today = Date()
+        datePicker.setDate(today, animated: true)
+        datePickerValueChanged(datePicker)
     }
     
     private func setupUI() {
@@ -127,6 +134,11 @@ final class TrackersViewController: UIViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         filterButton.translatesAutoresizingMaskIntoConstraints = false
         
+        let buttonHeight: CGFloat = 50
+        let buttonBottom: CGFloat = 16
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: buttonHeight + buttonBottom + 8, right: 0)
+        collectionView.scrollIndicatorInsets = collectionView.contentInset
+        
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 1),
             titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
@@ -141,15 +153,16 @@ final class TrackersViewController: UIViewController {
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
+            
             stateView.topAnchor.constraint(equalTo: collectionView.topAnchor),
             stateView.leadingAnchor.constraint(equalTo: collectionView.leadingAnchor),
             stateView.trailingAnchor.constraint(equalTo: collectionView.trailingAnchor),
             stateView.bottomAnchor.constraint(equalTo: collectionView.bottomAnchor),
             
             filterButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            filterButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+            filterButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -buttonBottom),
             filterButton.widthAnchor.constraint(equalToConstant: 114),
-            filterButton.heightAnchor.constraint(equalToConstant: 50)
+            filterButton.heightAnchor.constraint(equalToConstant: buttonHeight)
         ])
     }
     
@@ -164,36 +177,100 @@ final class TrackersViewController: UIViewController {
             self?.collectionView.reloadData()
             self?.updateState()
         }
+        
+        viewModel.onStateChange = { [weak self] state in
+            self?.render(state)
+        }
+    }
+    
+    private func render(_ state: TrackersState) {
+        
+        switch state {
+            
+        case .content:
+            collectionView.isHidden = false
+            stateView.isHidden = true
+            filterButton.isHidden = false
+        case .emptyTrackers:
+            collectionView.isHidden = true
+            stateView.isHidden = false
+            filterButton.isHidden = true
+            
+            stateView.configure(
+                text: L10n.trackersStateViewTitle,
+                image: UIImage(resource: .dizzy)
+            )
+            
+        case .emptyFilter:
+            collectionView.isHidden = true
+            stateView.isHidden = false
+            filterButton.isHidden = false
+            
+            stateView.configure(
+                text: "Ничего не найдено",
+                image: UIImage(resource: .filterStateView)
+            )
+        }
     }
     
     // MARK: - Actions
     @objc private func didTapAddButton() {
         AnalyticsService.report(
-                event: "click",
-                screen: "Main",
-                item: "add_track"
-            )
+            event: "click",
+            screen: "Main",
+            item: "add_track"
+        )
         
         let chooseVC = TrackerTypePickerViewController()
         
-        chooseVC.onCreateTracker = { [weak self] draft in
+        chooseVC.onCreateTracker = { [weak self] tracker in
             guard let self else { return }
-            viewModel.createTracker(draft: draft)
+            viewModel.saveTracker(tracker: tracker)
         }
         
         let nav = UINavigationController(rootViewController: chooseVC)
         present(nav, animated: true)
     }
     
-    @objc private func didTapFilterButton() {
-        
-    }
-    
     @objc private func datePickerValueChanged(_ sender: UIDatePicker) {
         viewModel.setSelectedDate(sender.date)
-        viewModel.updateFilteredCategories()
         viewModel.reloadCompletedTrackers()
+        viewModel.updateFilteredCategories()
     }
+    
+    @objc func textDidChange(_ searchField: UISearchTextField) {
+        let text = searchField.text ?? ""
+        viewModel.setSearchText(text)
+    }
+    
+    @objc private func didTapFilterButton() {
+        
+        AnalyticsService.report(
+            event: "click",
+            screen: "Main",
+            item: "filter"
+        )
+        
+        let vc = FilterViewController()
+        vc.selectedFilter = viewModel.getFilter()
+        
+        vc.onFilterSelected = { [weak self] filter in
+            if filter == .today {
+                self?.setTodayDate()
+            }
+            
+            self?.viewModel.setFilter(filter)
+            self?.updateFilterButton(filter)
+        }
+        
+        let nav = UINavigationController(rootViewController: vc)
+        present(nav, animated: true)
+    }
+    
+    private func updateFilterButton(_ filter: FilterType) {
+        filterButton.setTitleColor(filter.isActive ? .systemRed : .white,for: .normal)
+    }
+    
 }
 
 //MARK: - UICollectionViewDataSource
@@ -204,7 +281,7 @@ extension TrackersViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        viewModel.getTrackers(for: section)
+        viewModel.getTrackersCount(for: section)
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -212,10 +289,10 @@ extension TrackersViewController: UICollectionViewDataSource {
         let tracker = viewModel.getTrackerForCell(section: indexPath.section, item: indexPath.item)
         cell.delegate = self
         
-        let isCompletedToday = viewModel.isCompletedToday(for: tracker.id)
+        let isCompleted = viewModel.isCompleted(for: tracker.id)
         let completedDaysCount = viewModel.getCompletedDaysCount(for: tracker.id)
         
-        cell.configure(with: tracker, isCompleted: isCompletedToday, completedDaysCount: completedDaysCount)
+        cell.configure(with: tracker, isCompleted: isCompleted, completedDaysCount: completedDaysCount, indexPath: indexPath)
         return cell
     }
     
@@ -238,6 +315,7 @@ extension TrackersViewController: UICollectionViewDataSource {
         }
     }
 }
+
 //MARK: - UICollectionViewDelegateFlowLayout
 extension TrackersViewController: UICollectionViewDelegateFlowLayout {
     
@@ -260,16 +338,37 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
 //MARK: - TrackerCardCellDelegate
 
 extension TrackersViewController: TrackerCardCellDelegate {
+    func didPinItem(at indexPath: IndexPath) {
+        let tracker = viewModel.getTrackerForCell(section: indexPath.section, item: indexPath.item)
+        viewModel.togglePin(for: tracker.id)
+    }
+    
+    func didDeleteItem(at indexPath: IndexPath) {
+        let tracker = viewModel.getTrackerForCell(section: indexPath.section, item: indexPath.item)
+        viewModel.deleteTracker(byId: tracker.id)
+    }
+    
+    func didEditItem(at indexPath: IndexPath) {
+        let tracker = viewModel.getTrackerForCell(section: indexPath.section, item: indexPath.item)
+        guard let category = viewModel.getCategory(by: tracker.categoryId) else { return }
+        
+        let trackerFormVC = TrackerFormViewController(mode: .edit(tracker: tracker, category: category))
+        
+        trackerFormVC.onSaveTracker = { [weak self] tracker in
+            self?.viewModel.updateTracker(tracker: tracker)
+        }
+        present(UINavigationController(rootViewController: trackerFormVC), animated: true)
+    }
     
     func actionButtonTapped(_ cell: TrackerCardCell) {
         guard !viewModel.isFutureDate else { return }
         guard let indexPath = collectionView.indexPath(for: cell) else { return }
         
         AnalyticsService.report(
-                event: "click",
-                screen: "Main",
-                item: "track"
-            )
+            event: "click",
+            screen: "Main",
+            item: "track"
+        )
         
         let tracker = viewModel.getTrackerForCell(section: indexPath.section, item: indexPath.item)
         

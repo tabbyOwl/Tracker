@@ -11,12 +11,15 @@ final class TrackerFooterView: UIView {
     var onCancel: (() -> Void)?
     var onCreate: (() -> Void)?
     
+    private let mode: TrackerFormMode?
     private let cancelButton = UIButton(type: .system)
     private let createButton = UIButton(type: .system)
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(mode: TrackerFormMode? = nil) {
+        self.mode = mode
+        super.init(frame: .zero)
         setupUI()
+        configureForMode()
     }
     
     @available(*, unavailable)
@@ -29,14 +32,13 @@ final class TrackerFooterView: UIView {
         stack.axis = .horizontal
         stack.spacing = 8
         stack.distribution = .fillEqually
-    
+        
         cancelButton.setTitle(L10n.cancel, for: .normal)
         cancelButton.setTitleColor(.systemRed, for: .normal)
         cancelButton.layer.borderWidth = 1
         cancelButton.layer.borderColor = UIColor.systemRed.cgColor
         cancelButton.layer.cornerRadius = 16
         
-        createButton.setTitle(L10n.create, for: .normal)
         createButton.backgroundColor = .lightGray
         createButton.setTitleColor(.white, for: .normal)
         createButton.layer.cornerRadius = 16
@@ -53,6 +55,18 @@ final class TrackerFooterView: UIView {
         
         cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
         createButton.addTarget(self, action: #selector(createTapped), for: .touchUpInside)
+    }
+    
+    private func configureForMode() {
+        switch mode {
+        case .create:
+            createButton.setTitle(L10n.create, for: .normal)
+
+        case .edit:
+            createButton.setTitle("Сохранить", for: .normal)
+        case .none:
+            return
+        }
     }
     
     func setCreateButtonState(_ isEnabled: Bool) {

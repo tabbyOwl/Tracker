@@ -15,7 +15,14 @@ category_delete_title = "Удалить категорию?";
 category_delete_message = "Вы уверены, что хотите удалить эту категорию?";
 
 /* Filter */
+filter_title = "Фильтры";
 filter_button = "Фильтры";
+
+/* TrackerFilter */
+filter_all = "Все трекеры";
+filter_today = "Трекеры на сегодня";
+filter_completed = "Завершенные";
+filter_uncompleted = "Незавершенные";
 
 /* Edit */
 edit_category_title = "Редактировать категорию";
@@ -59,6 +66,11 @@ tracker_creation_title = "Создание трекера";
 /* Trackers */
 search_placeholder = "Поиск";
 trackers_state_view_title = "Что будем отслеживать?";
+trackers_state_view_empty_filter = "Ничего не найдено";
+pinned_category_title = "Закрепленные";
+pin_button_title = "Закрепить";
+unpin_button_title = "Открепить";
+
 
 /* Tab Bar */
 statistics_title = "Статистика";

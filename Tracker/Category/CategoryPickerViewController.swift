@@ -171,11 +171,7 @@ extension CategoryPickerViewController: UITableViewDelegate {
         75
     }
     
-    func tableView(
-        _ tableView: UITableView,
-        contextMenuConfigurationForRowAt indexPath: IndexPath,
-        point: CGPoint
-    ) -> UIContextMenuConfiguration? {
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         
         let category = viewModel.getCategory(at: indexPath)
         

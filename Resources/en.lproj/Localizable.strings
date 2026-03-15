@@ -18,7 +18,14 @@ category_delete_message = "Are you sure you want to delete this category?";
 edit_category_title = "Edit category";
 
 /* Filter */
+filter_title = "Filters";
 filter_button = "Filter";
+
+/* TrackerFilter */
+filter_all = "All trackers";
+filter_today = "Today's trackers";
+filter_completed = "Completed";
+filter_uncompleted = "Uncompleted";
 
 /* New Category */
 new_category_title = "New category";
@@ -58,6 +65,10 @@ tracker_creation_title = "Create tracker";
 /* Trackers */
 search_placeholder = "Search";
 trackers_state_view_title = "What will we track?";
+trackers_state_view_empty_filter = "Nothing found";
+pinned_category_title = "Pinned";
+pin_button_title = "Pin";
+unpin_button_title = "Unpin";
 
 /* Tab Bar */
 statistics_title = "Statistics";
