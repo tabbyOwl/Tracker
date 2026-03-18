@@ -70,6 +70,13 @@ pinned_category_title = "Pinned";
 pin_button_title = "Pin";
 unpin_button_title = "Unpin";
 
+/* Statistics */
+statistics_state_view_title = "No data to analyze yet";
+best_streak_card_title = "Best Streak";
+perfect_days_card_title = "Perfect Days";
+completed_trackers_card_title = "Completed Trackers";
+average_card_title = "Average Value";
+
 /* Tab Bar */
 statistics_title = "Statistics";
 trackers_title = "Trackers";

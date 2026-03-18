@@ -8,7 +8,6 @@
 public import UIKit
 public import CoreData
 
-
 public typealias TrackerCoreDataCoreDataPropertiesSet = NSSet
 
 extension TrackerCoreData {

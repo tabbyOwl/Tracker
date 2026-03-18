@@ -18,6 +18,12 @@ final class TrackerStore {
         self.context = context
         self.categoryStore = categoryStore
     }
+    
+    func fetchAll() -> [Tracker] {
+        let request = TrackerCoreData.fetchRequest()
+        let result = (try? context.fetch(request)) ?? []
+        return result.map(Tracker.init)
+    }
 
     func add(_ tracker: Tracker) {
         guard let category = categoryStore.fetchCategory(by: tracker.categoryId) else {

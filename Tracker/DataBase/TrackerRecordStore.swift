@@ -17,34 +17,43 @@ final class TrackerRecordStore {
     }
     
     func toggle(trackerId: UUID, date: Date) {
-        let request = TrackerRecordCoreData.fetchRequest()
-        request.predicate = NSPredicate(
-            format: "id == %@ AND date == %@",
-            trackerId as CVarArg,
-            date as NSDate
-        )
+        let day = Calendar.current.startOfDay(for: date)
         
         do {
-            if let record = try context.fetch(request).first {
-                context.delete(record)
+            let trackerRequest: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
+            trackerRequest.predicate = NSPredicate(format: "id == %@", trackerId as CVarArg)
+            trackerRequest.fetchLimit = 1
+            
+            guard let tracker = try context.fetch(trackerRequest).first else {
+                print("Tracker not found for id: \(trackerId)")
+                return
+            }
+            
+            let recordRequest: NSFetchRequest<TrackerRecordCoreData> = TrackerRecordCoreData.fetchRequest()
+            recordRequest.predicate = NSPredicate(
+                format: "tracker == %@ AND date == %@",
+                tracker,
+                day as NSDate
+            )
+            recordRequest.fetchLimit = 1
+            
+            if let existingRecord = try context.fetch(recordRequest).first {
+                context.delete(existingRecord)
             } else {
                 let record = TrackerRecordCoreData(context: context)
-                record.id = trackerId
-                record.date = date
+                record.tracker = tracker
+                record.date = day
             }
             
             CoreDataStack.shared.saveContext()
+
         } catch {
             logger.error(
-                "Failed to toggle tracker record",
+                "Error toggling tracker record",
                 metadata: [
-                    "trackerId": "\(trackerId)",
-                    "date": "\(date)",
                     "error": "\(error)"
                 ]
             )
-            
-            assertionFailure("Toggle tracker record failed: \(error)")
         }
     }
     
@@ -63,10 +72,10 @@ final class TrackerRecordStore {
             let objects = try context.fetch(request)
             return Set(objects.compactMap { coreData in
                 
-                let id = coreData.id
                 let date = coreData.date
+                let id = coreData.tracker.id
                 
-                return TrackerRecord(id: id, date: date)
+                return TrackerRecord(trackerId: id, date: date)
             })
         } catch {
             logger.error(
@@ -116,7 +125,7 @@ final class TrackerRecordStore {
         TrackerRecordCoreData.fetchRequest()
         
         request.predicate = NSPredicate(
-            format: "id == %@",
+            format: "tracker.id == %@",
             trackerId as NSUUID
         )
         
@@ -134,4 +143,42 @@ final class TrackerRecordStore {
             return 0
         }
     }
+    
+    func totalCompletedCount() -> Int {
+        let request: NSFetchRequest<TrackerRecordCoreData> =
+        TrackerRecordCoreData.fetchRequest()
+        
+        do {
+            return try context.count(for: request)
+        } catch {
+            logger.error("Failed to count all completed trackers")
+            return 0
+        }
+    }
+    
+    func averageCompletedTrackersPerDay() -> Int {
+        let request: NSFetchRequest<TrackerRecordCoreData> =
+        TrackerRecordCoreData.fetchRequest()
+
+        do {
+            let completedRecords = try context.fetch(request)
+            
+            let uniqueDates = Set(completedRecords.map { Calendar.current.startOfDay(for: $0.date) })
+            
+            let completedTrackersCount = completedRecords.count
+            
+            return uniqueDates.isEmpty ? 0 : completedTrackersCount / uniqueDates.count
+            
+        } catch {
+            logger.error("Failed to fetch tracker records")
+            return 0
+        }
+    }
+    
+    func fetchAll() -> [TrackerRecord] {
+        let request = TrackerRecordCoreData.fetchRequest()
+        let result = (try? context.fetch(request)) ?? []
+        return result.map(TrackerRecord.init)
+    }
+    
 }

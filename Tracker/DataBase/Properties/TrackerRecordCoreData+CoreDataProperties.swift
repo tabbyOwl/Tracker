@@ -17,9 +17,8 @@ extension TrackerRecordCoreData {
         return NSFetchRequest<TrackerRecordCoreData>(entityName: "TrackerRecordCoreData")
     }
 
-    @NSManaged public var id: UUID
     @NSManaged public var date: Date
-    @NSManaged public var tracker: NSSet
+    @NSManaged public var tracker: TrackerCoreData
 
 }
 

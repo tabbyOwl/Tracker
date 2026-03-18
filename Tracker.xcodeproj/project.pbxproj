@@ -30,7 +30,7 @@
 
 /* Begin PBXFileReference section */
 		3FA470B12F20D97500DF01CB /* TrackerDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TrackerDataModel.xcdatamodel; sourceTree = "<group>"; };
-		3FC7FA392F36D89A005A1CAC /* swiftgen.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = swiftgen.yml; sourceTree = "<group>"; };
+		3FC7FA392F36D89A005A1CAC /* swiftgen.yml */ = {isa = PBXFileReference; explicitFileType = text.yaml; path = swiftgen.yml; sourceTree = "<group>"; };
 		3FE35D5C2F5585290069CB54 /* TrackerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrackerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3FE78CB22F188725006AB7FD /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -106,8 +106,8 @@
 		3F2F34E12F11F30F000ADB96 = {
 			isa = PBXGroup;
 			children = (
-				3FC7FA472F36DA02005A1CAC /* Generated */,
 				3FC7FA392F36D89A005A1CAC /* swiftgen.yml */,
+				3FC7FA472F36DA02005A1CAC /* Generated */,
 				3FA470B02F20D97500DF01CB /* TrackerDataModel.xcdatamodeld */,
 				3FC7FA412F36D9DB005A1CAC /* Resources */,
 				3F2F34EC2F11F30F000ADB96 /* Tracker */,

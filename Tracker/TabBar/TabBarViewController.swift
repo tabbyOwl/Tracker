@@ -26,7 +26,8 @@ final class TabBarController: UITabBarController {
         )
         let navTrackersListViewController = UINavigationController(rootViewController: trackersViewController)
         
-        let statisticsViewController = UIViewController()
+        let statisticsViewController = StatisticsViewController()
+        
         statisticsViewController.tabBarItem = UITabBarItem(title: L10n.statisticsTitle,
                                                            image: UIImage(systemName: "hare.fill"),
                                                            selectedImage: nil)

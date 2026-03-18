@@ -121,9 +121,7 @@ final class TrackersViewModel {
         selectedFilter
     }
     
-    
     func updateFilteredCategories() {
-        
         guard let selectedWeekday = WeekDay(date: selectedDate) else { return }
         var pinnedTrackers: [Tracker] = []
         
@@ -176,7 +174,7 @@ final class TrackersViewModel {
             result.append(
                 TrackerCategory(
                     id: UUID(),
-                    name: "Закрепленные",
+                    name: L10n.pinnedCategoryTitle,
                     trackers: pinnedTrackers
                 )
             )
@@ -207,9 +205,10 @@ final class TrackersViewModel {
     }
     
     func isCompleted(for trackerId: UUID) -> Bool {
-        completedTrackers.contains {
-            $0.id == trackerId
-        }
+        completedTrackers.contains(where: {
+            $0.trackerId == trackerId
+        })
+        
     }
     
     func getCategory(by id: UUID) -> TrackerCategory? {

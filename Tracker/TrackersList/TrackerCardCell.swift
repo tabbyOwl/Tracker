@@ -170,7 +170,7 @@ final class TrackerCardCell: UICollectionViewCell {
 extension TrackerCardCell: UIContextMenuInteractionDelegate {
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
         guard let indexPath = indexPath else { return nil }
-        let title = isPinned ? "Открепить" : "Закрепить"
+        let title = isPinned ? L10n.unpinButtonTitle : L10n.pinButtonTitle
         let pinAction = UIAction(title: title, image: nil) { action in
             self.delegate?.didPinItem(at: indexPath)
         }

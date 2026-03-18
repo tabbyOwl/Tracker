@@ -23,7 +23,7 @@ final class TrackersViewController: UIViewController {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = L10n.trackersTitle
-        label.font = .systemFont(ofSize: 30, weight: .bold)
+        label.font = .systemFont(ofSize: 34, weight: .bold)
         return label
     }()
     
@@ -121,11 +121,11 @@ final class TrackersViewController: UIViewController {
     }
     
     private func setupConstraints() {
-        view.addSubview(titleLabel)
-        view.addSubview(searchBar)
-        view.addSubview(collectionView)
-        view.addSubview(stateView)
-        view.addSubview(filterButton)
+        view.addSubviews(titleLabel,
+                         searchBar,
+                         collectionView,
+                         stateView,
+                         filterButton)
         
         
         stateView.translatesAutoresizingMaskIntoConstraints = false
@@ -184,9 +184,7 @@ final class TrackersViewController: UIViewController {
     }
     
     private func render(_ state: TrackersState) {
-        
         switch state {
-            
         case .content:
             collectionView.isHidden = false
             stateView.isHidden = true
@@ -207,7 +205,7 @@ final class TrackersViewController: UIViewController {
             filterButton.isHidden = false
             
             stateView.configure(
-                text: "Ничего не найдено",
+                text: L10n.trackersStateViewEmptyFilter,
                 image: UIImage(resource: .filterStateView)
             )
         }

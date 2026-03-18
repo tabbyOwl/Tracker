@@ -71,6 +71,12 @@ pinned_category_title = "Закрепленные";
 pin_button_title = "Закрепить";
 unpin_button_title = "Открепить";
 
+/* Statistics */
+statistics_state_view_title = "Анализировать пока нечего";
+best_streak_card_title = "Лучший период";
+perfect_days_card_title = "Идеальные дни";
+completed_trackers_card_title = "Трекеров завершено";
+average_card_title = "Среднее значение";
 
 /* Tab Bar */
 statistics_title = "Статистика";

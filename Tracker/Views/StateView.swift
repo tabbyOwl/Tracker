@@ -18,7 +18,6 @@ final class StateView: UIView {
         let label = UILabel()
         label.font = .systemFont(ofSize: 12, weight: .medium)
         label.textAlignment = .center
-        label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
