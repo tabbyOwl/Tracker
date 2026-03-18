@@ -25,7 +25,12 @@ final class TrackerRecordStore {
             trackerRequest.fetchLimit = 1
             
             guard let tracker = try context.fetch(trackerRequest).first else {
-                print("Tracker not found for id: \(trackerId)")
+                logger.error(
+                    "Tracker not found for id",
+                    metadata: [
+                        "trackerId": "\(trackerId)"
+                    ]
+                )
                 return
             }
             

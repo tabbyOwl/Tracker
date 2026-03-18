@@ -4,12 +4,14 @@
 //
 //  Created by Svetlana on 2026/1/21.
 //
+import Logging
 import CoreData
 
 final class TrackerStore {
 
     private let context: NSManagedObjectContext
     private let categoryStore: TrackerCategoryStore
+    private let logger = Logger(label: "TrackerStore")
 
     init(
         context: NSManagedObjectContext = CoreDataStack.shared.context,
@@ -62,7 +64,8 @@ final class TrackerStore {
                 CoreDataStack.shared.saveContext()
             }
         } catch {
-            print("Error updating Tracker: \(error)")
+            logger.error("Error updating Tracker",
+                         metadata: ["error": "\(error)"])
         }
     }
     
@@ -77,10 +80,10 @@ final class TrackerStore {
                     context.delete(trackerToDelete)
                     CoreDataStack.shared.saveContext()
                 } else {
-                    print("Tracker with id \(id) not found.")
+                    logger.error("Tracker with id \(id) not found.")
                 }
             } catch {
-                print("Error fetching Tracker for deletion: \(error)")
+                logger.error("Error fetching Tracker for deletion: \(error)")
             }
         }
     
@@ -94,7 +97,7 @@ final class TrackerStore {
                 CoreDataStack.shared.saveContext()
             }
         } catch {
-            print("Error toggling pin: \(error)")
+            logger.error("Error toggling pin: \(error)")
         }
     }
 }

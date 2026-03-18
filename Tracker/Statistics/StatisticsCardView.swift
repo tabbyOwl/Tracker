@@ -16,6 +16,7 @@ final class StatisticsCardView: GradientBorderView {
         
         colors = [.projectColor(.gradientRed), .projectColor(.gradientGreen), .projectColor(.gradientBlue)]
         layer.cornerRadius = 16
+        
         titleLabel.text = title
         titleLabel.font = .systemFont(ofSize: 12, weight: .medium)
         valueLabel.font = .systemFont(ofSize: 34, weight: .bold)
@@ -39,7 +40,7 @@ final class StatisticsCardView: GradientBorderView {
     required init?(coder: NSCoder) {
         nil
     }
-
+    
     func update(value: String) {
         valueLabel.text = value
     }

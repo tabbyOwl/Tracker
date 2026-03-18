@@ -10,6 +10,7 @@ import UIKit
 final class StatisticsViewController: UIViewController {
     
     private let viewModel = StatisticsViewModel()
+    private var statisticsCards: [StatisticsCardView] = []
     
     private let titleLabel: UILabel = {
         let label = UILabel()
@@ -29,17 +30,12 @@ final class StatisticsViewController: UIViewController {
         return stackView
     }()
     
-    private lazy var bestStreakCard = StatisticsCardView(title: L10n.bestStreakCardTitle)
-    private lazy var perfectDaysCard = StatisticsCardView(title: L10n.perfectDaysCardTitle)
-    private lazy var completedTrackersCard = StatisticsCardView(title: L10n.completedTrackersCardTitle)
-    private lazy var averageCard = StatisticsCardView(title: L10n.averageCardTitle)
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupCards()
         setupLayout()
-        setupNavigationBar()
-        view.backgroundColor = .systemBackground
+        setupView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -49,34 +45,55 @@ final class StatisticsViewController: UIViewController {
         updateStateView()
     }
     
+    private func setupView() {
+        navigationItem.title = L10n.statisticsTitle
+        view.backgroundColor = .systemBackground
+    }
+    
+    private func setupCards() {
+        statisticsCards = [
+            StatisticsCardView(title: L10n.bestStreakCardTitle),
+            StatisticsCardView(title: L10n.perfectDaysCardTitle),
+            StatisticsCardView(title: L10n.completedTrackersCardTitle),
+            StatisticsCardView(title: L10n.averageCardTitle)
+        ]
+    }
+    
     private func updateStateView() {
-        let bestStreak = viewModel.getBestStreak()
-        let perfectDays = viewModel.getPerfectDaysCount()
-        let completedTrackersCard = viewModel.getAllCompletedTrackersCount()
-        let averageCard = viewModel.getAverageCountPerDays()
+        let hasData = (viewModel.getBestStreak() + viewModel.getPerfectDaysCount() +
+                       viewModel.getAllCompletedTrackersCount() + viewModel.getAverageCountPerDays()) != 0
         
-        let hasData: Bool = (bestStreak + perfectDays + completedTrackersCard + averageCard) != 0
-            
         stateView.isHidden = hasData
         stackView.isHidden = !hasData
     }
     
     private func updateStatistics() {
-        bestStreakCard.update(value: "\(viewModel.getBestStreak())")
-        perfectDaysCard.update(value: "\(viewModel.getPerfectDaysCount())")
-        averageCard.update(value: "\(viewModel.getAverageCountPerDays())")
-        completedTrackersCard.update(value: "\(viewModel.getAllCompletedTrackersCount())")
+        let statisticsValues = [
+            viewModel.getBestStreak(),
+            viewModel.getPerfectDaysCount(),
+            viewModel.getAllCompletedTrackersCount(),
+            viewModel.getAverageCountPerDays()
+        ]
+        
+        for (index, card) in statisticsCards.enumerated() {
+            card.update(value: "\(statisticsValues[index])")
+        }
     }
     
     
     private func setupLayout() {
         view.addSubviews(stateView, titleLabel, stackView)
-        stackView.addArrangedSubviews(bestStreakCard,
-                                      perfectDaysCard,
-                                      completedTrackersCard,
-                                      averageCard)
+        
+        statisticsCards.forEach {
+            stackView.addArrangedSubview($0)
+            
+            NSLayoutConstraint.activate( [
+                $0.heightAnchor.constraint(equalToConstant: 90)
+            ])
+        }
         
         stateView.translatesAutoresizingMaskIntoConstraints = false
+        
         NSLayoutConstraint.activate( [
             titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 44),
             titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
@@ -91,16 +108,6 @@ final class StatisticsViewController: UIViewController {
             stackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -126),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            
-            bestStreakCard.heightAnchor.constraint(equalToConstant: 90),
-            perfectDaysCard.heightAnchor.constraint(equalToConstant: 90),
-            completedTrackersCard.heightAnchor.constraint(equalToConstant: 90),
-            averageCard.heightAnchor.constraint(equalToConstant: 90)
         ])
-    }
-    
-    
-    private func setupNavigationBar() {
-        navigationItem.title = L10n.statisticsTitle
     }
 }
