@@ -63,6 +63,7 @@ final class TrackersViewController: UIViewController {
         setupCollectionView()
         bindViewModel()
         viewModel.loadCategories()
+        setupGesture()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -83,6 +84,11 @@ final class TrackersViewController: UIViewController {
                 screen: "Main"
             )
         }
+    }
+    
+    private func setupGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
     }
     
     private func setTodayDate() {
@@ -269,6 +275,10 @@ final class TrackersViewController: UIViewController {
         filterButton.setTitleColor(filter.isActive ? .systemRed : .white,for: .normal)
     }
     
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
+    }
+    
 }
 
 //MARK: - UICollectionViewDataSource
@@ -343,7 +353,7 @@ extension TrackersViewController: TrackerCardCellDelegate {
     
     func didDeleteItem(at indexPath: IndexPath) {
         let tracker = viewModel.getTrackerForCell(section: indexPath.section, item: indexPath.item)
-        viewModel.deleteTracker(byId: tracker.id)
+        confirmDelete(tracker: tracker)
     }
     
     func didEditItem(at indexPath: IndexPath) {
@@ -373,5 +383,18 @@ extension TrackersViewController: TrackerCardCellDelegate {
         viewModel.toggleRecords(for: tracker.id)
         viewModel.reloadCompletedTrackers()
         collectionView.reloadItems(at: [indexPath])
+    }
+    
+    private func confirmDelete(tracker: Tracker) {
+        let title = L10n.trackerDeleteTitle
+        let message = L10n.trackerDeleteMessage
+        
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
+        alertController.addAction(UIAlertAction(title: L10n.cancel, style: .cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: L10n.delete, style: .destructive, handler: { _ in
+            self.viewModel.deleteTracker(byId: tracker.id)
+        }))
+        
+        present(alertController, animated: true)
     }
 }

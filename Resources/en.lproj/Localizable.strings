@@ -61,6 +61,8 @@ schedule_every_day = "Every day";
 tracker_type_habit = "Habit";
 tracker_type_event = "Irregular event";
 tracker_creation_title = "Create tracker";
+tracker_delete_title = "Delete tracker?";
+tracker_delete_message = "Are you sure you want to delete the tracker?";
 
 /* Trackers */
 search_placeholder = "Search";

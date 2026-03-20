@@ -15,15 +15,44 @@ final class StatisticsViewModel {
     private let recordStore = TrackerRecordStore()
     private let trackerStore = TrackerStore()
     
-    func getAllCompletedTrackersCount() -> Int {
+    func getStatistics() -> (bestStreak: Int, perfectDays: Int, completedTrackers: Int, average: Int) {
+        let bestStreak = getBestStreak()
+        let perfectDays = getPerfectDaysCount()
+        let completedTrackers = getAllCompletedTrackersCount()
+        let average = getAverageCountPerDays()
+        
+        return (bestStreak, perfectDays, completedTrackers, average)
+    }
+    
+    func getStatisticsCards() -> [StatisticsCardView] {
+        return [
+            StatisticsCardView(title: L10n.bestStreakCardTitle),
+            StatisticsCardView(title: L10n.perfectDaysCardTitle),
+            StatisticsCardView(title: L10n.completedTrackersCardTitle),
+            StatisticsCardView(title: L10n.averageCardTitle)
+        ]
+    }
+    
+    func getStatisticsValues() -> [Int] {
+        let statistics = getStatistics()
+        return [statistics.bestStreak, statistics.perfectDays, statistics.completedTrackers, statistics.average]
+    }
+    
+    func hasData() -> Bool {
+        let statistics = getStatistics()
+        return (statistics.bestStreak + statistics.perfectDays + statistics.completedTrackers + statistics.average) != 0
+    }
+    
+    // MARK: - Private methods
+    private func getAllCompletedTrackersCount() -> Int {
         recordStore.totalCompletedCount()
     }
     
-    func getAverageCountPerDays() -> Int {
+    private func getAverageCountPerDays() -> Int {
         recordStore.averageCompletedTrackersPerDay()
     }
     
-    func getBestStreak() -> Int {
+    private func getBestStreak() -> Int {
         let calendar = Calendar.current
         
         let days = getPerfectDays().sorted()
@@ -34,10 +63,10 @@ final class StatisticsViewModel {
         var currentStreak = 1
         
         for i in 1..<days.count {
-            let prev = days[i - 1]
+            let previous = days[i - 1]
             let current = days[i]
             
-            if calendar.date(byAdding: .day, value: 1, to: prev) == current {
+            if calendar.date(byAdding: .day, value: 1, to: previous) == current {
                 currentStreak += 1
             } else {
                 maxStreak = max(maxStreak, currentStreak)
@@ -48,7 +77,7 @@ final class StatisticsViewModel {
         return max(maxStreak, currentStreak)
     }
     
-   private func getPerfectDays() -> [Date] {
+    private func getPerfectDays() -> [Date] {
         let calendar = Calendar.current
         let trackers = trackerStore.fetchAll()
         
@@ -61,13 +90,13 @@ final class StatisticsViewModel {
             let completed = Set(records.map(\.trackerId))
             
             let isPerfect = !active.isEmpty &&
-                active.allSatisfy { completed.contains($0.id) }
+            active.allSatisfy { completed.contains($0.id) }
             
             return isPerfect ? date : nil
         }
     }
     
-    func getPerfectDaysCount() -> Int {
+    private func getPerfectDaysCount() -> Int {
         let trackers = trackerStore.fetchAll()
         let groupedRecords = getGroupedByDateRecords()
         
@@ -81,7 +110,7 @@ final class StatisticsViewModel {
             let completedIds = Set(recordsForDay.map { $0.trackerId })
             
             let isPerfect = !activeTrackers.isEmpty &&
-                activeTrackers.allSatisfy { completedIds.contains($0.id) }
+            activeTrackers.allSatisfy { completedIds.contains($0.id) }
             
             return result + (isPerfect ? 1 : 0)
         }

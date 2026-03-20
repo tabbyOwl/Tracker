@@ -39,7 +39,7 @@ final class TrackerTypePickerViewController: UIViewController {
     }
     
     private func setupBackground() {
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
     }
     
     private func setupNavigationBar() {

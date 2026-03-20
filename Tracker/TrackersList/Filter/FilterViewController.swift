@@ -50,6 +50,7 @@ final class FilterViewController: UIViewController {
     
 }
 
+//MARK: - UITableViewDataSource
 extension FilterViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -78,25 +79,25 @@ extension FilterViewController: UITableViewDataSource {
     }
     
 }
-
+// MARK: - UITableViewDelegate
 extension FilterViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-
+        
         let previousFilter = selectedFilter
         selectedFilter = FilterType.allCases[indexPath.row]
         let previousIndex = FilterType.allCases.firstIndex(of: previousFilter)
-
+        
         var toReload = [indexPath]
-
+        
         if let previousIndex {
             toReload.append(IndexPath(row: previousIndex, section: 0))
         }
-
+        
         tableView.reloadRows(at: toReload, with: .automatic)
-
+        
         onFilterSelected?(selectedFilter)
-
+        
         dismiss(animated: true)
     }
     

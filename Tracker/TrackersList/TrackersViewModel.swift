@@ -37,18 +37,16 @@ final class TrackersViewModel {
                 guard let weekday = WeekDay(date: selectedDate) else { return false }
                 return tracker.schedule.isEmpty || tracker.schedule.contains(weekday)
             }
-
+        
         if !hasTrackersForDate {
             return .emptyTrackers
         }
-
+        
         if filteredCategories.isEmpty {
             return .emptyFilter
         }
-
         return .content
     }
-    
     
     private var searchText: String = "" {
         didSet {
@@ -62,7 +60,7 @@ final class TrackersViewModel {
         }
     }
     
-
+    
     private var categories: [TrackerCategory] = [] {
         didSet {
             updateFilteredCategories()
@@ -123,65 +121,30 @@ final class TrackersViewModel {
     
     func updateFilteredCategories() {
         guard let selectedWeekday = WeekDay(date: selectedDate) else { return }
+
         var pinnedTrackers: [Tracker] = []
-        
+
         filteredCategories = categories
             .map { category in
+                let filteredTrackers = filterTrackers(in: category, for: selectedWeekday, searchText: searchText)
                 
-                let trackers = category.trackers.filter { tracker in
-                    
-                    
-                    if tracker.isPinned {
-                        pinnedTrackers.append(tracker)
-                        return false
-                    }
-                    
-                    let matchesSchedule =
-                        tracker.schedule.isEmpty ||
-                        tracker.schedule.contains(selectedWeekday)
-                    
-                    if !matchesSchedule { return false }
-
-                    if !searchText.isEmpty {
-                        let matchesSearch =
-                            tracker.name.lowercased()
-                            .contains(searchText.lowercased())
-                        
-                        if !matchesSearch { return false }
-                    }
-
-                    switch selectedFilter {
-                    case .all, .today:
-                        return true
-                    case .completed:
-                        return isCompleted(for: tracker.id)
-                    case .uncompleted:
-                        return !isCompleted(for: tracker.id)
-                    }
-                }
-
-                return TrackerCategory(
-                    id: category.id,
-                    name: category.name,
-                    trackers: trackers
-                )
+                let pinned = filteredTrackers.filter { $0.isPinned }
+                pinnedTrackers.append(contentsOf: pinned)
+                
+                let regular = filteredTrackers.filter { !$0.isPinned }
+                
+                return TrackerCategory(id: category.id, name: category.name, trackers: regular)
             }
             .filter { !$0.trackers.isEmpty }
-        
+
         var result: [TrackerCategory] = []
 
         if !pinnedTrackers.isEmpty {
-            result.append(
-                TrackerCategory(
-                    id: UUID(),
-                    name: L10n.pinnedCategoryTitle,
-                    trackers: pinnedTrackers
-                )
-            )
+            result.append(TrackerCategory(id: UUID(), name: L10n.pinnedCategoryTitle, trackers: pinnedTrackers))
         }
 
         result.append(contentsOf: filteredCategories)
-        
+
         filteredCategories = result
         onDataChanged?()
         onStateChange?(state)
@@ -233,6 +196,32 @@ final class TrackersViewModel {
     func deleteTracker(byId id: UUID) {
         trackerStore.delete(byId: id)
         onDataChanged?()
+    }
+    
+    private func filterTrackers(in category: TrackerCategory, for selectedWeekday: WeekDay, searchText: String) -> [Tracker] {
+     
+        return category.trackers.filter { tracker in
+            let matchesSchedule = tracker.schedule.isEmpty || tracker.schedule.contains(selectedWeekday)
+            if !matchesSchedule { return false }
+
+            if !searchText.isEmpty {
+                let matchesSearch = tracker.name.lowercased().contains(searchText.lowercased())
+                if !matchesSearch { return false }
+            }
+
+            switch selectedFilter {
+            case .all, .today:
+                return true
+            case .completed:
+                return isCompleted(for: tracker.id)
+            case .uncompleted:
+                return !isCompleted(for: tracker.id)
+            }
+        }
+    }
+    
+    private func getPinnedTrackers(from category: TrackerCategory) -> [Tracker] {
+        return category.trackers.filter { $0.isPinned }
     }
     
     private func addTracker(_ tracker: Tracker) {

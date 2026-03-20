@@ -41,6 +41,7 @@ final class NewCategoryViewController: UIViewController {
     }
     
     private func setupNavigationBar() {
+        view.backgroundColor = .systemBackground
         navigationItem.title = L10n.newCategoryTitle
     }
     

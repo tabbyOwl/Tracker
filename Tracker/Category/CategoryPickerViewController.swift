@@ -31,7 +31,7 @@ final class CategoryPickerViewController: UIViewController {
         let button = UIButton()
         button.setTitle(L10n.categoryPickerAddButton, for: .normal)
         button.layer.cornerRadius = 16
-        button.backgroundColor = .projectColor(.blackDay)
+        button.backgroundColor = .secondarySystemBackground
         button.addTarget(
             self,
             action: #selector(createCategoryButtonTapped),
@@ -43,6 +43,7 @@ final class CategoryPickerViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setupUI()
         setupNavigationBar()
         bindViewModel()
@@ -51,8 +52,8 @@ final class CategoryPickerViewController: UIViewController {
     
     // MARK: - UI
     private func setupUI() {
-        view.backgroundColor = .white
-        tableView.backgroundColor = .white
+        view.backgroundColor = .systemBackground
+        tableView.backgroundColor = .systemBackground
         
         view.addSubviews(stateView, tableView, createCategoryButton)
         
@@ -79,6 +80,7 @@ final class CategoryPickerViewController: UIViewController {
     }
     
     private func setupNavigationBar() {
+        view.backgroundColor = .systemBackground
         navigationItem.title = L10n.categoryPickerTitle
     }
     
@@ -125,7 +127,6 @@ final class CategoryPickerViewController: UIViewController {
         
         alertController.addAction(UIAlertAction(title: L10n.delete, style: .destructive, handler: { _ in
             self.viewModel.deleteCategory(by: category.id)
-            self.tableView.reloadData()
         }))
         
         present(alertController, animated: true)

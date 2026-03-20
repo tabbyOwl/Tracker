@@ -51,35 +51,23 @@ final class StatisticsViewController: UIViewController {
     }
     
     private func setupCards() {
-        statisticsCards = [
-            StatisticsCardView(title: L10n.bestStreakCardTitle),
-            StatisticsCardView(title: L10n.perfectDaysCardTitle),
-            StatisticsCardView(title: L10n.completedTrackersCardTitle),
-            StatisticsCardView(title: L10n.averageCardTitle)
-        ]
+        statisticsCards = viewModel.getStatisticsCards()
     }
     
     private func updateStateView() {
-        let hasData = (viewModel.getBestStreak() + viewModel.getPerfectDaysCount() +
-                       viewModel.getAllCompletedTrackersCount() + viewModel.getAverageCountPerDays()) != 0
+        let hasData = viewModel.hasData()
         
         stateView.isHidden = hasData
         stackView.isHidden = !hasData
     }
     
     private func updateStatistics() {
-        let statisticsValues = [
-            viewModel.getBestStreak(),
-            viewModel.getPerfectDaysCount(),
-            viewModel.getAllCompletedTrackersCount(),
-            viewModel.getAverageCountPerDays()
-        ]
+        let statisticsValues = viewModel.getStatisticsValues()
         
         for (index, card) in statisticsCards.enumerated() {
             card.update(value: "\(statisticsValues[index])")
         }
     }
-    
     
     private func setupLayout() {
         view.addSubviews(stateView, titleLabel, stackView)

@@ -62,6 +62,8 @@ schedule_every_day = "Каждый день";
 tracker_type_habit = "Привычка";
 tracker_type_event = "Нерегулярное событие";
 tracker_creation_title = "Создание трекера";
+tracker_delete_title = "Удалить трекер?";
+tracker_delete_message = "Уверены, что хотите удалить трекер?";
 
 /* Trackers */
 search_placeholder = "Поиск";

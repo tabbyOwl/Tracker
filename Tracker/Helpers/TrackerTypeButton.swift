@@ -20,7 +20,7 @@ final class TrackerTypeButton: UIButton {
     }
 
     private func setup() {
-        backgroundColor = .black
+        backgroundColor = .secondarySystemBackground
         setTitleColor(.white, for: .normal)
         titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         layer.cornerRadius = 16
