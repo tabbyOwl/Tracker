@@ -26,7 +26,6 @@ final class CategoryPickerViewController: UIViewController {
         table.separatorStyle = .singleLine
         return table
     }()
-    
     private lazy var createCategoryButton: UIButton = {
         let button = UIButton()
         button.setTitle(L10n.categoryPickerAddButton, for: .normal)

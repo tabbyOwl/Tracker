@@ -51,7 +51,7 @@ final class TrackerRecordStore {
             }
             
             CoreDataStack.shared.saveContext()
-
+            
         } catch {
             logger.error(
                 "Error toggling tracker record",
@@ -108,20 +108,20 @@ final class TrackerRecordStore {
         )
         
         do {
-               let count = try context.count(for: request)
-               return count > 0
-           } catch {
-               logger.error(
-                   "Failed to check tracker completion",
-                   metadata: [
-                       "trackerId": "\(trackerId)",
-                       "date": "\(date)",
-                       "error": "\(error)"
-                   ]
-               )
-               assertionFailure("Check tracker completion failed: \(error)")
-               return false
-           }
+            let count = try context.count(for: request)
+            return count > 0
+        } catch {
+            logger.error(
+                "Failed to check tracker completion",
+                metadata: [
+                    "trackerId": "\(trackerId)",
+                    "date": "\(date)",
+                    "error": "\(error)"
+                ]
+            )
+            assertionFailure("Check tracker completion failed: \(error)")
+            return false
+        }
         
     }
     
@@ -164,7 +164,7 @@ final class TrackerRecordStore {
     func averageCompletedTrackersPerDay() -> Int {
         let request: NSFetchRequest<TrackerRecordCoreData> =
         TrackerRecordCoreData.fetchRequest()
-
+        
         do {
             let completedRecords = try context.fetch(request)
             

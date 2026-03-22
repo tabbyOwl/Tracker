@@ -1,5 +1,5 @@
 {
-  "originHash" : "772711730ab12a87324bef6c74a0c08cd90126c4dc609567df18f9c81001f550",
+  "originHash" : "5b1874ca25cfe18a8ad9a1d854cb8fdd067d5a91851e6c1d250ca2bb8cdc22d2",
   "pins" : [
     {
       "identity" : "appmetrica-sdk-ios",
@@ -53,6 +53,15 @@
       "state" : {
         "revision" : "4799286537280063c85a32f09884cfbca301b1a1",
         "version" : "602.0.0"
+      }
+    },
+    {
+      "identity" : "swiftgenplugin",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SwiftGen/SwiftGenPlugin",
+      "state" : {
+        "revision" : "879b85a470cacd70c19e22eb7e11a3aed66f4068",
+        "version" : "6.6.2"
       }
     },
     {

@@ -210,6 +210,7 @@
 				3FE587712F34BF99002470F6 /* XCRemoteSwiftPackageReference "swift-log" */,
 				3FE35D512F5583E70069CB54 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */,
 				3F2D7DAD2F570A1F003A5F57 /* XCRemoteSwiftPackageReference "appmetrica-sdk-ios" */,
+				3F2D54432F6E43B2009533B8 /* XCRemoteSwiftPackageReference "SwiftGenPlugin" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3F2F34E12F11F30F000ADB96;
@@ -243,10 +244,12 @@
 /* Begin PBXShellScriptBuildPhase section */
 		3FC7FA362F36D386005A1CAC /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
+				"",
 			);
 			inputPaths = (
 			);
@@ -257,7 +260,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if which swiftgen >/dev/null; then\n  swiftgen config run --config \"${SRCROOT}/swiftgen.yml\"\nelse\n  echo \"warning: SwiftGen not installed\"\nfi\n";
+			shellScript = "if which swiftgen > /dev/null; then\n  swiftgen config run\nelif [ -x \"/opt/homebrew/bin/swiftgen\" ]; then\n  /opt/homebrew/bin/swiftgen config run\nelif [ -x \"/usr/local/bin/swiftgen\" ]; then\n  /usr/local/bin/swiftgen config run\nelse\n  echo \"error: SwiftGen not installed\"\n  echo \"Install via: brew install swiftgen\"\n  exit 1\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -548,6 +551,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		3F2D54432F6E43B2009533B8 /* XCRemoteSwiftPackageReference "SwiftGenPlugin" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftGen/SwiftGenPlugin";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.6.2;
+			};
+		};
 		3F2D7DAD2F570A1F003A5F57 /* XCRemoteSwiftPackageReference "appmetrica-sdk-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/appmetrica/appmetrica-sdk-ios";
