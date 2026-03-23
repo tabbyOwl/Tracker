@@ -11,7 +11,7 @@ final class TrackerFormViewModel {
     var navigationTitle: String {
         switch mode {
         case .create:
-            trackerType == .habit ? L10n.trackerNewHabitTitle : L10n.trackerNewEventTitle
+            trackerType == .habit ? L10n.Tracker.newHabitTitle : L10n.Tracker.newEventTitle
         case .edit:
             trackerType == .habit ? "Редактирование привычки" : "Редактирование события"
         }
@@ -21,7 +21,7 @@ final class TrackerFormViewModel {
         guard !selectedSchedule.isEmpty else { return nil }
         
         if selectedSchedule.count == WeekDay.allCases.count {
-            return L10n.scheduleEveryDay
+            return L10n.Tracker.scheduleEveryDay
         }
         
         return selectedSchedule

@@ -14,13 +14,13 @@ final class StatisticsViewController: UIViewController {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = L10n.statisticsTitle
+        label.text = L10n.TabBar.statisticsTitle
         label.font = .systemFont(ofSize: 34, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    private lazy var stateView = StateView(text: L10n.statisticsStateViewTitle, image: UIImage(resource: .statisticsStateView))
+    private lazy var stateView = StateView(text: L10n.Statistics.stateViewTitle, image: UIImage(resource: .statisticsStateView))
     
     private lazy var stackView = {
         let stackView = UIStackView()
@@ -46,7 +46,6 @@ final class StatisticsViewController: UIViewController {
     }
     
     private func setupView() {
-        navigationItem.title = L10n.statisticsTitle
         view.backgroundColor = .systemBackground
     }
     

@@ -11,11 +11,11 @@ final class OnboardingPageViewController: UIPageViewController {
     private lazy var pages: [UIViewController] = [
         OnboardingContentViewController(
             image: UIImage(resource: .onboardingFirstPage),
-            text: L10n.onboardingFirstPageText
+            text: L10n.Onboarding.firstPageText
         ),
         OnboardingContentViewController(
             image: UIImage(resource: .onboardingSecondPage),
-            text: L10n.onboardingSecondPageText
+            text: L10n.Onboarding.secondPageText
         )
     ]
     
@@ -30,7 +30,7 @@ final class OnboardingPageViewController: UIPageViewController {
     
     private let actionButton: UIButton = {
         let button = UIButton()
-        button.setTitle(L10n.actionButtonTitle, for: .normal)
+        button.setTitle(L10n.Onboarding.actionButtonTitle, for: .normal)
         button.backgroundColor = .black
         button.tintColor = .white
         button.clipsToBounds = true

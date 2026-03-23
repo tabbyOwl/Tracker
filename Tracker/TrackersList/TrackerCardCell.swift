@@ -170,16 +170,16 @@ final class TrackerCardCell: UICollectionViewCell {
 extension TrackerCardCell: UIContextMenuInteractionDelegate {
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
         guard let indexPath = indexPath else { return nil }
-        let title = isPinned ? L10n.unpinButtonTitle : L10n.pinButtonTitle
+        let title = isPinned ? L10n.Trackers.unpinButtonTitle : L10n.Trackers.pinButtonTitle
         let pinAction = UIAction(title: title, image: nil) { action in
             self.delegate?.didPinItem(at: indexPath)
         }
         
-        let editAction = UIAction(title: L10n.edit, image: nil) { action in
+        let editAction = UIAction(title: L10n.Common.edit, image: nil) { action in
             self.delegate?.didEditItem(at: indexPath)
         }
         
-        let deleteAction = UIAction(title: L10n.delete, image: nil) { action in
+        let deleteAction = UIAction(title: L10n.Common.delete, image: nil) { action in
             self.delegate?.didDeleteItem(at: indexPath)
         }
         

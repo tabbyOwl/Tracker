@@ -140,7 +140,7 @@ final class TrackersViewModel {
         var result: [TrackerCategory] = []
 
         if !pinnedTrackers.isEmpty {
-            result.append(TrackerCategory(id: UUID(), name: L10n.pinnedCategoryTitle, trackers: pinnedTrackers))
+            result.append(TrackerCategory(id: UUID(), name: L10n.Trackers.pinnedCategoryTitle, trackers: pinnedTrackers))
         }
 
         result.append(contentsOf: filteredCategories)

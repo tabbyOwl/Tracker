@@ -11,7 +11,7 @@ final class TrackersViewController: UIViewController {
     private let viewModel =  TrackersViewModel()
     
     // MARK: - UI
-    private lazy var stateView = StateView(text: L10n.trackersStateViewTitle, image: UIImage(resource: .dizzy))
+    private lazy var stateView = StateView(text: L10n.Trackers.stateViewTitle, image: UIImage(resource: .dizzy))
     
     private let datePicker: UIDatePicker = {
         let picker = UIDatePicker()
@@ -22,14 +22,14 @@ final class TrackersViewController: UIViewController {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = L10n.trackersTitle
+        label.text = L10n.TabBar.trackersTitle
         label.font = .systemFont(ofSize: 34, weight: .bold)
         return label
     }()
     
     private lazy var searchBar: UISearchBar = {
         let searchBar = UISearchBar()
-        searchBar.placeholder = L10n.searchPlaceholder
+        searchBar.placeholder = L10n.Trackers.searchPlaceholder
         searchBar.searchBarStyle = .minimal
         searchBar.searchTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
         return searchBar
@@ -46,7 +46,7 @@ final class TrackersViewController: UIViewController {
     
     private lazy var filterButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle(L10n.filterButton, for: .normal)
+        button.setTitle(L10n.Filter.button, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 17, weight: .medium)
         button.backgroundColor = .projectColor(.blue)
         button.tintColor = .white
@@ -201,7 +201,7 @@ final class TrackersViewController: UIViewController {
             filterButton.isHidden = true
             
             stateView.configure(
-                text: L10n.trackersStateViewTitle,
+                text: L10n.Trackers.stateViewTitle,
                 image: UIImage(resource: .dizzy)
             )
             
@@ -211,7 +211,7 @@ final class TrackersViewController: UIViewController {
             filterButton.isHidden = false
             
             stateView.configure(
-                text: L10n.trackersStateViewEmptyFilter,
+                text: L10n.Trackers.stateViewEmptyFilter,
                 image: UIImage(resource: .filterStateView)
             )
         }
@@ -386,12 +386,12 @@ extension TrackersViewController: TrackerCardCellDelegate {
     }
     
     private func confirmDelete(tracker: Tracker) {
-        let title = L10n.trackerDeleteTitle
-        let message = L10n.trackerDeleteMessage
+        let title = L10n.Tracker.deleteTitle
+        let message = L10n.Tracker.deleteMessage
         
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
-        alertController.addAction(UIAlertAction(title: L10n.cancel, style: .cancel, handler: nil))
-        alertController.addAction(UIAlertAction(title: L10n.delete, style: .destructive, handler: { _ in
+        alertController.addAction(UIAlertAction(title: L10n.Common.cancel, style: .cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: L10n.Common.delete, style: .destructive, handler: { _ in
             self.viewModel.deleteTracker(byId: tracker.id)
         }))
         

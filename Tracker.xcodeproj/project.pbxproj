@@ -13,7 +13,6 @@
 		3F2D7DAF2F570A1F003A5F57 /* AppMetricaCore in Frameworks */ = {isa = PBXBuildFile; productRef = 3F2D7DAE2F570A1F003A5F57 /* AppMetricaCore */; };
 		3F2D7DB12F570A1F003A5F57 /* AppMetricaCrashes in Frameworks */ = {isa = PBXBuildFile; productRef = 3F2D7DB02F570A1F003A5F57 /* AppMetricaCrashes */; };
 		3FA470B22F20D97500DF01CB /* TrackerDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3FA470B02F20D97500DF01CB /* TrackerDataModel.xcdatamodeld */; };
-		3FC7FA3A2F36D8A5005A1CAC /* swiftgen.yml in Resources */ = {isa = PBXBuildFile; fileRef = 3FC7FA392F36D89A005A1CAC /* swiftgen.yml */; };
 		3FE587732F34BF99002470F6 /* InMemoryLogging in Frameworks */ = {isa = PBXBuildFile; productRef = 3FE587722F34BF99002470F6 /* InMemoryLogging */; };
 		3FE587752F34BF99002470F6 /* Logging in Frameworks */ = {isa = PBXBuildFile; productRef = 3FE587742F34BF99002470F6 /* Logging */; };
 /* End PBXBuildFile section */
@@ -30,7 +29,6 @@
 
 /* Begin PBXFileReference section */
 		3FA470B12F20D97500DF01CB /* TrackerDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TrackerDataModel.xcdatamodel; sourceTree = "<group>"; };
-		3FC7FA392F36D89A005A1CAC /* swiftgen.yml */ = {isa = PBXFileReference; explicitFileType = text.yaml; path = swiftgen.yml; sourceTree = "<group>"; };
 		3FE35D5C2F5585290069CB54 /* TrackerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrackerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3FE78CB22F188725006AB7FD /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -57,11 +55,6 @@
 		3FC7FA412F36D9DB005A1CAC /* Resources */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Resources;
-			sourceTree = "<group>";
-		};
-		3FC7FA472F36DA02005A1CAC /* Generated */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Generated;
 			sourceTree = "<group>";
 		};
 		3FE35D5D2F5585290069CB54 /* TrackerTests */ = {
@@ -106,8 +99,6 @@
 		3F2F34E12F11F30F000ADB96 = {
 			isa = PBXGroup;
 			children = (
-				3FC7FA392F36D89A005A1CAC /* swiftgen.yml */,
-				3FC7FA472F36DA02005A1CAC /* Generated */,
 				3FA470B02F20D97500DF01CB /* TrackerDataModel.xcdatamodeld */,
 				3FC7FA412F36D9DB005A1CAC /* Resources */,
 				3F2F34EC2F11F30F000ADB96 /* Tracker */,
@@ -126,7 +117,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3F2F34FD2F11F310000ADB96 /* Build configuration list for PBXNativeTarget "Tracker" */;
 			buildPhases = (
-				3FC7FA362F36D386005A1CAC /* Run Script */,
 				3F2F34E62F11F30F000ADB96 /* Sources */,
 				3F2F34E72F11F30F000ADB96 /* Frameworks */,
 				3F2F34E82F11F30F000ADB96 /* Resources */,
@@ -138,7 +128,6 @@
 			fileSystemSynchronizedGroups = (
 				3F2F34EC2F11F30F000ADB96 /* Tracker */,
 				3FC7FA412F36D9DB005A1CAC /* Resources */,
-				3FC7FA472F36DA02005A1CAC /* Generated */,
 			);
 			name = Tracker;
 			packageProductDependencies = (
@@ -210,7 +199,6 @@
 				3FE587712F34BF99002470F6 /* XCRemoteSwiftPackageReference "swift-log" */,
 				3FE35D512F5583E70069CB54 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */,
 				3F2D7DAD2F570A1F003A5F57 /* XCRemoteSwiftPackageReference "appmetrica-sdk-ios" */,
-				3F2D54432F6E43B2009533B8 /* XCRemoteSwiftPackageReference "SwiftGenPlugin" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3F2F34E12F11F30F000ADB96;
@@ -228,7 +216,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3FC7FA3A2F36D8A5005A1CAC /* swiftgen.yml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -240,29 +227,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		3FC7FA362F36D386005A1CAC /* Run Script */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"",
-			);
-			inputPaths = (
-			);
-			name = "Run Script";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if which swiftgen > /dev/null; then\n  swiftgen config run\nelif [ -x \"/opt/homebrew/bin/swiftgen\" ]; then\n  /opt/homebrew/bin/swiftgen config run\nelif [ -x \"/usr/local/bin/swiftgen\" ]; then\n  /usr/local/bin/swiftgen config run\nelse\n  echo \"error: SwiftGen not installed\"\n  echo \"Install via: brew install swiftgen\"\n  exit 1\nfi\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		3F2F34E62F11F30F000ADB96 /* Sources */ = {
@@ -413,6 +377,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -470,6 +435,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -551,14 +517,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		3F2D54432F6E43B2009533B8 /* XCRemoteSwiftPackageReference "SwiftGenPlugin" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SwiftGen/SwiftGenPlugin";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 6.6.2;
-			};
-		};
 		3F2D7DAD2F570A1F003A5F57 /* XCRemoteSwiftPackageReference "appmetrica-sdk-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/appmetrica/appmetrica-sdk-ios";

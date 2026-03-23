@@ -45,7 +45,7 @@ final class FilterViewController: UIViewController {
     }
     
     private func setupNavigationBar() {
-        navigationItem.title = L10n.filterTitle
+        navigationItem.title = L10n.Filter.title
     }
     
 }

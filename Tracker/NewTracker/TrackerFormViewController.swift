@@ -17,7 +17,7 @@ final class TrackerFormViewController: UIViewController {
     
     private let mode: TrackerFormMode
     private let viewModel: TrackerFormViewModel
-    private let textField = TextFieldView(placeholder: L10n.newTrackerPlaceholder)
+    private let textField = TextFieldView(placeholder: L10n.NewTracker.placeholder)
     
     // MARK: - Sections
     private enum Section: Int, CaseIterable {
@@ -219,10 +219,10 @@ extension TrackerFormViewController: UITableViewDataSource {
             let image = UIImage(systemName: "chevron.right")
             if indexPath.row == 0 {
                 let categoryName = viewModel.getCategoryName()
-                cell.configure(title: L10n.categoryTitle, subtitle: categoryName, image: image)
+                cell.configure(title: L10n.Common.categoryTitle, subtitle: categoryName, image: image)
             } else {
                 let scheduleSubtitle = viewModel.scheduleSubtitle
-                cell.configure(title: L10n.scheduleTitle, subtitle: scheduleSubtitle, image: image)
+                cell.configure(title: L10n.Common.scheduleTitle, subtitle: scheduleSubtitle, image: image)
             }
             
             return cell
@@ -233,9 +233,9 @@ extension TrackerFormViewController: UITableViewDataSource {
             cell.delegate = self
             switch type {
             case .emoji:
-                cell.configure(title: L10n.emojiTitle, items: EmojiLibrary.all, selectedItem: viewModel.getSelectedEmojiItem())
+                cell.configure(title: L10n.Common.emojiTitle, items: EmojiLibrary.all, selectedItem: viewModel.getSelectedEmojiItem())
             case .color:
-                cell.configure(title: L10n.colorTitle, items: ColorLibrary.all, selectedItem: viewModel.getSelectedColorItem())
+                cell.configure(title: L10n.Common.colorTitle, items: ColorLibrary.all, selectedItem: viewModel.getSelectedColorItem())
             }
             
             return cell

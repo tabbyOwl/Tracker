@@ -26,10 +26,10 @@ final class StatisticsViewModel {
     
     func getStatisticsCards() -> [StatisticsCardView] {
         return [
-            StatisticsCardView(title: L10n.bestStreakCardTitle),
-            StatisticsCardView(title: L10n.perfectDaysCardTitle),
-            StatisticsCardView(title: L10n.completedTrackersCardTitle),
-            StatisticsCardView(title: L10n.averageCardTitle)
+            StatisticsCardView(title: L10n.Statistics.bestStreakCardTitle),
+            StatisticsCardView(title: L10n.Statistics.perfectDaysCardTitle),
+            StatisticsCardView(title: L10n.Statistics.completedTrackersCardTitle),
+            StatisticsCardView(title: L10n.Statistics.averageCardTitle)
         ]
     }
     

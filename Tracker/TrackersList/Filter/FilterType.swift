@@ -14,13 +14,13 @@ enum FilterType: CaseIterable {
     var title: String {
         switch self {
         case .all:
-            return L10n.filterAll
+            return L10n.TrackerFilter.all
         case .today:
-            return L10n.filterToday
+            return L10n.TrackerFilter.today
         case .completed:
-            return L10n.filterCompleted
+            return L10n.TrackerFilter.completed
         case .uncompleted:
-            return L10n.filterUncompleted
+            return L10n.TrackerFilter.uncompleted
         }
     }
 }

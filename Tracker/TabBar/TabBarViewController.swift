@@ -20,7 +20,7 @@ final class TabBarController: UITabBarController {
         let trackersViewController = TrackersViewController()
         
         trackersViewController.tabBarItem = UITabBarItem(
-            title: L10n.trackersTitle,
+            title: L10n.TabBar.trackersTitle,
             image: UIImage(systemName: "circle.circle.fill"),
             selectedImage: nil
         )
@@ -28,7 +28,7 @@ final class TabBarController: UITabBarController {
         
         let statisticsViewController = StatisticsViewController()
         
-        statisticsViewController.tabBarItem = UITabBarItem(title: L10n.statisticsTitle,
+        statisticsViewController.tabBarItem = UITabBarItem(title: L10n.TabBar.statisticsTitle,
                                                            image: UIImage(systemName: "hare.fill"),
                                                            selectedImage: nil)
         

@@ -33,7 +33,7 @@ final class TrackerFooterView: UIView {
         stack.spacing = 8
         stack.distribution = .fillEqually
         
-        cancelButton.setTitle(L10n.cancel, for: .normal)
+        cancelButton.setTitle(L10n.Common.cancel, for: .normal)
         cancelButton.setTitleColor(.systemRed, for: .normal)
         cancelButton.layer.borderWidth = 1
         cancelButton.layer.borderColor = UIColor.systemRed.cgColor
@@ -60,7 +60,7 @@ final class TrackerFooterView: UIView {
     private func configureForMode() {
         switch mode {
         case .create:
-            createButton.setTitle(L10n.create, for: .normal)
+            createButton.setTitle(L10n.Common.create, for: .normal)
 
         case .edit:
             createButton.setTitle("Сохранить", for: .normal)

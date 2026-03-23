@@ -12,11 +12,11 @@ final class NewCategoryViewController: UIViewController {
     var onCategoryCreated: ((String) -> Void)?
     private var name: String = ""
     
-    private let textField = TextFieldView(placeholder: L10n.newCategoryPlaceholder)
+    private let textField = TextFieldView(placeholder: L10n.NewCategory.placeholder)
     
     private let doneButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle(L10n.done, for: .normal)
+        button.setTitle(L10n.Common.done, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .lightGray
         button.layer.cornerRadius = 16
@@ -42,7 +42,7 @@ final class NewCategoryViewController: UIViewController {
     
     private func setupNavigationBar() {
         view.backgroundColor = .systemBackground
-        navigationItem.title = L10n.newCategoryTitle
+        navigationItem.title = L10n.NewCategory.title
     }
     
     private func setupKeyboard() {
