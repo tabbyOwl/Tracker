@@ -23,16 +23,16 @@ final class OnboardingPageViewController: UIPageViewController {
         let pageControl = UIPageControl()
         pageControl.numberOfPages = pages.count
         pageControl.currentPage = 0
-        pageControl.currentPageIndicatorTintColor = .black
-        pageControl.pageIndicatorTintColor = .gray
+        pageControl.currentPageIndicatorTintColor = .appBlack
+        pageControl.pageIndicatorTintColor = .appGray
         return pageControl
     }()
     
     private let actionButton: UIButton = {
         let button = UIButton()
         button.setTitle(L10n.Onboarding.actionButtonTitle, for: .normal)
-        button.backgroundColor = .black
-        button.tintColor = .white
+        button.backgroundColor = .appBlack
+        button.tintColor = .appWhite
         button.clipsToBounds = true
         button.layer.cornerRadius = 16
         return button
@@ -46,7 +46,7 @@ final class OnboardingPageViewController: UIPageViewController {
     }
     
     private func setupPageController() {
-        view.backgroundColor = .white
+        view.backgroundColor = .appWhite
         dataSource = self
         delegate = self
         

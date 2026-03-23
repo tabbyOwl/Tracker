@@ -14,7 +14,7 @@ final class StatisticsCardView: GradientBorderView {
     init(title: String) {
         super.init(frame: .zero)
         
-        colors = [.projectColor(.gradientRed), .projectColor(.gradientGreen), .projectColor(.gradientBlue)]
+        colors = [.gradientRed, .gradientGreen, .gradientBlue]
         layer.cornerRadius = 16
         
         titleLabel.text = title

@@ -18,8 +18,8 @@ final class EditCategoryViewController: UIViewController {
     private let doneButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(L10n.Common.done, for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .secondarySystemBackground
+        button.setTitleColor(.appWhite, for: .normal)
+        button.backgroundColor = .appBlack
         button.layer.cornerRadius = 16
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         return button
@@ -46,7 +46,7 @@ final class EditCategoryViewController: UIViewController {
     private func setupUI() {
         
         doneButton.addTarget(self, action: #selector(didTapDone), for: .touchUpInside)
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .appWhite
         navigationItem.title = L10n.EditCategory.title
         
         nameTextField.text = category.name

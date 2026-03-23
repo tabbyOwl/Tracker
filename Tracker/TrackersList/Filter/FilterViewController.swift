@@ -29,8 +29,8 @@ final class FilterViewController: UIViewController {
     }
     
     private func setupUI() {
-        view.backgroundColor = .systemBackground
-        tableView.backgroundColor = .systemBackground
+        view.backgroundColor = .appWhite
+        tableView.backgroundColor = .appWhite
         
         view.addSubview(tableView)
         

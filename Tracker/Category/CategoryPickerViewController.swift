@@ -26,11 +26,12 @@ final class CategoryPickerViewController: UIViewController {
         table.separatorStyle = .singleLine
         return table
     }()
+    
     private lazy var createCategoryButton: UIButton = {
         let button = UIButton()
         button.setTitle(L10n.CategoryPicker.addButton, for: .normal)
         button.layer.cornerRadius = 16
-        button.backgroundColor = .secondarySystemBackground
+        button.backgroundColor = .appBlack
         button.addTarget(
             self,
             action: #selector(createCategoryButtonTapped),
@@ -51,8 +52,8 @@ final class CategoryPickerViewController: UIViewController {
     
     // MARK: - UI
     private func setupUI() {
-        view.backgroundColor = .systemBackground
-        tableView.backgroundColor = .systemBackground
+        view.backgroundColor = .appWhite
+        tableView.backgroundColor = .appWhite
         
         view.addSubviews(stateView, tableView, createCategoryButton)
         
@@ -79,7 +80,7 @@ final class CategoryPickerViewController: UIViewController {
     }
     
     private func setupNavigationBar() {
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .appWhite
         navigationItem.title = L10n.CategoryPicker.title
     }
     

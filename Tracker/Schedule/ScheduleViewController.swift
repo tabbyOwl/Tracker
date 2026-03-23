@@ -26,8 +26,8 @@ final class ScheduleViewController: UIViewController {
     private let doneButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(L10n.Common.done, for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .black
+        button.setTitleColor(.appWhite, for: .normal)
+        button.backgroundColor = .appBlack
         button.layer.cornerRadius = 16
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         return button
@@ -47,8 +47,8 @@ final class ScheduleViewController: UIViewController {
     
     // MARK: - Private methods
     private func setupUI() {
-        view.backgroundColor = .white
-        tableView.backgroundColor = .white
+        view.backgroundColor = .appWhite
+        tableView.backgroundColor = .appWhite
         title = L10n.Common.scheduleTitle
         
         tableView.register(ScheduleCell.self, forCellReuseIdentifier: ScheduleCell.reuseIdentifier)

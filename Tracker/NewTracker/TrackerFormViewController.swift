@@ -70,8 +70,8 @@ final class TrackerFormViewController: UIViewController {
     }
     
     private func setupUI() {
-        view.backgroundColor = .systemBackground
-        tableView.backgroundColor = .systemBackground
+        view.backgroundColor = .appWhite
+        tableView.backgroundColor = .appWhite
         
         view.addSubviews(textField, tableView)
         

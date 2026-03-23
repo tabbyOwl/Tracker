@@ -46,7 +46,7 @@ final class StatisticsViewController: UIViewController {
     }
     
     private func setupView() {
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .appWhite
     }
     
     private func setupCards() {

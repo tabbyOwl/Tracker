@@ -16,7 +16,7 @@ final class RowCell: UITableViewCell {
         let label = UILabel()
         label.font = .systemFont(ofSize: 17)
         label.numberOfLines = 0
-        label.textColor = .projectColor(.gray)
+        label.textColor = .appGray
         return label
     }()
     
@@ -28,7 +28,7 @@ final class RowCell: UITableViewCell {
     
     private lazy var image: UIImageView = {
         let imageView = UIImageView()
-        imageView.tintColor = .projectColor(.gray)
+        imageView.tintColor = .appGray
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
@@ -48,8 +48,7 @@ final class RowCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        contentView.backgroundColor = .projectColor(.backgroundDay)
-        
+        contentView.backgroundColor = .appBackground
         setupConstraints()
     }
     

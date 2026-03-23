@@ -17,8 +17,8 @@ final class NewCategoryViewController: UIViewController {
     private let doneButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(L10n.Common.done, for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .lightGray
+        button.setTitleColor(.appWhite, for: .normal)
+        button.backgroundColor = .appBlack
         button.layer.cornerRadius = 16
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         return button
@@ -41,7 +41,7 @@ final class NewCategoryViewController: UIViewController {
     }
     
     private func setupNavigationBar() {
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .appWhite
         navigationItem.title = L10n.NewCategory.title
     }
     
@@ -59,7 +59,7 @@ final class NewCategoryViewController: UIViewController {
     }
     
     private func setupUI() {
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .appWhite
         view.addSubviews(textField, doneButton)
         doneButton.addTarget(self, action: #selector(didTapDoneButton), for: .touchUpInside)
         
@@ -82,7 +82,7 @@ final class NewCategoryViewController: UIViewController {
     private func updateDoneButtonState() {
         let isValid = !name.trimmingCharacters(in: .whitespaces).isEmpty
         doneButton.isEnabled = isValid
-        doneButton.backgroundColor = isValid ? .black : .lightGray
+        doneButton.backgroundColor = isValid ? .appBlack : .appLightGray
     }
     
     @objc private func didTapDoneButton() {

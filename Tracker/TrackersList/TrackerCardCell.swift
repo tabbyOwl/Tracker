@@ -56,7 +56,7 @@ final class TrackerCardCell: UICollectionViewCell {
     private let actionButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "plus"), for: .normal)
-        button.tintColor = .white
+        button.tintColor = .appWhite
         button.layer.cornerRadius = 17
         return button
     }()

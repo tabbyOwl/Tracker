@@ -24,6 +24,7 @@ final class TrackersViewController: UIViewController {
         let label = UILabel()
         label.text = L10n.TabBar.trackersTitle
         label.font = .systemFont(ofSize: 34, weight: .bold)
+        label.textColor = .appBlack
         return label
     }()
     
@@ -48,7 +49,7 @@ final class TrackersViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setTitle(L10n.Filter.button, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 17, weight: .medium)
-        button.backgroundColor = .projectColor(.blue)
+        button.backgroundColor = .appBlue
         button.tintColor = .white
         button.layer.cornerRadius = 16
         button.addTarget(self, action: #selector(didTapFilterButton), for: .touchUpInside)
@@ -98,7 +99,7 @@ final class TrackersViewController: UIViewController {
     }
     
     private func setupUI() {
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .appWhite
         setupNavigationBar()
         setupConstraints()
     }
@@ -111,9 +112,7 @@ final class TrackersViewController: UIViewController {
             action: #selector(didTapAddButton)
         )
         
-        navigationItem.leftBarButtonItem?.tintColor = UIColor { traitCollection in
-            traitCollection.userInterfaceStyle == .dark ? UIColor.white : UIColor.black
-        }
+        navigationItem.leftBarButtonItem?.tintColor = .appBlack
         
         datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePicker)
@@ -142,6 +141,7 @@ final class TrackersViewController: UIViewController {
         
         let buttonHeight: CGFloat = 50
         let buttonBottom: CGFloat = 16
+        
         collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: buttonHeight + buttonBottom + 8, right: 0)
         collectionView.scrollIndicatorInsets = collectionView.contentInset
         
@@ -272,7 +272,7 @@ final class TrackersViewController: UIViewController {
     }
     
     private func updateFilterButton(_ filter: FilterType) {
-        filterButton.setTitleColor(filter.isActive ? .systemRed : .white,for: .normal)
+        filterButton.setTitleColor(filter.isActive ? .appRed : .appWhite, for: .normal)
     }
     
     @objc private func dismissKeyboard() {

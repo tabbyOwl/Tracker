@@ -34,13 +34,13 @@ final class TrackerFooterView: UIView {
         stack.distribution = .fillEqually
         
         cancelButton.setTitle(L10n.Common.cancel, for: .normal)
-        cancelButton.setTitleColor(.systemRed, for: .normal)
+        cancelButton.setTitleColor(.appRed, for: .normal)
         cancelButton.layer.borderWidth = 1
-        cancelButton.layer.borderColor = UIColor.systemRed.cgColor
+        cancelButton.layer.borderColor = UIColor.appRed.cgColor
         cancelButton.layer.cornerRadius = 16
         
-        createButton.backgroundColor = .lightGray
-        createButton.setTitleColor(.white, for: .normal)
+        createButton.backgroundColor = .appLightGray
+        createButton.setTitleColor(.appWhite, for: .normal)
         createButton.layer.cornerRadius = 16
         
         addSubview(stack)
