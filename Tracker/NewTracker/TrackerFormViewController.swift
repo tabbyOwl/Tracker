@@ -136,7 +136,7 @@ final class TrackerFormViewController: UIViewController {
     
     private func saveTracker() {
         guard let tracker = viewModel.saveTracker() else { return }
-
+        
         switch mode {
         case .create:
             onSaveTracker?(tracker)
@@ -145,10 +145,10 @@ final class TrackerFormViewController: UIViewController {
             onSaveTracker?(tracker)
             dismiss(animated: true)
         }
-
-      
+        
+        
     }
-  
+    
     
     private func categoryTapped() {
         let viewModel = CategoryPickerViewModel(store: TrackerCategoryStore())

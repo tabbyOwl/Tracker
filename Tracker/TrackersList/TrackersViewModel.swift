@@ -121,9 +121,9 @@ final class TrackersViewModel {
     
     func updateFilteredCategories() {
         guard let selectedWeekday = WeekDay(date: selectedDate) else { return }
-
+        
         var pinnedTrackers: [Tracker] = []
-
+        
         filteredCategories = categories
             .map { category in
                 let filteredTrackers = filterTrackers(in: category, for: selectedWeekday, searchText: searchText)
@@ -136,15 +136,15 @@ final class TrackersViewModel {
                 return TrackerCategory(id: category.id, name: category.name, trackers: regular)
             }
             .filter { !$0.trackers.isEmpty }
-
+        
         var result: [TrackerCategory] = []
-
+        
         if !pinnedTrackers.isEmpty {
             result.append(TrackerCategory(id: UUID(), name: L10n.Trackers.pinnedCategoryTitle, trackers: pinnedTrackers))
         }
-
+        
         result.append(contentsOf: filteredCategories)
-
+        
         filteredCategories = result
         onDataChanged?()
         onStateChange?(state)
@@ -199,16 +199,16 @@ final class TrackersViewModel {
     }
     
     private func filterTrackers(in category: TrackerCategory, for selectedWeekday: WeekDay, searchText: String) -> [Tracker] {
-     
+        
         return category.trackers.filter { tracker in
             let matchesSchedule = tracker.schedule.isEmpty || tracker.schedule.contains(selectedWeekday)
             if !matchesSchedule { return false }
-
+            
             if !searchText.isEmpty {
                 let matchesSearch = tracker.name.lowercased().contains(searchText.lowercased())
                 if !matchesSearch { return false }
             }
-
+            
             switch selectedFilter {
             case .all, .today:
                 return true

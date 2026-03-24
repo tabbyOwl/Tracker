@@ -1,0 +1,11 @@
+//
+//  Config.xcconfig
+//  Tracker
+//
+//  Created by Svetlana on 2026/3/24.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://developer.apple.com/documentation/xcode/adding-a-build-configuration-file-to-your-project
+
+APP_METRICA_API_KEY = "d6643117-1660-4329-9a0c-a105caddfdf6"

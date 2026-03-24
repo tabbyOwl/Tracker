@@ -20,3 +20,13 @@ enum MainScreenItem: String {
     case filter = "filter"
     case track = "track"
 }
+
+enum AnalyticsKey {
+    static let event = "event"
+    static let screen = "screen"
+    static let item = "item"
+}
+
+enum AnalyticsEventName {
+    static let event = "event"
+}

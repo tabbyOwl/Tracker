@@ -7,7 +7,7 @@
 import Foundation
 
 enum ScheduleMapper {
-
+    
     static func decode(_ data: Data) -> Set<WeekDay> {
         (try? JSONDecoder().decode(Set<WeekDay>.self, from: data)) ?? []
     }

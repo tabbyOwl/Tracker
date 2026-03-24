@@ -49,8 +49,8 @@ final class TrackersViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setTitle(L10n.Filter.button, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 17, weight: .medium)
-        button.backgroundColor = .appBlue
         button.tintColor = .white
+        button.backgroundColor = .appBlue
         button.layer.cornerRadius = 16
         button.addTarget(self, action: #selector(didTapFilterButton), for: .touchUpInside)
         return button
@@ -282,7 +282,7 @@ final class TrackersViewController: UIViewController {
     }
     
     private func updateFilterButton(_ filter: FilterType) {
-        filterButton.setTitleColor(filter.isActive ? .appRed : .appWhite, for: .normal)
+        filterButton.setTitleColor(filter.isActive ? .appRed : .white, for: .normal)
     }
     
     @objc private func dismissKeyboard() {

@@ -102,7 +102,10 @@ extension TextFieldView: UITextFieldDelegate {
         let updatedText = text.replacingCharacters(in: textRange, with: string)
         
         if updatedText.count > maxCount {
-            showError("Ограничение \(maxCount) символов")
+            showError(String.localizedStringWithFormat(
+                L10n.Common.characterLimit,
+                maxCount
+            ))
             return false
         } else {
             hideError()

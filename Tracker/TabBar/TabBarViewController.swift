@@ -11,7 +11,6 @@ final class TabBarController: UITabBarController {
     //MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        tabBar.backgroundColor = .appBlack
         setControllersToTabBar()
         setAppearance()
     }
@@ -39,17 +38,17 @@ final class TabBarController: UITabBarController {
     private func setAppearance() {
         let appearance = UITabBarAppearance()
         appearance.backgroundColor = .appWhite
-
+        
         appearance.stackedLayoutAppearance.selected.iconColor = .appBlue
         appearance.stackedLayoutAppearance.selected.titleTextAttributes = [
             .foregroundColor: UIColor.appBlue
         ]
-
+        
         appearance.stackedLayoutAppearance.normal.iconColor = .appGray
         appearance.stackedLayoutAppearance.normal.titleTextAttributes = [
             .foregroundColor: UIColor.appGray
         ]
-
+        
         UITabBar.appearance().standardAppearance = appearance
         UITabBar.appearance().scrollEdgeAppearance = appearance
     }

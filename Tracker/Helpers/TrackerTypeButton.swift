@@ -7,18 +7,18 @@
 import UIKit
 
 final class TrackerTypeButton: UIButton {
-
+    
     init(title: String) {
         super.init(frame: .zero)
         setTitle(title, for: .normal)
         setup()
     }
-
+    
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         nil
     }
-
+    
     private func setup() {
         backgroundColor = .appBlack
         setTitleColor(.appWhite, for: .normal)

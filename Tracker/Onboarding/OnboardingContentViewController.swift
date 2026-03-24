@@ -7,7 +7,7 @@
 import UIKit
 
 final class OnboardingContentViewController: UIViewController {
-
+    
     private let backgroundImageView = UIImageView()
     private let titleLabel: UILabel = {
         let label = UILabel()
@@ -22,17 +22,17 @@ final class OnboardingContentViewController: UIViewController {
         backgroundImageView.image = image
         titleLabel.text = text
     }
-
+    
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         nil
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
     }
-
+    
     private func setupUI() {
         backgroundImageView.contentMode = .scaleAspectFill
         backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -46,7 +46,7 @@ final class OnboardingContentViewController: UIViewController {
             backgroundImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             backgroundImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             backgroundImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-
+            
             titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: view.frame.height/2 + 20)

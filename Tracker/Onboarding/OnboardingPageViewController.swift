@@ -114,7 +114,7 @@ final class OnboardingPageViewController: UIPageViewController {
             animations: nil
         )
         
-        UserDefaults.standard.set(true, forKey: "onboardingShown")
+        UserDefaults.standard.set(true, forKey: UserDefaultsKeys.onboardingShown)
     }
 }
 

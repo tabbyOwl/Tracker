@@ -21,15 +21,15 @@ struct AnalyticsService {
 
     static func report(event: String, screen: String, item: String? = nil) {
         var params: [String: Any] = [
-            "event": event,
-            "screen": screen
+            AnalyticsKey.event: event,
+            AnalyticsKey.screen: screen
         ]
 
         if let item {
-            params["item"] = item
+            params[AnalyticsKey.item] = item
         }
 
-        AppMetrica.reportEvent(name: "event", parameters: params) { error in
+        AppMetrica.reportEvent(name: AnalyticsEventName.event, parameters: params) { error in
             logger.error("AppMetrica error: \(error.localizedDescription)")
         }
 

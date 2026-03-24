@@ -8,7 +8,7 @@
 import UIKit
 
 final class EditCategoryViewController: UIViewController {
-
+    
     // MARK: - Properties
     var category: TrackerCategory
     var onCategoryUpdated: ((TrackerCategory) -> Void)?
@@ -35,7 +35,7 @@ final class EditCategoryViewController: UIViewController {
     required init?(coder: NSCoder) {
         nil
     }
-
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -78,13 +78,13 @@ final class EditCategoryViewController: UIViewController {
     // MARK: - Actions
     @objc private func didTapDone() {
         let newName = nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
-
+        
         guard let newName, !newName.isEmpty else { return }
-
+        
         let updatedCategory = TrackerCategory(id: category.id, name: newName, trackers: category.trackers)
-
+        
         onCategoryUpdated?(updatedCategory)
-
+        
         dismiss(animated: true)
     }
 }
