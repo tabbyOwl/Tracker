@@ -9,7 +9,7 @@ import AppMetricaCore
 
 struct AnalyticsService {
     
-    private static let logger = Logger(label: "analytics")
+    private static let logger = Logger(label: "AnalyticsService")
     
     static func activate() {
         guard let configuration = AppMetricaConfiguration(

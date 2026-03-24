@@ -9,10 +9,11 @@ import XCTest
 import SnapshotTesting
 @testable import Tracker
 
-final class TrackerTests: XCTestCase {
+final class TrackersViewControllerSnapshotTests: XCTestCase {
 
     func testViewController() {
-        let vc = TrackersViewController()
+        let viewModel = TrackersViewModel()
+        let vc = TrackersViewController(viewModel: viewModel)
         
         assertSnapshot(of: vc, as: .image(traits: .init(userInterfaceStyle: .light)))
         assertSnapshot(of: vc, as: .image(traits: .init(userInterfaceStyle: .dark)))

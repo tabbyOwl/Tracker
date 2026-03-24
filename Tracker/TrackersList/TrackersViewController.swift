@@ -8,7 +8,7 @@ import UIKit
 
 final class TrackersViewController: UIViewController {
     
-    private let viewModel =  TrackersViewModel()
+    private let viewModel: TrackersViewModel
     
     // MARK: - UI
     private lazy var stateView = StateView(text: L10n.Trackers.stateViewTitle, image: UIImage(resource: .dizzy))
@@ -56,6 +56,16 @@ final class TrackersViewController: UIViewController {
         return button
     }()
     
+    init(viewModel: TrackersViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,8 +81,8 @@ final class TrackersViewController: UIViewController {
         super.viewDidAppear(animated)
         
         AnalyticsService.report(
-            event: "open",
-            screen: "Main"
+            event:   MainScreenEvent.open.rawValue,
+            screen: Screen.main.rawValue
         )
     }
     
@@ -81,8 +91,8 @@ final class TrackersViewController: UIViewController {
         
         if self.isMovingFromParent || self.isBeingDismissed {
             AnalyticsService.report(
-                event: "close",
-                screen: "Main"
+                event: MainScreenEvent.close.rawValue,
+                screen: Screen.main.rawValue
             )
         }
     }
@@ -106,7 +116,7 @@ final class TrackersViewController: UIViewController {
     
     private func setupNavigationBar() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(
-            image: UIImage(systemName: "plus"),
+            image: SystemImage.plus,
             style: .plain,
             target: self,
             action: #selector(didTapAddButton)
@@ -220,9 +230,9 @@ final class TrackersViewController: UIViewController {
     // MARK: - Actions
     @objc private func didTapAddButton() {
         AnalyticsService.report(
-            event: "click",
-            screen: "Main",
-            item: "add_track"
+            event: MainScreenEvent.click.rawValue,
+            screen: Screen.main.rawValue,
+            item: MainScreenItem.addTrack.rawValue
         )
         
         let chooseVC = TrackerTypePickerViewController()
@@ -250,9 +260,9 @@ final class TrackersViewController: UIViewController {
     @objc private func didTapFilterButton() {
         
         AnalyticsService.report(
-            event: "click",
-            screen: "Main",
-            item: "filter"
+            event: MainScreenEvent.click.rawValue,
+            screen: Screen.main.rawValue,
+            item: MainScreenItem.filter.rawValue
         )
         
         let vc = FilterViewController()
@@ -373,9 +383,9 @@ extension TrackersViewController: TrackerCardCellDelegate {
         guard let indexPath = collectionView.indexPath(for: cell) else { return }
         
         AnalyticsService.report(
-            event: "click",
-            screen: "Main",
-            item: "track"
+            event: MainScreenEvent.click.rawValue,
+            screen: Screen.main.rawValue,
+            item: MainScreenItem.track.rawValue
         )
         
         let tracker = viewModel.getTrackerForCell(section: indexPath.section, item: indexPath.item)

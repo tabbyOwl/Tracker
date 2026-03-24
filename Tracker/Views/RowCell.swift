@@ -76,7 +76,7 @@ final class RowCell: UITableViewCell {
     }
     
     func setCheckmark() {
-        image.image = UIImage(systemName: "checkmark")
+        image.image = SystemImage.checkmark
         image.isHidden = false
     }
     

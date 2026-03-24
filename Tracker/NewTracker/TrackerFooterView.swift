@@ -39,7 +39,7 @@ final class TrackerFooterView: UIView {
         cancelButton.layer.borderColor = UIColor.appRed.cgColor
         cancelButton.layer.cornerRadius = 16
         
-        createButton.backgroundColor = .appLightGray
+        createButton.backgroundColor = .appBlack
         createButton.setTitleColor(.appWhite, for: .normal)
         createButton.layer.cornerRadius = 16
         
@@ -63,7 +63,7 @@ final class TrackerFooterView: UIView {
             createButton.setTitle(L10n.Common.create, for: .normal)
 
         case .edit:
-            createButton.setTitle("Сохранить", for: .normal)
+            createButton.setTitle(L10n.Common.save, for: .normal)
         case .none:
             return
         }
@@ -71,7 +71,7 @@ final class TrackerFooterView: UIView {
     
     func setCreateButtonState(_ isEnabled: Bool) {
         createButton.isEnabled = isEnabled
-        createButton.backgroundColor = isEnabled ? .black : .lightGray
+        createButton.backgroundColor = isEnabled ? .appBlack : .appGray
     }
     
     @objc private func cancelTapped() {

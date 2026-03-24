@@ -11,25 +11,26 @@ final class TabBarController: UITabBarController {
     //MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        tabBar.backgroundColor = .appBlack
         setControllersToTabBar()
         setAppearance()
     }
     
     //MARK: -Private methods
     private func setControllersToTabBar() {
-        let trackersViewController = TrackersViewController()
+        let trackersViewController = TrackersViewController(viewModel: TrackersViewModel())
         
         trackersViewController.tabBarItem = UITabBarItem(
             title: L10n.TabBar.trackersTitle,
-            image: UIImage(systemName: "circle.circle.fill"),
+            image: SystemImage.circleCircleFill,
             selectedImage: nil
         )
         let navTrackersListViewController = UINavigationController(rootViewController: trackersViewController)
         
-        let statisticsViewController = StatisticsViewController()
+        let statisticsViewController = StatisticsViewController(viewModel: StatisticsViewModel())
         
         statisticsViewController.tabBarItem = UITabBarItem(title: L10n.TabBar.statisticsTitle,
-                                                           image: UIImage(systemName: "hare.fill"),
+                                                           image: SystemImage.hareFill,
                                                            selectedImage: nil)
         
         self.viewControllers = [navTrackersListViewController, statisticsViewController]
@@ -37,7 +38,7 @@ final class TabBarController: UITabBarController {
     
     private func setAppearance() {
         let appearance = UITabBarAppearance()
-        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .appWhite
 
         appearance.stackedLayoutAppearance.selected.iconColor = .appBlue
         appearance.stackedLayoutAppearance.selected.titleTextAttributes = [

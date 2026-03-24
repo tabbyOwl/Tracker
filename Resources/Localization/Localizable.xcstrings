@@ -376,7 +376,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Edit category"
+            "value" : "Edit Category"
           }
         },
         "ru" : {
@@ -532,7 +532,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "New category"
+            "value" : "New Category"
           }
         },
         "ru" : {
@@ -567,7 +567,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "New tracker"
+            "value" : "New Tracker"
           }
         },
         "ru" : {
@@ -660,6 +660,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Закрепленные"
+          }
+        }
+      }
+    },
+    "save" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сохранить"
           }
         }
       }
@@ -758,7 +775,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Create tracker"
+            "value" : "Create Tracker"
           }
         },
         "ru" : {
@@ -803,6 +820,40 @@
         }
       }
     },
+    "tracker_edit_event_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit Event"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Редактирование события"
+          }
+        }
+      }
+    },
+    "tracker_edit_habit_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit Habit"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Редактирование привычки"
+          }
+        }
+      }
+    },
     "tracker_new_event_title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -826,7 +877,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "New habit"
+            "value" : "New Habit"
           }
         },
         "ru" : {
@@ -843,7 +894,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Irregular event"
+            "value" : "Irregular Event"
           }
         },
         "ru" : {

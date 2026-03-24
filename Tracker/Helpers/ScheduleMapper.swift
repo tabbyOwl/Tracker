@@ -12,8 +12,6 @@ enum ScheduleMapper {
         (try? JSONDecoder().decode(Set<WeekDay>.self, from: data)) ?? []
     }
     
-    
-
     static func encode(_ schedule: Set<WeekDay>) -> Data {
         (try? JSONEncoder().encode(Array(schedule))) ?? Data()
     }

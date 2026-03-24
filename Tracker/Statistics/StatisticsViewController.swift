@@ -9,7 +9,7 @@ import UIKit
 
 final class StatisticsViewController: UIViewController {
     
-    private let viewModel = StatisticsViewModel()
+    private let viewModel: StatisticsViewModel
     private var statisticsCards: [StatisticsCardView] = []
     
     private let titleLabel: UILabel = {
@@ -29,6 +29,16 @@ final class StatisticsViewController: UIViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
+    
+    init(viewModel: StatisticsViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

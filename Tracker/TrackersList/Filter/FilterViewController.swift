@@ -67,7 +67,7 @@ extension FilterViewController: UITableViewDataSource {
         let shouldShowCheckmark = isSelected(at: indexPath) && ![FilterType.all, .today].contains(filter)
         
         let title = filter.title
-        let image = shouldShowCheckmark ? UIImage(systemName: "checkmark") : nil
+        let image = shouldShowCheckmark ? SystemImage.checkmark : nil
         
         cell.configure(title: title, image: image)
         

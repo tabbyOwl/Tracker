@@ -151,7 +151,8 @@ final class TrackerFormViewController: UIViewController {
   
     
     private func categoryTapped() {
-        let vc = CategoryPickerViewController()
+        let viewModel = CategoryPickerViewModel(store: TrackerCategoryStore())
+        let vc = CategoryPickerViewController(viewModel: viewModel)
         vc.onCategorySelected = { [weak self] category in
             self?.viewModel.setSelectedCategory(category)
         }
@@ -216,7 +217,7 @@ extension TrackerFormViewController: UITableViewDataSource {
         case .options:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: RowCell.identifier, for: indexPath) as? RowCell else { return UITableViewCell() }
             
-            let image = UIImage(systemName: "chevron.right")
+            let image = SystemImage.chevronRight
             if indexPath.row == 0 {
                 let categoryName = viewModel.getCategoryName()
                 cell.configure(title: L10n.Common.categoryTitle, subtitle: categoryName, image: image)

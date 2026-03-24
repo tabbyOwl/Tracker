@@ -55,7 +55,7 @@ final class TrackerCardCell: UICollectionViewCell {
     
     private let actionButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(UIImage(systemName: "plus"), for: .normal)
+        button.setImage(SystemImage.plus, for: .normal)
         button.tintColor = .appWhite
         button.layer.cornerRadius = 17
         return button
@@ -71,7 +71,7 @@ final class TrackerCardCell: UICollectionViewCell {
     
     private let pinImageView: UIImageView = {
         let view = UIImageView()
-        view.image = UIImage(systemName: "pin.fill")
+        view.image = SystemImage.pin
         view.tintColor = .white
         view.contentMode = .scaleAspectFill
         return view
@@ -100,10 +100,10 @@ final class TrackerCardCell: UICollectionViewCell {
         actionButton.backgroundColor = tracker.color
         
         let isCompleted = isCompleted
-        actionButton.setImage(UIImage(systemName: isCompleted ? "checkmark" : "plus"), for: .normal)
+        actionButton.setImage(isCompleted ? SystemImage.checkmark : SystemImage.plus, for: .normal)
         
         daysLabel.text = String.localizedStringWithFormat(
-            NSLocalizedString("days_count", comment: ""),
+            L10n.Tracker.daysCount,
             completedDaysCount
         )
         isPinned = tracker.isPinned

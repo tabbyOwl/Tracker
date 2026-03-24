@@ -11,7 +11,7 @@ final class CategoryPickerViewController: UIViewController {
     var onCategorySelected: ((TrackerCategory) -> Void)?
     
     private(set) var selectedIndexPath: IndexPath?
-    private let viewModel = CategoryPickerViewModel(store: TrackerCategoryStore())
+    private let viewModel: CategoryPickerViewModel
     
     private let stateView = StateView(
         text: L10n.CategoryPicker.stateText,
@@ -39,6 +39,17 @@ final class CategoryPickerViewController: UIViewController {
         )
         return button
     }()
+    
+    init(viewModel: CategoryPickerViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -144,7 +155,7 @@ extension CategoryPickerViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: RowCell.identifier, for: indexPath) as? RowCell else { return UITableViewCell() }
         
         let title = viewModel.titleForCell(at: indexPath)
-        let image = viewModel.isSelected(at: indexPath) ? UIImage(systemName: "checkmark") : nil
+        let image = viewModel.isSelected(at: indexPath) ? SystemImage.checkmark : nil
         cell.configure(title: title, image: image)
         
         return cell
@@ -180,14 +191,14 @@ extension CategoryPickerViewController: UITableViewDelegate {
             
             let editAction = UIAction(
                 title: L10n.Common.edit,
-                image: UIImage(systemName: "pencil")
+                image: SystemImage.pencil
             ) { _ in
                 self.showEditView(for: category)
             }
             
             let deleteAction = UIAction(
                 title: L10n.Common.delete,
-                image: UIImage(systemName: "trash"),
+                image: SystemImage.trash,
                 attributes: .destructive
             ) { _ in
                 self.deleteCategory(category)

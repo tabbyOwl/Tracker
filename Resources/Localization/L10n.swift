@@ -71,6 +71,8 @@ enum L10n {
     enum Tracker {
         static var newHabitTitle: String { NSLocalizedString("tracker_new_habit_title", comment: "") }
         static var newEventTitle: String { NSLocalizedString("tracker_new_event_title", comment: "") }
+        static var editHabitTitle: String { NSLocalizedString("tracker_edit_habit_title", comment: "") }
+        static var editEventTitle: String { NSLocalizedString("tracker_edit_event_title", comment: "") }
         static var scheduleEveryDay: String { NSLocalizedString("schedule_every_day", comment: "") }
 
         static var typeHabit: String { NSLocalizedString("tracker_type_habit", comment: "") }
@@ -78,6 +80,7 @@ enum L10n {
         static var creationTitle: String { NSLocalizedString("tracker_creation_title", comment: "") }
         static var deleteTitle: String { NSLocalizedString("tracker_delete_title", comment: "") }
         static var deleteMessage: String { NSLocalizedString("tracker_delete_message", comment: "") }
+        static var daysCount: String { NSLocalizedString("days_count", comment: "")}
     }
 
     // MARK: - Trackers
@@ -124,5 +127,6 @@ enum L10n {
         static var delete: String { NSLocalizedString("delete", comment: "") }
         static var edit: String { NSLocalizedString("edit", comment: "") }
         static var create: String { NSLocalizedString("create", comment: "") }
+        static var save: String { NSLocalizedString("save", comment: "") }
     }
 }

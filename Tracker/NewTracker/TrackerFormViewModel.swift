@@ -13,7 +13,7 @@ final class TrackerFormViewModel {
         case .create:
             trackerType == .habit ? L10n.Tracker.newHabitTitle : L10n.Tracker.newEventTitle
         case .edit:
-            trackerType == .habit ? "Редактирование привычки" : "Редактирование события"
+            trackerType == .habit ? L10n.Tracker.editHabitTitle : L10n.Tracker.editEventTitle
         }
     }
     
