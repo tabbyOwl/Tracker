@@ -18,7 +18,6 @@ final class StateView: UIView {
         let label = UILabel()
         label.font = .systemFont(ofSize: 12, weight: .medium)
         label.textAlignment = .center
-        label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -34,6 +33,11 @@ final class StateView: UIView {
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         nil
+    }
+    
+    func configure(text: String, image: UIImage?) {
+        label.text = text
+        imageView.image = image
     }
     
     private func setupUI() {

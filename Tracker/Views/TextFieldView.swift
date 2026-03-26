@@ -10,9 +10,14 @@ final class TextFieldView: UIView {
     
     var onTextChanged: ((String) -> Void)?
     
+    var text: String? {
+        get { textField.text }
+        set { textField.text = newValue }
+    }
+    
     private let textField: UITextField = {
         let textField = UITextField()
-        textField.backgroundColor = .projectColor(.backgroundDay)
+        textField.backgroundColor = .appBackground
         textField.layer.cornerRadius = 16
         textField.font = .systemFont(ofSize: 17)
         textField.setLeftPadding(16)
@@ -22,7 +27,7 @@ final class TextFieldView: UIView {
     private let errorLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 17)
-        label.textColor = .projectColor(.red)
+        label.textColor = .appRed
         label.textAlignment = .center
         label.isHidden = true
         return label
@@ -97,7 +102,10 @@ extension TextFieldView: UITextFieldDelegate {
         let updatedText = text.replacingCharacters(in: textRange, with: string)
         
         if updatedText.count > maxCount {
-            showError("Ограничение \(maxCount) символов")
+            showError(String.localizedStringWithFormat(
+                L10n.Common.characterLimit,
+                maxCount
+            ))
             return false
         } else {
             hideError()

@@ -11,17 +11,26 @@ struct Tracker {
     let name: String
     let color: UIColor
     let emoji: String
+    let type: TrackerType
     let schedule: Set<WeekDay>
+    let categoryId: UUID
+    let isPinned: Bool
 }
 
 extension Tracker {
     init(coreData: TrackerCoreData) {
+        let schedule = ScheduleMapper.decode(coreData.schedule)
+        let type: TrackerType = schedule.isEmpty ? .event : .habit
+        
         self.init(
             id: coreData.id,
             name: coreData.name,
             color: UIColor(hex: coreData.color),
             emoji: coreData.emoji,
-            schedule: ScheduleMapper.decode(coreData.schedule)
+            type: type,
+            schedule: schedule,
+            categoryId: coreData.category.id,
+            isPinned: coreData.isPinned
         )
     }
 }

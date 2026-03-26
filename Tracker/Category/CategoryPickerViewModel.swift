@@ -53,7 +53,7 @@ final class CategoryPickerViewModel {
     func selectCategory(at indexPath: IndexPath) {
         let category = categories[indexPath.row]
         selectedCategoryId = category.id
-        UserDefaults.standard.set(category.id.uuidString, forKey: "selectedCategoryId")
+        UserDefaults.standard.set(category.id.uuidString, forKey: UserDefaultsKeys.selectedCategoryId)
     }
     
     func addCategory(name: String) {
@@ -81,7 +81,7 @@ final class CategoryPickerViewModel {
     
     private func restoreSelection() {
         guard
-            let idString = UserDefaults.standard.string(forKey: "selectedCategoryId"),
+            let idString = UserDefaults.standard.string(forKey: UserDefaultsKeys.selectedCategoryId),
             let id = UUID(uuidString: idString),
             let index = categories.firstIndex(where: { $0.id == id })
         else { return }

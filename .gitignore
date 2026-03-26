@@ -18,4 +18,7 @@ xcuserdata/
 /*.gcno
 **/xcshareddata/WorkspaceSettings.xcsettings
 
+# SwiftGen generated files
+Generated/
+
 # End of https://www.toptal.com/developers/gitignore/api/xcode

@@ -12,25 +12,45 @@ final class TabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setControllersToTabBar()
+        setAppearance()
     }
     
     //MARK: -Private methods
     private func setControllersToTabBar() {
-        let trackersViewController = TrackersViewController()
+        let trackersViewController = TrackersViewController(viewModel: TrackersViewModel())
         
         trackersViewController.tabBarItem = UITabBarItem(
-            title: "Трекеры",
-            image: UIImage(systemName: "circle.circle.fill"),
+            title: L10n.TabBar.trackersTitle,
+            image: SystemImage.circleCircleFill,
             selectedImage: nil
         )
         let navTrackersListViewController = UINavigationController(rootViewController: trackersViewController)
         
-        let statisticsViewController = UIViewController()
-        statisticsViewController.tabBarItem = UITabBarItem(title: "Статистика",
-                                                           image: UIImage(systemName: "hare.fill"),
+        let statisticsViewController = StatisticsViewController(viewModel: StatisticsViewModel())
+        
+        statisticsViewController.tabBarItem = UITabBarItem(title: L10n.TabBar.statisticsTitle,
+                                                           image: SystemImage.hareFill,
                                                            selectedImage: nil)
         
         self.viewControllers = [navTrackersListViewController, statisticsViewController]
+    }
+    
+    private func setAppearance() {
+        let appearance = UITabBarAppearance()
+        appearance.backgroundColor = .appWhite
+        
+        appearance.stackedLayoutAppearance.selected.iconColor = .appBlue
+        appearance.stackedLayoutAppearance.selected.titleTextAttributes = [
+            .foregroundColor: UIColor.appBlue
+        ]
+        
+        appearance.stackedLayoutAppearance.normal.iconColor = .appGray
+        appearance.stackedLayoutAppearance.normal.titleTextAttributes = [
+            .foregroundColor: UIColor.appGray
+        ]
+        
+        UITabBar.appearance().standardAppearance = appearance
+        UITabBar.appearance().scrollEdgeAppearance = appearance
     }
 }
 

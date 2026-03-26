@@ -11,10 +11,10 @@ final class CategoryPickerViewController: UIViewController {
     var onCategorySelected: ((TrackerCategory) -> Void)?
     
     private(set) var selectedIndexPath: IndexPath?
-    private let viewModel = CategoryPickerViewModel(store: TrackerCategoryStore())
+    private let viewModel: CategoryPickerViewModel
     
     private let stateView = StateView(
-        text: "Привычки и события можно объединить по смыслу",
+        text: L10n.CategoryPicker.stateText,
         image: UIImage(resource: .dizzy)
     )
     
@@ -29,9 +29,9 @@ final class CategoryPickerViewController: UIViewController {
     
     private lazy var createCategoryButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Добавить категорию", for: .normal)
+        button.setTitle(L10n.CategoryPicker.addButton, for: .normal)
         button.layer.cornerRadius = 16
-        button.backgroundColor = .projectColor(.blackDay)
+        button.backgroundColor = .appBlack
         button.addTarget(
             self,
             action: #selector(createCategoryButtonTapped),
@@ -40,9 +40,21 @@ final class CategoryPickerViewController: UIViewController {
         return button
     }()
     
+    init(viewModel: CategoryPickerViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setupUI()
         setupNavigationBar()
         bindViewModel()
@@ -51,8 +63,8 @@ final class CategoryPickerViewController: UIViewController {
     
     // MARK: - UI
     private func setupUI() {
-        view.backgroundColor = .white
-        tableView.backgroundColor = .white
+        view.backgroundColor = .appWhite
+        tableView.backgroundColor = .appWhite
         
         view.addSubviews(stateView, tableView, createCategoryButton)
         
@@ -79,7 +91,8 @@ final class CategoryPickerViewController: UIViewController {
     }
     
     private func setupNavigationBar() {
-        navigationItem.title = "Категория"
+        view.backgroundColor = .appWhite
+        navigationItem.title = L10n.CategoryPicker.title
     }
     
     private func bindViewModel() {
@@ -116,13 +129,15 @@ final class CategoryPickerViewController: UIViewController {
     }
     
     private func deleteCategory(_ category: TrackerCategory) {
-        let alertController = UIAlertController(title: "Удалить категорию?", message: "Вы уверены, что хотите удалить эту категорию?", preferredStyle: .actionSheet)
+        let title = L10n.CategoryPicker.deleteTitle
+        let message = L10n.CategoryPicker.deleteMessage
         
-        alertController.addAction(UIAlertAction(title: "Отмена", style: .cancel, handler: nil))
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
         
-        alertController.addAction(UIAlertAction(title: "Удалить", style: .destructive, handler: { _ in
+        alertController.addAction(UIAlertAction(title: L10n.Common.cancel, style: .cancel, handler: nil))
+        
+        alertController.addAction(UIAlertAction(title: L10n.Common.delete, style: .destructive, handler: { _ in
             self.viewModel.deleteCategory(by: category.id)
-            self.tableView.reloadData()
         }))
         
         present(alertController, animated: true)
@@ -140,7 +155,7 @@ extension CategoryPickerViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: RowCell.identifier, for: indexPath) as? RowCell else { return UITableViewCell() }
         
         let title = viewModel.titleForCell(at: indexPath)
-        let image = viewModel.isSelected(at: indexPath) ? UIImage(systemName: "checkmark") : nil
+        let image = viewModel.isSelected(at: indexPath) ? SystemImage.checkmark : nil
         cell.configure(title: title, image: image)
         
         return cell
@@ -168,26 +183,22 @@ extension CategoryPickerViewController: UITableViewDelegate {
         75
     }
     
-    func tableView(
-        _ tableView: UITableView,
-        contextMenuConfigurationForRowAt indexPath: IndexPath,
-        point: CGPoint
-    ) -> UIContextMenuConfiguration? {
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         
         let category = viewModel.getCategory(at: indexPath)
         
         return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
             
             let editAction = UIAction(
-                title: "Редактировать",
-                image: UIImage(systemName: "pencil")
+                title: L10n.Common.edit,
+                image: SystemImage.pencil
             ) { _ in
                 self.showEditView(for: category)
             }
             
             let deleteAction = UIAction(
-                title: "Удалить",
-                image: UIImage(systemName: "trash"),
+                title: L10n.Common.delete,
+                image: SystemImage.trash,
                 attributes: .destructive
             ) { _ in
                 self.deleteCategory(category)

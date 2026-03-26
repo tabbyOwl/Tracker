@@ -44,9 +44,10 @@ final class OptionRowCollectionView: UIView {
         nil
     }
     
-    func updateItems(title: String, items: [OptionItem]) {
+    func updateItems(title: String, items: [OptionItem], selectedItem: OptionItem?) {
         self.items = items
         self.titleLabel.text = title
+        self.selectedItem = selectedItem
         collectionView.reloadData()
     }
     
@@ -97,10 +98,21 @@ extension OptionRowCollectionView: UICollectionViewDataSource {
 
 extension OptionRowCollectionView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let item = items[indexPath.row]
-        selectedItem = item
-        collectionView.reloadData()
-        delegate?.itemSelected(item)
+        let newItem = items[indexPath.row]
+        let oldItem = selectedItem
+        
+        selectedItem = newItem
+        
+        var indexPaths: [IndexPath] = [indexPath]
+        
+        if let oldItem,
+           let oldIndex = items.firstIndex(of: oldItem) {
+            indexPaths.append(IndexPath(item: oldIndex, section: 0))
+        }
+        
+        collectionView.reloadItems(at: indexPaths)
+        
+        delegate?.itemSelected(newItem)
     }
 }
 

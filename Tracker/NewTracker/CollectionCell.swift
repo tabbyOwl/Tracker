@@ -19,6 +19,7 @@ final class CollectionCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        contentView.backgroundColor = .appWhite
         contentView.addSubview(optionRowView)
         setupConstraints()
         optionRowView.delegate = self
@@ -39,8 +40,8 @@ final class CollectionCell: UITableViewCell {
         ])
     }
     
-    func configure(title: String, items: [OptionItem]) {
-        optionRowView.updateItems(title: title, items: items)
+    func configure(title: String, items: [OptionItem], selectedItem: OptionItem?) {
+        optionRowView.updateItems(title: title, items: items, selectedItem: selectedItem)
     }
 }
 

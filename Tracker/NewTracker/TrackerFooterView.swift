@@ -11,12 +11,15 @@ final class TrackerFooterView: UIView {
     var onCancel: (() -> Void)?
     var onCreate: (() -> Void)?
     
+    private let mode: TrackerFormMode?
     private let cancelButton = UIButton(type: .system)
     private let createButton = UIButton(type: .system)
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(mode: TrackerFormMode? = nil) {
+        self.mode = mode
+        super.init(frame: .zero)
         setupUI()
+        configureForMode()
     }
     
     @available(*, unavailable)
@@ -30,15 +33,14 @@ final class TrackerFooterView: UIView {
         stack.spacing = 8
         stack.distribution = .fillEqually
         
-        cancelButton.setTitle("Отменить", for: .normal)
-        cancelButton.setTitleColor(.systemRed, for: .normal)
+        cancelButton.setTitle(L10n.Common.cancel, for: .normal)
+        cancelButton.setTitleColor(.appRed, for: .normal)
         cancelButton.layer.borderWidth = 1
-        cancelButton.layer.borderColor = UIColor.systemRed.cgColor
+        cancelButton.layer.borderColor = UIColor.appRed.cgColor
         cancelButton.layer.cornerRadius = 16
         
-        createButton.setTitle("Создать", for: .normal)
-        createButton.backgroundColor = .lightGray
-        createButton.setTitleColor(.white, for: .normal)
+        createButton.backgroundColor = .appBlack
+        createButton.setTitleColor(.appWhite, for: .normal)
         createButton.layer.cornerRadius = 16
         
         addSubview(stack)
@@ -55,9 +57,21 @@ final class TrackerFooterView: UIView {
         createButton.addTarget(self, action: #selector(createTapped), for: .touchUpInside)
     }
     
+    private func configureForMode() {
+        switch mode {
+        case .create:
+            createButton.setTitle(L10n.Common.create, for: .normal)
+
+        case .edit:
+            createButton.setTitle(L10n.Common.save, for: .normal)
+        case .none:
+            return
+        }
+    }
+    
     func setCreateButtonState(_ isEnabled: Bool) {
         createButton.isEnabled = isEnabled
-        createButton.backgroundColor = isEnabled ? .black : .lightGray
+        createButton.backgroundColor = isEnabled ? .appBlack : .appGray
     }
     
     @objc private func cancelTapped() {

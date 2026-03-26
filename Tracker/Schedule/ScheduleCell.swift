@@ -29,7 +29,7 @@ final class ScheduleCell: UITableViewCell {
     // MARK: - Private methods
     private func setupUI() {
         selectionStyle = .none
-        contentView.backgroundColor = .projectColor(.backgroundDay)
+        contentView.backgroundColor = .appWhite
         setupConstraints()
     }
     
@@ -58,7 +58,7 @@ final class ScheduleCell: UITableViewCell {
     // MARK: - Public methods
     func configure(title: String, isOn: Bool) {
         dayLabel.text = title
-        toggle.onTintColor = .systemBlue
+        toggle.onTintColor = .appBlue
         toggle.isOn = isOn
     }
 }

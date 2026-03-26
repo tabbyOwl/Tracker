@@ -7,12 +7,12 @@
 import Foundation
 
 struct TrackerRecord: Hashable {
-    let id: UUID
+    let trackerId: UUID
     let date: Date
 }
 
 extension TrackerRecord {
     init(coreData: TrackerRecordCoreData) {
-        self.init(id: coreData.id, date: coreData.date)
+        self.init(trackerId: coreData.tracker.id, date: coreData.date)
     }
 }

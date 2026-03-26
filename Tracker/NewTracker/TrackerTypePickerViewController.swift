@@ -8,11 +8,12 @@ import UIKit
 
 final class TrackerTypePickerViewController: UIViewController {
     
-    var onCreateTracker: ((TrackerDraft) -> Void)?
+    var onCreateTracker: ((Tracker) -> Void)?
     
     //MARK: - UI
-    private let habitButton = TrackerTypeButton(title: "Привычка")
-    private let eventButton = TrackerTypeButton(title: "Нерегулярное событие")
+    private let habitButton = TrackerTypeButton(title: L10n.Tracker.typeHabit)
+    private let eventButton = TrackerTypeButton(title: L10n.Tracker.typeEvent)
+    
     
     private let buttonsStack: UIStackView = {
         let stack = UIStackView()
@@ -38,11 +39,11 @@ final class TrackerTypePickerViewController: UIViewController {
     }
     
     private func setupBackground() {
-        view.backgroundColor = .white
+        view.backgroundColor = .appWhite
     }
     
     private func setupNavigationBar() {
-        navigationItem.title = "Создание трекера"
+        navigationItem.title = L10n.Tracker.creationTitle
     }
     
     private func setupConstraints() {
@@ -62,14 +63,14 @@ final class TrackerTypePickerViewController: UIViewController {
     
     //MARK: - Actions
     @objc private func habitButtonTapped() {
-        let vc = NewTrackerViewController(trackerType: .habit)
-        vc.onCreateTracker = onCreateTracker
+        let vc = TrackerFormViewController(mode: .create(type: .habit))
+        vc.onSaveTracker = onCreateTracker
         present(UINavigationController(rootViewController: vc), animated: true)
     }
     
     @objc private func eventButtonTapped() {
-        let vc = NewTrackerViewController(trackerType: .event)
-        vc.onCreateTracker = onCreateTracker
+        let vc = TrackerFormViewController(mode: .create(type: .event))
+        vc.onSaveTracker = onCreateTracker
         present(UINavigationController(rootViewController: vc), animated: true)
     }
 }

@@ -12,13 +12,13 @@ final class NewCategoryViewController: UIViewController {
     var onCategoryCreated: ((String) -> Void)?
     private var name: String = ""
     
-    private let textField = TextFieldView(placeholder: "Введите название категории")
+    private let textField = TextFieldView(placeholder: L10n.NewCategory.placeholder)
     
     private let doneButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Готово", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .lightGray
+        button.setTitle(L10n.Common.done, for: .normal)
+        button.setTitleColor(.appWhite, for: .normal)
+        button.backgroundColor = .appBlack
         button.layer.cornerRadius = 16
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         return button
@@ -41,7 +41,7 @@ final class NewCategoryViewController: UIViewController {
     }
     
     private func setupNavigationBar() {
-        navigationItem.title = "Новая категория"
+        navigationItem.title = L10n.NewCategory.title
     }
     
     private func setupKeyboard() {
@@ -58,6 +58,7 @@ final class NewCategoryViewController: UIViewController {
     }
     
     private func setupUI() {
+        view.backgroundColor = .appWhite
         view.addSubviews(textField, doneButton)
         doneButton.addTarget(self, action: #selector(didTapDoneButton), for: .touchUpInside)
         
@@ -80,7 +81,7 @@ final class NewCategoryViewController: UIViewController {
     private func updateDoneButtonState() {
         let isValid = !name.trimmingCharacters(in: .whitespaces).isEmpty
         doneButton.isEnabled = isValid
-        doneButton.backgroundColor = isValid ? .black : .lightGray
+        doneButton.backgroundColor = isValid ? .appBlack : .appLightGray
     }
     
     @objc private func didTapDoneButton() {
